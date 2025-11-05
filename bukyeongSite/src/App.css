@@ -1,68 +1,204 @@
-/* tailwindcss base; */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-
-/* index.css */
+/* index.css - 개선된 버전 */
 :root[data-theme="light"] {
   --bg-color: #ffffff;
   --text-color: #000000;
+  --card-bg: #ffffff;
+  --card-border: #e0e0e0;
+  --card-shadow: rgba(0, 0, 0, 0.1);
+  --card-hover-shadow: rgba(0, 0, 0, 0.15);
+  --button-bg: #007bff;
+  --button-text: #ffffff;
+  --button-hover-bg: #0056b3;
+  --transition-speed: 0.15s;
+  --focus-outline: #007bff;
 }
 
 :root[data-theme="dark"] {
   --bg-color: #1a1a1a;
   --text-color: #ffffff;
+  --card-bg: #2d2d2d;
+  --card-border: #404040;
+  --card-shadow: rgba(0, 0, 0, 0.3);
+  --card-hover-shadow: rgba(0, 0, 0, 0.5);
+  --button-bg: #0056b3;
+  --button-text: #ffffff;
+  --button-hover-bg: #007bff;
+  --transition-speed: 0.15s;
+  --focus-outline: #4da3ff;
 }
 
 body {
   margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
   background-color: var(--bg-color);
   color: var(--text-color);
-  transition: background-color 0.3s, color 0.3s;
+  transition: background-color var(--transition-speed), color var(--transition-speed);
   min-height: 100vh;
+  line-height: 1.6;
+  /* 모바일 텍스트 크기 조정 방지 */
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* 부드러운 스크롤 */
+  -webkit-overflow-scrolling: touch;
+  /* 터치 최적화 */
+  touch-action: manipulation;
+}
+
+/* 전체 앱 컨테이너 - 터치 최적화 */
+#root {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 스크롤바 스타일 - 다크모드 대응 */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--card-border);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #888;
 }
 
 
-/* 카드형식 CSS */
-/* 카드 컨테이너: 카드를 중앙에 배치하기 위함 */
-.card-container {
-    display: flex;
-    justify-content: center;
-    padding: 20px;
+/* Instagram-style Home Layout */
+.home-container {
+  max-width: 935px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  min-height: calc(100vh - 4rem);
+  /* 부드러운 스크롤 */
+  -webkit-overflow-scrolling: touch;
 }
 
-/* 🌟 카드 본체 스타일 */
-.card {
-    /* 카드 영역을 시각적으로 구분하는 최소한의 스타일 */
-    width: 100%;
-    max-width: 400px; /* 카드 최대 폭 지정 */
-    border: 1px solid #ccc; /* 얇은 테두리 */
-    border-radius: 5px; /* 약간의 둥근 모서리 */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 은은한 그림자 */
-    background-color: white;
+.home-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding: 2rem 1rem;
+  transition: background-color 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 카드 헤더/본문/푸터: 내용과 배경을 구분하는 패딩만 적용 */
-.card-header, .card-body, .card-footer {
-    padding: 15px;
+.home-title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.5px;
+  transition: color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 제목 기본 스타일 */
-.card-header h2 {
-    margin-top: 0;
-    margin-bottom: 5px;
+.home-subtitle {
+  font-size: 1.125rem;
+  color: var(--text-color);
+  opacity: 0.7;
+  margin: 0;
+  line-height: 1.5;
+  transition: color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 미디어 영역: 이미지가 카드 폭에 맞게 조정되도록 합니다. */
-.card-media img {
-    width: 100%;
-    display: block;
-    height: auto;
+/* Instagram-style Feed Layout */
+.home-feed {
+  max-width: 614px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-bottom: 3rem;
 }
 
-/* 버튼 기본 스타일 */
-.card-footer button {
-    padding: 8px 15px;
-    cursor: pointer;
+/* Weather Widget Styles */
+.home-weather-content {
+  text-align: center;
+  padding: 1.5rem 1rem;
+}
+
+.weather-icon {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  line-height: 1;
+}
+
+.weather-temp {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin: 0.5rem 0;
+  line-height: 1.2;
+  transition: color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.weather-desc {
+  font-size: 1.0625rem;
+  color: var(--text-color);
+  opacity: 0.75;
+  margin: 0;
+  line-height: 1.5;
+  transition: color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Notice Widget Styles */
+.home-notice-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+
+.notice-item {
+  color: var(--text-color);
+  line-height: 1.7;
+  margin: 0;
+  padding: 0.625rem 0;
+  opacity: 0.9;
+  font-size: 0.9375rem;
+  transition: color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Card Footer View More Link - 부드러운 애니메이션 */
+.card-view-more {
+  color: #3b82f6;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  /* 부드러운 transition */
+  transition: color 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+              transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  /* 터치 영역 확대 */
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0;
+  min-height: 44px;
+  line-height: 1.5;
+  position: relative;
+}
+
+/* 화살표 애니메이션 효과 */
+.card-view-more::after {
+  content: '';
+  display: inline-block;
+  margin-left: 0.25rem;
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.card-view-more:hover {
+  color: #2563eb;
+  transform: translateX(3px);
+}
+
+.card-view-more:hover::after {
+  transform: translateX(2px);
+}
+
+.card-view-more:active {
+  opacity: 0.8;
+  transform: translateX(1px);
 }

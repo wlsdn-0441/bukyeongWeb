@@ -1,0 +1,39 @@
+/* TimetableWidget.css */
+
+.timetable-widget {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.timetable-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
+  background-color: #f9fafb;
+  border-radius: 0.375rem;
+}
+
+.timetable-subject {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.timetable-time {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* 다크 모드 */
+:root[data-theme="dark"] .timetable-item {
+  background-color: #374151;
+}
+
+:root[data-theme="dark"] .timetable-subject {
+  color: #f9fafb;
+}
+
+:root[data-theme="dark"] .timetable-time {
+  color: #9ca3af;
+}

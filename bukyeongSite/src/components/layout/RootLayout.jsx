@@ -4,7 +4,7 @@ import  Header from "../common/Header";
 //루트 레이아웃 컴포넌트 맨위에 뜨는 네비게이션 바 구현 가능파트
 export default function RootLayout() {
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="">
             <Header />
             <main>
                 <Outlet />  {/* 여기에 각 페이지가 렌더링됨 */}

@@ -1,0 +1,146 @@
+/* Timetable.css */
+
+.timetable-page {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.timetable-back-button {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  color: #2563eb;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0;
+}
+
+.timetable-back-button:hover {
+  text-decoration: underline;
+}
+
+.timetable-page-title {
+  font-size: 1.875rem;
+  font-weight: bold;
+  color: #111827;
+  margin-bottom: 2rem;
+  margin-top: 0;
+}
+
+.timetable-cards-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.timetable-schedule {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.timetable-schedule-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: #f9fafb;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.timetable-schedule-item:hover {
+  background-color: #f3f4f6;
+}
+
+.timetable-schedule-left {
+  flex: 1;
+}
+
+.timetable-schedule-subject {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 1.125rem;
+  margin: 0 0 0.25rem 0;
+}
+
+.timetable-schedule-time {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.timetable-schedule-right {
+  text-align: right;
+}
+
+.timetable-schedule-teacher {
+  font-size: 0.875rem;
+  color: #4b5563;
+  background-color: #dbeafe;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  display: inline-block;
+}
+
+.timetable-schedule-room {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+  margin-bottom: 0;
+}
+
+/* 다크 모드 */
+:root[data-theme="dark"] .timetable-page-title {
+  color: #f9fafb;
+}
+
+:root[data-theme="dark"] .timetable-back-button {
+  color: #60a5fa;
+}
+
+:root[data-theme="dark"] .timetable-schedule-item {
+  background-color: #374151;
+}
+
+:root[data-theme="dark"] .timetable-schedule-item:hover {
+  background-color: #4b5563;
+}
+
+:root[data-theme="dark"] .timetable-schedule-subject {
+  color: #f9fafb;
+}
+
+:root[data-theme="dark"] .timetable-schedule-time {
+  color: #9ca3af;
+}
+
+:root[data-theme="dark"] .timetable-schedule-teacher {
+  color: #1e3a8a;
+  background-color: #93c5fd;
+}
+
+:root[data-theme="dark"] .timetable-schedule-room {
+  color: #9ca3af;
+}
+
+/* 반응형 - 태블릿 이상 */
+@media (min-width: 768px) {
+  .timetable-page {
+    padding: 2rem 1.5rem;
+  }
+}
+
+/* 반응형 - 데스크톱 */
+@media (min-width: 1024px) {
+  .timetable-page {
+    padding: 2rem;
+  }
+
+  .timetable-cards-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

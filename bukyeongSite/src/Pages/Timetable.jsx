@@ -1,10 +1,11 @@
 // src/Pages/Timetable.jsx
 import { useNavigate } from 'react-router-dom';
 import Card from '../components/common/Card';
+import './Timetable.css';
 
 const Timetable = () => {
   const navigate = useNavigate();
-  
+
   const weekSchedule = {
     monday: [
       { time: '09:00 - 10:00', subject: '수학', teacher: '김선생님', room: '201' },
@@ -20,7 +21,7 @@ const Timetable = () => {
     ],
     // ... 나머지 요일
   };
-  
+
   const days = [
     { key: 'monday', label: '월요일' },
     { key: 'tuesday', label: '화요일' },
@@ -28,42 +29,42 @@ const Timetable = () => {
     { key: 'thursday', label: '목요일' },
     { key: 'friday', label: '금요일' },
   ];
-  
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <button 
+    <div className="timetable-page">
+      <button
         onClick={() => navigate('/')}
-        className="mb-6 flex items-center text-blue-600 hover:underline"
+        className="timetable-back-button"
       >
         ← 홈으로 돌아가기
       </button>
-      
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">
+
+      <h1 className="timetable-page-title">
         이번 주 시간표
       </h1>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <div className="timetable-cards-container">
         {days.map((day) => (
           <Card key={day.key} title={day.label}>
-            <div className="space-y-3">
+            <div className="timetable-schedule">
               {weekSchedule[day.key]?.map((item, index) => (
-                <div 
+                <div
                   key={index}
-                  className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                  className="timetable-schedule-item"
                 >
-                  <div className="flex-1">
-                    <p className="font-semibold text-gray-800 text-lg">
+                  <div className="timetable-schedule-left">
+                    <p className="timetable-schedule-subject">
                       {item.subject}
                     </p>
-                    <p className="text-sm text-gray-500">
+                    <p className="timetable-schedule-time">
                       {item.time}
                     </p>
                   </div>
-                  <div className="text-right">
-                    <span className="text-sm text-gray-600 bg-blue-100 px-3 py-1 rounded-full">
+                  <div className="timetable-schedule-right">
+                    <span className="timetable-schedule-teacher">
                       {item.teacher}
                     </span>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="timetable-schedule-room">
                       {item.room}
                     </p>
                   </div>

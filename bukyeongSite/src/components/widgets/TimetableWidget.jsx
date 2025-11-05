@@ -1,5 +1,6 @@
 // src/components/widgets/Timetable.jsx
 import { memo } from 'react';
+import './TimetableWidget.css';
 
 const TimetableWidget = memo(() => {
   const todaySchedule = [
@@ -7,18 +8,18 @@ const TimetableWidget = memo(() => {
     { time: '10:00', subject: '영어' },
     { time: '11:00', subject: '과학' },
   ];
-  
+
   return (
-    <div className="space-y-2">
+    <div className="timetable-widget">
       {todaySchedule.map((item, index) => (
-        <div 
+        <div
           key={index}
-          className="flex items-center justify-between p-2 bg-gray-50 rounded"
+          className="timetable-item"
         >
-          <span className="font-semibold text-gray-800">
+          <span className="timetable-subject">
             {item.subject}
           </span>
-          <span className="text-sm text-gray-500">
+          <span className="timetable-time">
             {item.time}
           </span>
         </div>
@@ -29,4 +30,4 @@ const TimetableWidget = memo(() => {
 
 TimetableWidget.displayName = 'TimetableWidget';
 
-export default TimetableWidget;  // ← 이것도 확인
+export default TimetableWidget;

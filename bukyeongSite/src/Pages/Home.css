@@ -1,0 +1,139 @@
+/* Home.css */
+
+.home-page {
+  width: 100%;
+  padding: 2rem 0;
+}
+
+.home-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.home-header {
+  margin-bottom: 2rem;
+}
+
+.home-title {
+  font-size: 1.875rem;
+  font-weight: bold;
+  color: #111827;
+  margin: 0;
+}
+
+.home-subtitle {
+  margin-top: 0.5rem;
+  color: #4b5563;
+  margin-bottom: 0;
+}
+
+.home-content-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.home-content {
+  width: 100%;
+  max-width: 1280px;
+  padding: 0;
+}
+
+.home-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.home-card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.home-view-more {
+  margin-top: 1rem;
+  color: #2563eb;
+  font-weight: 500;
+}
+
+/* 다크 모드 */
+:root[data-theme="dark"] .home-title {
+  color: #f9fafb;
+}
+
+:root[data-theme="dark"] .home-subtitle {
+  color: #9ca3af;
+}
+
+/* 반응형 - 태블릿 */
+@media (min-width: 768px) {
+  .home-content {
+    padding: 0 1.5rem;
+  }
+
+  .home-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+/* 반응형 - 데스크톱 */
+@media (min-width: 1024px) {
+  .home-container {
+    padding: 0 2rem;
+  }
+
+  .home-content {
+    padding: 0 2rem;
+  }
+
+  .home-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* 날씨 위젯 스타일 */
+.weather-widget {
+  text-align: center;
+}
+
+.weather-icon {
+  font-size: 2.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.weather-temp {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin: 0;
+}
+
+.weather-status {
+  color: #4b5563;
+  margin: 0.25rem 0 0 0;
+}
+
+:root[data-theme="dark"] .weather-temp {
+  color: #f9fafb;
+}
+
+:root[data-theme="dark"] .weather-status {
+  color: #9ca3af;
+}
+
+/* 공지사항 위젯 스타일 */
+.notice-widget {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.notice-item {
+  color: #374151;
+  margin: 0;
+}
+
+:root[data-theme="dark"] .notice-item {
+  color: #d1d5db;
+}

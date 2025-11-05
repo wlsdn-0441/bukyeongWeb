@@ -1,0 +1,81 @@
+/* MealWidget.css */
+
+.meal-widget {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.meal-widget-header {
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+.meal-widget-day {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.meal-widget-date {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin: 0.25rem 0 0 0;
+}
+
+.meal-section {
+  border-left: 4px solid;
+  padding-left: 1rem;
+}
+
+.meal-section.breakfast {
+  border-color: #f97316;
+}
+
+.meal-section.lunch {
+  border-color: #3b82f6;
+}
+
+.meal-section.dinner {
+  border-color: #a855f7;
+}
+
+.meal-section-title {
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.meal-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.meal-item {
+  color: #4b5563;
+  font-size: 0.875rem;
+}
+
+/* 다크 모드 지원 */
+:root[data-theme="dark"] .meal-widget-day {
+  color: #9ca3af;
+}
+
+:root[data-theme="dark"] .meal-widget-date {
+  color: #6b7280;
+}
+
+:root[data-theme="dark"] .meal-section-title {
+  color: #d1d5db;
+}
+
+:root[data-theme="dark"] .meal-item {
+  color: #9ca3af;
+}

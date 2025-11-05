@@ -2,9 +2,9 @@
 import { memo } from 'react';
 import './Card.css';
 
-const Card = memo(({ 
-  title, 
-  children, 
+const Card = memo(({
+  title,
+  children,
   className = '',
   footer,
   onClick,
@@ -14,7 +14,7 @@ const Card = memo(({
   headerAction
 }) => {
   return (
-    <article 
+    <article
       className={`card ${isClickable ? 'card-clickable' : ''} ${className}`}
       onClick={onClick}
       role={isClickable ? 'button' : 'article'}
@@ -50,11 +50,11 @@ const Card = memo(({
           )}
         </header>
       )}
-      
+
       <section className="card-body">
         {children}
       </section>
-      
+
       {footer && (
         <footer className="card-footer">
           {footer}
