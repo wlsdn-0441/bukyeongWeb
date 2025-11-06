@@ -3,8 +3,21 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/', // 기본값, 서브 경로 배포 시 변경 필요
-   css: {
+  base: '/',
+  css: {
     postcss: './postcss.config.js',
   },
+  assetsInclude: ['**/*.html'],
+  server: {
+    fs: {
+      strict: false
+    },
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        secure: false
+      }
+    }
+  }
 })
