@@ -7,7 +7,16 @@ export default defineConfig({
   css: {
     postcss: './postcss.config.js',
   },
-  assetsInclude: ['**/*.html'],
+  build: {
+    outDir: 'dist',
+    emptyOutDir: true,
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: undefined
+      }
+    }
+  },
   server: {
     fs: {
       strict: false
