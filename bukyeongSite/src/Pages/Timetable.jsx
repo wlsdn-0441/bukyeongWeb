@@ -1,34 +1,61 @@
 // src/Pages/Timetable.jsx
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from '../components/common/Card';
+import { getWeekTimetable } from '../services/timetableService';
 import './Timetable.css';
 
-const Timetable = () => {
+const Timetable = ({ grade = "2", classNum = "6" }) => {
   const navigate = useNavigate();
+  const [weekTimetables, setWeekTimetables] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const weekSchedule = {
-    monday: [
-      { time: '09:00 - 10:00', subject: '수학', teacher: '김선생님', room: '201' },
-      { time: '10:00 - 11:00', subject: '영어', teacher: '이선생님', room: '202' },
-      { time: '11:00 - 12:00', subject: '과학', teacher: '박선생님', room: '실험실' },
-      { time: '13:00 - 14:00', subject: '체육', teacher: '최선생님', room: '운동장' },
-    ],
-    tuesday: [
-      { time: '09:00 - 10:00', subject: '국어', teacher: '정선생님', room: '201' },
-      { time: '10:00 - 11:00', subject: '수학', teacher: '김선생님', room: '201' },
-      { time: '11:00 - 12:00', subject: '음악', teacher: '송선생님', room: '음악실' },
-      { time: '13:00 - 14:00', subject: '미술', teacher: '강선생님', room: '미술실' },
-    ],
-    // ... 나머지 요일
-  };
+  useEffect(() => {
+    const loadWeekTimetables = async () => {
+      try {
+        setLoading(true);
+        const data = await getWeekTimetable(grade, classNum);
+        setWeekTimetables(data);
+        setError(null);
+      } catch (err) {
+        console.error('시간표 데이터 로딩 실패:', err);
+        setError('시간표 정보를 불러오는데 실패했습니다.');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const days = [
-    { key: 'monday', label: '월요일' },
-    { key: 'tuesday', label: '화요일' },
-    { key: 'wednesday', label: '수요일' },
-    { key: 'thursday', label: '목요일' },
-    { key: 'friday', label: '금요일' },
-  ];
+    loadWeekTimetables();
+  }, [grade, classNum]);
+
+  if (loading) {
+    return (
+      <div className="timetable-page">
+        <button
+          onClick={() => navigate('/')}
+          className="timetable-back-button"
+        >
+          ← 홈으로 돌아가기
+        </button>
+        <div className="timetable-loading">시간표 정보를 불러오는 중...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="timetable-page">
+        <button
+          onClick={() => navigate('/')}
+          className="timetable-back-button"
+        >
+          ← 홈으로 돌아가기
+        </button>
+        <div className="timetable-error">{error}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="timetable-page">
@@ -42,34 +69,36 @@ const Timetable = () => {
       <h1 className="timetable-page-title">
         이번 주 시간표
       </h1>
+      <p className="timetable-page-subtitle">
+        {grade}학년 {classNum}반
+      </p>
 
       <div className="timetable-cards-container">
-        {days.map((day) => (
-          <Card key={day.key} title={day.label}>
-            <div className="timetable-schedule">
-              {weekSchedule[day.key]?.map((item, index) => (
-                <div
-                  key={index}
-                  className="timetable-schedule-item"
-                >
-                  <div className="timetable-schedule-left">
-                    <p className="timetable-schedule-subject">
-                      {item.subject}
-                    </p>
-                    <p className="timetable-schedule-time">
-                      {item.time}
-                    </p>
-                  </div>
-                  <div className="timetable-schedule-right">
-                    <span className="timetable-schedule-teacher">
-                      {item.teacher}
-                    </span>
-                    <p className="timetable-schedule-room">
-                      {item.room}
-                    </p>
-                  </div>
+        {weekTimetables.map((daySchedule, index) => (
+          <Card
+            key={index}
+            title={`${daySchedule.day} (${daySchedule.date})`}
+          >
+            <div className="timetable-card-content">
+              {daySchedule.timetable.length > 0 ? (
+                <ul className="timetable-schedule-list">
+                  {daySchedule.timetable.map((item, idx) => (
+                    <li key={idx} className="timetable-schedule-item">
+                      <span className="timetable-schedule-period">
+                        {item.period}교시
+                      </span>
+                      <span className="timetable-schedule-subject">
+                        {item.subject}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <div className="timetable-empty">
+                  <p>시간표 정보 없음</p>
+                  <p className="timetable-empty-hint">(주말 또는 공휴일)</p>
                 </div>
-              ))}
+              )}
             </div>
           </Card>
         ))}
