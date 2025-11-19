@@ -1,11 +1,11 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { ThemeToggle } from "../common/ThemeContext";
-import  Header from "../common/Header";
+import  DraggableFloatingNav from "../common/DraggableFloatingNav";
 //루트 레이아웃 컴포넌트 맨위에 뜨는 네비게이션 바 구현 가능파트
 export default function RootLayout() {
     return (
         <div className="">
-            <Header />
+            <DraggableFloatingNav />
             <main>
                 <Outlet />  {/* 여기에 각 페이지가 렌더링됨 */}
             </main>
