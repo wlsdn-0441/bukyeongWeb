@@ -239,6 +239,7 @@
   -webkit-user-select: none;
   user-select: none;
   text-shadow: none;
+  text-decoration: none; /* 밑줄 제거 */
   outline: none;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
@@ -272,6 +273,7 @@
 .nav-item-text {
   display: block;
   color: inherit;
+  text-decoration: none; /* 밑줄 제거 */
 }
 
 .nav-item:focus,
@@ -282,10 +284,12 @@
 .nav-item.active {
   color: #ff3b30 !important; /* 활성 상태는 항상 빨간색 */
   text-shadow: none;
+  text-decoration: none; /* 밑줄 제거 */
 }
 
 .nav-item:not(.active):hover {
   text-shadow: none;
+  text-decoration: none; /* 밑줄 제거 */
   transform: none;
 }
 
