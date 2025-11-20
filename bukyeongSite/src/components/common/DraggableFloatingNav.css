@@ -255,10 +255,10 @@
 
 /* 저사양 기기 최적화: 블러 효과 감소 */
 @media (max-width: 768px) {
+ /*
   .floating-indicator::before {
     /* backdrop-filter: blur(8px) saturate(130%); */
-    /* -webkit-backdrop-filter: blur(8px) saturate(130%); */
-  }
+    /* -webkit-backdrop-filter: blur(8px) saturate(130%); }*/
 
   .floating-indicator::after {
     backdrop-filter: blur(12px) saturate(140%);
@@ -419,8 +419,8 @@
   background: transparent;
   border: none;
   border-radius: 40px;
-  /* 라이트모드 기본 블랙 컬러 */
-  color: #000 !important;
+  /* 기본 색상 (fallback) */
+  color: #000;
   font-size: 15px;
   font-weight: 500;
   cursor: pointer;
@@ -487,8 +487,7 @@
 }
 
 .nav-item:not(.active):hover {
-  /* 라이트모드 호버 시 블랙 유지 */
-  color: #000 !important;
+  color: #000; /* fallback */
   text-shadow: none;
   transform: none;
 }
@@ -540,7 +539,35 @@
   }
 }
 
-/* 다크모드 지원 - 폰트 색상만 변경 */
+/* 라이트모드 - 폰트 색상 */
+@media (prefers-color-scheme: light) {
+  .nav-item {
+    /* 라이트모드 기본 블랙 컬러 */
+    color: #000 !important;
+  }
+
+  .nav-item:not(.active):hover {
+    /* 호버 시 블랙 유지 */
+    color: #000 !important;
+  }
+
+  /* 라이트모드에서도 네비게이션 바 위치 고정 유지 */
+  .draggable-nav-wrapper {
+    position: fixed !important;
+    bottom: 20px !important;
+  }
+}
+
+/* 모바일 라이트모드 조합 */
+@media (max-width: 768px) and (prefers-color-scheme: light) {
+  .draggable-nav-wrapper {
+    position: fixed !important;
+    bottom: 10px !important;
+    width: 94% !important;
+  }
+}
+
+/* 다크모드 - 폰트 색상만 변경 */
 @media (prefers-color-scheme: dark) {
   .nav-item {
     /* 다크모드 기본 화이트 컬러 */
@@ -550,5 +577,45 @@
   .nav-item:not(.active):hover {
     /* 호버 시 화이트 유지 */
     color: #fff !important;
+  }
+
+  /* 다크모드에서도 네비게이션 바 위치 고정 유지 */
+  .draggable-nav-wrapper {
+    position: fixed !important;
+    bottom: 20px !important;
+  }
+}
+
+/* 모바일 다크모드 조합 */
+@media (max-width: 768px) and (prefers-color-scheme: dark) {
+  .draggable-nav-wrapper {
+    position: fixed !important;
+    bottom: 10px !important;
+    width: 94% !important;
+  }
+}
+
+/* 기본값 (prefers-color-scheme를 지원하지 않는 브라우저용) */
+@media (prefers-color-scheme: no-preference) {
+  .nav-item {
+    color: #000 !important;
+  }
+
+  .nav-item:not(.active):hover {
+    color: #000 !important;
+  }
+
+  .draggable-nav-wrapper {
+    position: fixed !important;
+    bottom: 20px !important;
+  }
+}
+
+/* 모바일 기본값 조합 */
+@media (max-width: 768px) and (prefers-color-scheme: no-preference) {
+  .draggable-nav-wrapper {
+    position: fixed !important;
+    bottom: 10px !important;
+    width: 94% !important;
   }
 }

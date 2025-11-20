@@ -1,4 +1,37 @@
 /* index.css - 개선된 버전 */
+/* 기본 라이트모드 변수 */
+:root {
+  --bg-color: #ffffff;
+  --text-color: #000000;
+  --card-bg: #ffffff;
+  --card-border: #e0e0e0;
+  --card-shadow: rgba(0, 0, 0, 0.1);
+  --card-hover-shadow: rgba(0, 0, 0, 0.15);
+  --button-bg: #007bff;
+  --button-text: #ffffff;
+  --button-hover-bg: #0056b3;
+  --transition-speed: 0.15s;
+  --focus-outline: #007bff;
+}
+
+/* 시스템 다크모드 자동 감지 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #1a1a1a;
+    --text-color: #ffffff;
+    --card-bg: #2d2d2d;
+    --card-border: #404040;
+    --card-shadow: rgba(0, 0, 0, 0.3);
+    --card-hover-shadow: rgba(0, 0, 0, 0.5);
+    --button-bg: #0056b3;
+    --button-text: #ffffff;
+    --button-hover-bg: #007bff;
+    --transition-speed: 0.15s;
+    --focus-outline: #4da3ff;
+  }
+}
+
+/* 수동 테마 설정 (ThemeToggle 사용 시 우선 적용) */
 :root[data-theme="light"] {
   --bg-color: #ffffff;
   --text-color: #000000;
