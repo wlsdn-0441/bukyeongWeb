@@ -1,4 +1,8 @@
-/* DraggableFloatingNav.css */
+/* DraggableFloatingNav.css - 재구성 버전 */
+
+/* ==============================================
+   네비게이션 래퍼 - 화면 고정 (테마 무관)
+   ============================================== */
 .draggable-nav-wrapper {
   position: fixed !important;
   bottom: 20px !important;
@@ -6,27 +10,24 @@
   right: 0 !important;
   margin: 0 auto !important;
   z-index: 9999 !important;
-  /* 화면의 92%를 차지 (좌우 각 4% 여백) */
-  width: 92% !important;
-  max-width: 1200px !important; /* 최대 너비 제한 */
+  width: 92%;
+  max-width: 1200px;
   pointer-events: auto !important;
 }
 
+/* ==============================================
+   네비게이션 바 기본 스타일
+   ============================================== */
 .draggable-floating-nav {
-  /* 완전히 투명한 배경 */
   background: transparent;
-  /* 약한 블러 효과 (1px) - 네비게이션 바 전체에 적용 */
   backdrop-filter: blur(1px);
   -webkit-backdrop-filter: blur(1px);
   border-radius: 50px;
-  /* 네비게이션 바 내부 여백 축소 */
   padding: 6px;
-  /* 유리 느낌의 그림자 */
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.1),
     0 1px 2px rgba(0, 0, 0, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  /* 반투명한 밝은 테두리로 유리 가장자리 표현 */
   border: 1px solid rgba(255, 255, 255, 0.3);
   position: relative;
   overflow: visible;
@@ -53,13 +54,11 @@
   z-index: -1;
 }
 
-/* 애플 리퀴드 글래스 번지는 효과 - 가장자리 블러 레이어 (블러 제거됨) */
 .draggable-floating-nav::after {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: 50px;
-  /* 가장자리 색상 그라데이션 */
   background: radial-gradient(
     ellipse 100% 100% at center,
     transparent 0%,
@@ -68,10 +67,6 @@
     rgba(255, 255, 255, 0.08) 80%,
     rgba(255, 255, 255, 0.15) 100%
   );
-  /* 가장자리 블러 제거 */
-  /* backdrop-filter: blur(20px) saturate(150%); */
-  /* -webkit-backdrop-filter: blur(20px) saturate(150%); */
-  /* mask: 중심은 투명(블러 안 보임), 가장자리는 블러 보임 */
   mask: radial-gradient(
     ellipse 100% 100% at center,
     transparent 0%,
@@ -96,19 +91,16 @@
   gap: 4px;
   overflow: visible;
   width: 100%;
-  z-index: 2; /* ::after 레이어 위에 표시 */
+  z-index: 2;
 }
 
 /* ==============================================
-   플로팅 인디케이터 (Floating Indicator)
-   - 선택된 항목을 강조하는 배경
-   - 드래그 가능하며 스프링 효과 적용
+   플로팅 인디케이터
    ============================================== */
 .floating-indicator {
   position: absolute;
   top: 0;
   height: 100%;
-  /* 매우 투명한 유리 느낌 - 뒷배경이 거의 그대로 보이도록 */
   background: rgba(255, 255, 255, 0.02);
   border-radius: 40px;
   z-index: 10;
@@ -119,9 +111,7 @@
   touch-action: none;
   -webkit-user-select: none;
   user-select: none;
-  /* 스프링 효과를 위한 부드러운 transition */
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  /* 매우 약한 그림자 */
   box-shadow:
     0 4px 16px rgba(0, 0, 0, 0.1),
     0 1px 3px rgba(0, 0, 0, 0.05),
@@ -131,58 +121,29 @@
   will-change: transform;
 }
 
-/* ==============================================
-   출렁임 애니메이션 (Liquid Animation)
-   - 액체처럼 부드럽게 출렁이는 효과
-   - 스프링이 아닌 물결 같은 유동적인 움직임
-   ============================================== */
 .floating-indicator.wobbling {
   animation: liquidWave 1.2s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 @keyframes liquidWave {
-  0% {
-    transform: translateY(0) scaleX(1) scaleY(1);
-  }
-  10% {
-    transform: translateY(-1px) scaleX(1.015) scaleY(0.99);
-  }
-  25% {
-    transform: translateY(0.5px) scaleX(0.99) scaleY(1.01);
-  }
-  40% {
-    transform: translateY(-0.3px) scaleX(1.008) scaleY(0.995);
-  }
-  55% {
-    transform: translateY(0.2px) scaleX(0.995) scaleY(1.005);
-  }
-  70% {
-    transform: translateY(-0.1px) scaleX(1.003) scaleY(0.998);
-  }
-  85% {
-    transform: translateY(0.05px) scaleX(0.998) scaleY(1.002);
-  }
-  100% {
-    transform: translateY(0) scaleX(1) scaleY(1);
-  }
+  0% { transform: translateY(0) scaleX(1) scaleY(1); }
+  10% { transform: translateY(-1px) scaleX(1.015) scaleY(0.99); }
+  25% { transform: translateY(0.5px) scaleX(0.99) scaleY(1.01); }
+  40% { transform: translateY(-0.3px) scaleX(1.008) scaleY(0.995); }
+  55% { transform: translateY(0.2px) scaleX(0.995) scaleY(1.005); }
+  70% { transform: translateY(-0.1px) scaleX(1.003) scaleY(0.998); }
+  85% { transform: translateY(0.05px) scaleX(0.998) scaleY(1.002); }
+  100% { transform: translateY(0) scaleX(1) scaleY(1); }
 }
 
-/* ==============================================
-   드래그 중 효과 (Dragging Effect)
-   - 마우스/터치를 즉각 반응으로 따라감 (transition 없음)
-   - 커서 변경 및 그림자 강화
-   ============================================== */
 .floating-indicator.dragging {
   cursor: grabbing;
   z-index: 100;
-  /* 드래그 중 살짝 떠오르는 효과 */
   transform: translateY(-1.5px) scale(1.02);
-  /* 투명한 배경에서도 돋보이는 그림자 */
   box-shadow:
     0 8px 24px rgba(0, 0, 0, 0.2),
     0 2px 8px rgba(0, 0, 0, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  /* 드래그 중 약간 더 불투명하게 */
   background: rgba(255, 255, 255, 0.04);
 }
 
@@ -191,9 +152,6 @@
   position: absolute;
   inset: 0;
   border-radius: 40px;
-  /* 블러 제거 */
-  /* backdrop-filter: blur(15px) saturate(150%); */
-  /* -webkit-backdrop-filter: blur(15px) saturate(150%); */
   -webkit-mask: radial-gradient(
     ellipse at center,
     transparent 10%,
@@ -216,13 +174,11 @@
   z-index: 1;
 }
 
-/* 인디케이터 가장자리 리퀴드 글래스 효과 */
 .floating-indicator::after {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: 40px;
-  /* 가장자리 색상 그라데이션 */
   background: radial-gradient(
     ellipse 100% 100% at center,
     transparent 0%,
@@ -231,10 +187,8 @@
     rgba(255, 255, 255, 0.1) 75%,
     rgba(255, 255, 255, 0.18) 100%
   );
-  /* 가장자리에 약한 블러 적용 */
   backdrop-filter: blur(18px) saturate(160%);
   -webkit-backdrop-filter: blur(18px) saturate(160%);
-  /* mask: 중심은 투명(블러 안 보임), 가장자리는 블러 보임 */
   mask: radial-gradient(
     ellipse 100% 100% at center,
     transparent 0%,
@@ -253,150 +207,6 @@
   z-index: 2;
 }
 
-/* 저사양 기기 최적화: 블러 효과 감소 */
-@media (max-width: 768px) {
- /*
-  .floating-indicator::before {
-    /* backdrop-filter: blur(8px) saturate(130%); */
-    /* -webkit-backdrop-filter: blur(8px) saturate(130%); }*/
-
-  .floating-indicator::after {
-    backdrop-filter: blur(12px) saturate(140%);
-    -webkit-backdrop-filter: blur(12px) saturate(140%);
-  }
-}
-
-
-/* 드래그 핸들 */
-.drag-handle {
-  position: relative;
-  z-index: 10;
-  display: none;
-  gap: 4px;
-  padding: 8px;
-  pointer-events: none;
-}
-
-.handle-dot {
-  width: 4px;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: 50%;
-}
-
-/* 리퀴드 글래스 효과 (파란색 번지는 효과 제거) */
-.liquid-layer {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 40px;
-  opacity: 0.7;
-  mix-blend-mode: overlay;
-  pointer-events: none;
-  will-change: transform, opacity;
-  /* 파란색 번지는 효과 숨김 */
-  display: none;
-}
-
-.liquid-layer-1 {
-  background: radial-gradient(
-    circle at 20% 50%,
-    rgba(147, 197, 253, 0.5) 0%,
-    transparent 50%
-  );
-  animation: liquidFlow1 4s ease-in-out infinite;
-}
-
-.liquid-layer-2 {
-  background: radial-gradient(
-    circle at 80% 50%,
-    rgba(96, 165, 250, 0.4) 0%,
-    transparent 50%
-  );
-  animation: liquidFlow2 5s ease-in-out infinite;
-}
-
-@keyframes liquidFlow1 {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
-    opacity: 0.4;
-  }
-  50% {
-    transform: translate(10%, -5%) scale(1.1);
-    opacity: 0.6;
-  }
-}
-
-@keyframes liquidFlow2 {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
-    opacity: 0.3;
-  }
-  50% {
-    transform: translate(-10%, 5%) scale(1.15);
-    opacity: 0.5;
-  }
-}
-
-/* 모바일에서 리퀴드 애니메이션 비활성화 */
-@media (max-width: 768px) {
-  .liquid-layer {
-    display: none;
-  }
-}
-
-/* 애니메이션 감소 모드 */
-@media (prefers-reduced-motion: reduce) {
-  .liquid-layer {
-    animation: none;
-    opacity: 0.3;
-  }
-
-  .floating-indicator {
-    transition: left 0.3s ease, width 0.3s ease !important;
-  }
-
-  .floating-indicator.wobbling {
-    animation: none;
-  }
-
-  .nav-item-logo {
-    transition: none;
-  }
-}
-
-/* 모바일에서 액체 애니메이션 최적화 */
-@media (max-width: 768px) {
-  @keyframes liquidWave {
-    0% {
-      transform: translateY(0) scaleX(1) scaleY(1);
-    }
-    15% {
-      transform: translateY(-0.8px) scaleX(1.01) scaleY(0.995);
-    }
-    35% {
-      transform: translateY(0.4px) scaleX(0.995) scaleY(1.008);
-    }
-    55% {
-      transform: translateY(-0.2px) scaleX(1.005) scaleY(0.998);
-    }
-    75% {
-      transform: translateY(0.1px) scaleX(0.998) scaleY(1.003);
-    }
-    100% {
-      transform: translateY(0) scaleX(1) scaleY(1);
-    }
-  }
-
-  .floating-indicator.wobbling {
-    animation: liquidWave 1s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
-  .floating-indicator.dragging {
-    transform: translateY(-1px) scale(1.015);
-  }
-}
-
 /* 드래그 중 오버레이 */
 .drag-overlay {
   position: fixed;
@@ -408,19 +218,19 @@
   cursor: grabbing;
 }
 
-/* 네비게이션 항목 */
+/* ==============================================
+   네비게이션 항목 - 기본 스타일
+   ============================================== */
 .nav-item {
   position: relative;
   z-index: 5;
   flex: 1;
   min-width: 0;
-  /* 네비게이션 크기 축소 (상하 더 축소) */
   padding: 20px 16px 16px;
   background: transparent;
   border: none;
   border-radius: 40px;
-  /* 기본 색상 (fallback) */
-  color: #000;
+  color: #000; /* 기본 라이트모드 색상 */
   font-size: 15px;
   font-weight: 500;
   cursor: pointer;
@@ -428,11 +238,9 @@
   white-space: nowrap;
   -webkit-user-select: none;
   user-select: none;
-  /* 텍스트 그림자 제거 */
   text-shadow: none;
   outline: none;
   -webkit-tap-highlight-color: transparent;
-  /* 더블클릭 방지 */
   touch-action: manipulation;
 }
 
@@ -440,12 +248,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* 아이콘-텍스트 간격 축소 */
   gap: 3px;
 }
 
 .nav-item-logo {
-  /* SVG 아이콘 크기 축소 */
   width: 20px;
   height: 20px;
   display: flex;
@@ -453,74 +259,65 @@
   justify-content: center;
   transition: all 0.05s ease;
   will-change: transform, opacity;
-  /* 부모의 color를 확실히 상속 */
   color: inherit;
 }
 
 .nav-item-logo svg {
   width: 100%;
   height: 100%;
-  /* currentColor로 부모의 color 상속받아 라이트/다크 모드 자동 대응 */
   stroke: currentColor;
-  /* fill을 명시적으로 none으로 설정하여 stroke만 보이도록 */
   fill: none;
 }
 
 .nav-item-text {
   display: block;
-  /* 부모의 color를 확실히 상속 */
   color: inherit;
 }
 
-.nav-item:focus {
-  outline: none;
-}
-
+.nav-item:focus,
 .nav-item:active {
   outline: none;
 }
 
 .nav-item.active {
-  /* 인디케이터가 올라가면 빨간색으로 변경 (볼드 제거) */
-  color: #ff3b30 !important;
+  color: #ff3b30 !important; /* 활성 상태는 항상 빨간색 */
   text-shadow: none;
 }
 
 .nav-item:not(.active):hover {
-  color: #000; /* fallback */
   text-shadow: none;
   transform: none;
 }
 
-/* 태블릿 사이즈 */
+/* ==============================================
+   반응형 - 화면 크기만 기준 (테마 무관)
+   ============================================== */
+
+/* 태블릿 */
 @media (max-width: 1024px) {
   .draggable-nav-wrapper {
     width: 90%;
   }
 }
 
-/* 모바일 최적화 */
+/* 모바일 */
 @media (max-width: 768px) {
   .draggable-nav-wrapper {
-    bottom: 10px;
-    /* 모바일에서 화면의 94%를 차지 (좌우 각 3% 여백) */
+    bottom: 10px !important;
     width: 94%;
   }
 
   .draggable-floating-nav {
-    /* 모바일 내부 여백 축소 */
     padding: 5px;
     border-radius: 40px;
   }
 
   .nav-item {
-    /* 모바일 네비게이션 크기 축소 (상하 더 축소) */
     padding: 16px 12px 12px;
     font-size: 14px;
   }
 
   .nav-item-logo {
-    /* 모바일에서 SVG 아이콘 크기 조정 */
     width: 18px;
     height: 18px;
   }
@@ -533,89 +330,85 @@
     border-radius: 35px;
   }
 
-  .handle-dot {
-    width: 3px;
-    height: 3px;
+  .floating-indicator::after {
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+  }
+
+  .floating-indicator.dragging {
+    transform: translateY(-1px) scale(1.015);
+  }
+
+  .floating-indicator.wobbling {
+    animation: liquidWaveMobile 1s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  @keyframes liquidWaveMobile {
+    0% { transform: translateY(0) scaleX(1) scaleY(1); }
+    15% { transform: translateY(-0.8px) scaleX(1.01) scaleY(0.995); }
+    35% { transform: translateY(0.4px) scaleX(0.995) scaleY(1.008); }
+    55% { transform: translateY(-0.2px) scaleX(1.005) scaleY(0.998); }
+    75% { transform: translateY(0.1px) scaleX(0.998) scaleY(1.003); }
+    100% { transform: translateY(0) scaleX(1) scaleY(1); }
   }
 }
 
-/* 라이트모드 - 폰트 색상 */
-@media (prefers-color-scheme: light) {
-  .nav-item {
-    /* 라이트모드 기본 블랙 컬러 */
-    color: #000 !important;
-  }
+/* ==============================================
+   테마별 색상 설정
+   ============================================== */
 
-  .nav-item:not(.active):hover {
-    /* 호버 시 블랙 유지 */
-    color: #000 !important;
-  }
-
-  /* 라이트모드에서도 네비게이션 바 위치 고정 유지 */
-  .draggable-nav-wrapper {
-    position: fixed !important;
-    bottom: 20px !important;
-  }
-}
-
-/* 모바일 라이트모드 조합 */
-@media (max-width: 768px) and (prefers-color-scheme: light) {
-  .draggable-nav-wrapper {
-    position: fixed !important;
-    bottom: 10px !important;
-    width: 94% !important;
-  }
-}
-
-/* 다크모드 - 폰트 색상만 변경 */
+/* 시스템 다크모드 감지 */
 @media (prefers-color-scheme: dark) {
   .nav-item {
-    /* 다크모드 기본 화이트 컬러 */
-    color: #fff !important;
+    color: #fff;
   }
-
   .nav-item:not(.active):hover {
-    /* 호버 시 화이트 유지 */
-    color: #fff !important;
-  }
-
-  /* 다크모드에서도 네비게이션 바 위치 고정 유지 */
-  .draggable-nav-wrapper {
-    position: fixed !important;
-    bottom: 20px !important;
+    color: #fff;
   }
 }
 
-/* 모바일 다크모드 조합 */
-@media (max-width: 768px) and (prefers-color-scheme: dark) {
-  .draggable-nav-wrapper {
-    position: fixed !important;
-    bottom: 10px !important;
-    width: 94% !important;
-  }
-}
-
-/* 기본값 (prefers-color-scheme를 지원하지 않는 브라우저용) */
-@media (prefers-color-scheme: no-preference) {
+/* 시스템 라이트모드 감지 */
+@media (prefers-color-scheme: light) {
   .nav-item {
-    color: #000 !important;
+    color: #000;
   }
-
   .nav-item:not(.active):hover {
-    color: #000 !important;
-  }
-
-  .draggable-nav-wrapper {
-    position: fixed !important;
-    bottom: 20px !important;
+    color: #000;
   }
 }
 
-/* 모바일 기본값 조합 */
-@media (max-width: 768px) and (prefers-color-scheme: no-preference) {
-  .draggable-nav-wrapper {
-    position: fixed !important;
-    bottom: 10px !important;
-    width: 94% !important;
+/* 수동 테마 설정 (data-theme 속성 사용 시 우선 적용) */
+:root[data-theme="dark"] .nav-item {
+  color: #fff !important;
+}
+
+:root[data-theme="dark"] .nav-item:not(.active):hover {
+  color: #fff !important;
+}
+
+:root[data-theme="light"] .nav-item {
+  color: #000 !important;
+}
+
+:root[data-theme="light"] .nav-item:not(.active):hover {
+  color: #000 !important;
+}
+
+/* ==============================================
+   접근성 및 최적화
+   ============================================== */
+
+/* 애니메이션 감소 모드 */
+@media (prefers-reduced-motion: reduce) {
+  .floating-indicator {
+    transition: left 0.3s ease, width 0.3s ease !important;
+  }
+
+  .floating-indicator.wobbling {
+    animation: none;
+  }
+
+  .nav-item-logo {
+    transition: none;
   }
 }

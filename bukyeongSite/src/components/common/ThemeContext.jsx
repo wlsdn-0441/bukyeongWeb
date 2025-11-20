@@ -1,8 +1,5 @@
 import { useState, useEffect } from "react";
-
-// 카드 및 다른 ui개발후 다크모드 라이트모드 구현 (뒤로 미룸)
-// APP.jsx 파일을 APP.css파일로 모두다 꾸며서 변경함
-// 직접적으로 아예 바꿈
+import "./ThemeContext.css";
 
 function ThemeToggle() {
   // ✅ 1. 초기 테마 설정: localStorage → OS 설정 → 기본값(light)
