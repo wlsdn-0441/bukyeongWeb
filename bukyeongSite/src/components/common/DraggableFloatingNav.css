@@ -2,12 +2,14 @@
 .draggable-nav-wrapper {
   position: fixed;
   bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1000;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  z-index: 9999;
   /* 화면의 92%를 차지 (좌우 각 4% 여백) */
   width: 92%;
   max-width: 1200px; /* 최대 너비 제한 */
+  pointer-events: auto;
 }
 
 .draggable-floating-nav {
