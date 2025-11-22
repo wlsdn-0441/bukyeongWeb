@@ -307,7 +307,12 @@
 /* 모바일 */
 @media (max-width: 768px) {
   .draggable-nav-wrapper {
+    position: fixed !important;
     bottom: 10px !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin: 0 auto !important;
+    z-index: 9999 !important;
     width: 94%;
   }
 
