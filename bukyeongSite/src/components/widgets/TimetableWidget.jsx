@@ -1,30 +1,35 @@
 // src/components/widgets/TimetableWidget.jsx
-import { memo, useState, useEffect } from 'react';
+import { memo } from 'react';
+import { useQuery } from '@tanstack/react-query'; // React Query 훅 import
 import { getTodayTimetable } from '../../services/timetableService';
 import './TimetableWidget.css';
 
 const TimetableWidget = memo(({ grade = "2", classNum = "6" }) => {
-  const [todayTimetable, setTodayTimetable] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  // ============================================
+  // React Query를 사용한 시간표 데이터 캐싱
+  // ============================================
+  // useQuery: 서버 데이터를 가져오고 자동으로 캐싱하는 훅
+  // - 장점 1: 홈에서 불러온 시간표를 Timetable 페이지에서 재사용 가능
+  // - 장점 2: 학년/반이 바뀌면 자동으로 새 데이터 요청 (queryKey 변경 감지)
+  // - 장점 3: 중복 요청 자동 제거
+  const {
+    data: todayTimetable,    // 서버에서 받아온 시간표 데이터
+    isLoading: loading,      // 로딩 중 여부 (true/false)
+    error,                   // 에러 객체 (에러 발생 시)
+  } = useQuery({
+    // queryKey: 캐시를 식별하는 고유 키
+    // ['timetable', 'today', grade, classNum] → "특정 학년/반의 오늘 시간표" 식별
+    // grade나 classNum이 바뀌면 자동으로 새로운 데이터 요청
+    // 예: ['timetable', 'today', '2', '6'] → 2학년 6반 오늘 시간표
+    queryKey: ['timetable', 'today', grade, classNum],
 
-  useEffect(() => {
-    const loadTodayTimetable = async () => {
-      try {
-        setLoading(true);
-        const data = await getTodayTimetable(grade, classNum);
-        setTodayTimetable(data);
-        setError(null);
-      } catch (err) {
-        console.error('시간표 데이터 로딩 실패:', err);
-        setError('시간표 정보를 불러오는데 실패했습니다.');
-      } finally {
-        setLoading(false);
-      }
-    };
+    // queryFn: 실제 데이터를 가져오는 함수
+    // getTodayTimetable(grade, classNum)를 호출하여 오늘 시간표 fetch
+    queryFn: () => getTodayTimetable(grade, classNum),
 
-    loadTodayTimetable();
-  }, [grade, classNum]);
+    // staleTime: 시간표는 하루 단위로 변경되므로 5분간 캐시 유지
+    staleTime: 1000 * 60 * 5, // 5분
+  });
 
   if (loading) {
     return (

@@ -1,30 +1,35 @@
 // src/components/widgets/MealWidget.jsx
-import { memo, useState, useEffect } from 'react';
+import { memo } from 'react';
+import { useQuery } from '@tanstack/react-query'; // React Query 훅 import
 import { getTodayMealData } from '../../services/mealService';
 import './MealWidget.css';
 
 const MealWidget = memo(() => {
-  const [todayMeal, setTodayMeal] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  // ============================================
+  // React Query를 사용한 데이터 캐싱
+  // ============================================
+  // useQuery: 서버 데이터를 가져오고 자동으로 캐싱하는 훅
+  // - 장점 1: 홈에서 불러온 데이터를 Meal 페이지에서 재사용 가능
+  // - 장점 2: 로딩/에러 상태 자동 관리
+  // - 장점 3: 중복 요청 자동 제거 (같은 queryKey면 한 번만 요청)
+  const {
+    data: todayMeal,     // 서버에서 받아온 급식 데이터
+    isLoading: loading,  // 로딩 중 여부 (true/false)
+    error,               // 에러 객체 (에러 발생 시)
+  } = useQuery({
+    // queryKey: 캐시를 식별하는 고유 키
+    // ['meal', 'today'] → "오늘의 급식" 데이터를 식별
+    // 다른 컴포넌트(Meal.jsx)에서 같은 날짜 요청 시 캐시 재사용
+    queryKey: ['meal', 'today'],
 
-  useEffect(() => {
-    const loadTodayMeal = async () => {
-      try {
-        setLoading(true);
-        const data = await getTodayMealData();
-        setTodayMeal(data);
-        setError(null);
-      } catch (err) {
-        console.error('급식 데이터 로딩 실패:', err);
-        setError('급식 정보를 불러오는데 실패했습니다.');
-      } finally {
-        setLoading(false);
-      }
-    };
+    // queryFn: 실제 데이터를 가져오는 함수
+    // getTodayMealData()를 호출하여 오늘 급식 정보 fetch
+    queryFn: getTodayMealData,
 
-    loadTodayMeal();
-  }, []);
+    // staleTime: 이 쿼리만의 커스텀 설정 (App.jsx의 기본값 override)
+    // 급식은 하루 단위로 변경되므로 5분간 캐시 유지
+    staleTime: 1000 * 60 * 5, // 5분
+  });
 
   if (loading) {
     return (
