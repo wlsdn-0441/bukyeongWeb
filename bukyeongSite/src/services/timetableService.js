@@ -1,5 +1,17 @@
 // src/services/timetableService.js
 
+// 날짜 유틸리티 함수 import
+// - getNextSchoolDay: 다음 학교일 계산 (주말/19시 이후 처리)
+// - getKoreanTime: 한국 시간(UTC+9) 반환
+// - formatDateToYYYYMMDD: 날짜를 YYYYMMDD 형식으로 변환
+// - getDayName: 요일 이름 반환
+import {
+  getNextSchoolDay,
+  getKoreanTime,
+  formatDateToYYYYMMDD,
+  getDayName
+} from './dateUtils';
+
 /**
  * 시간표 데이터를 서버리스 함수에서 가져오는 함수
  * @param {string} date - YYYYMMDD 형식의 날짜 문자열
@@ -57,26 +69,29 @@ export const parseTimetable = (timetableArray) => {
 };
 
 /**
- * 날짜를 YYYYMMDD 형식으로 변환
- * @param {Date} date - Date 객체
- * @returns {string} YYYYMMDD 형식의 날짜 문자열
- */
-export const formatDateToYYYYMMDD = (date) => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}${month}${day}`;
-};
-
-/**
- * 오늘 날짜의 시간표 정보를 가져오는 함수
+ * ============================================
+ * "다음 학교일"의 시간표 정보를 가져오는 함수
+ * ============================================
+ *
+ * 함수명은 getTodayTimetable이지만, 실제로는 "다음 학교일"의 시간표를 반환
+ *
+ * 동작 방식:
+ * - 평일 19시 이전: 오늘 시간표
+ * - 평일 19시 이후: 다음 학교일 시간표 (금요일이면 월요일)
+ * - 주말: 다음 주 월요일 시간표
+ *
+ * React Query 캐싱과 연계:
+ * - 반환된 dateStr을 React Query의 queryKey에 포함시켜야 함
+ * - 날짜가 바뀌면 자동으로 새 캐시 생성
+ *
  * @param {string} grade - 학년 (기본값: "2")
  * @param {string} classNum - 반 (기본값: "6")
- * @returns {Promise<Object>} 오늘의 시간표 정보
+ * @returns {Promise<Object>} 다음 학교일의 시간표 정보 + dateStr 포함
  */
 export const getTodayTimetable = async (grade = "2", classNum = "6") => {
-  const today = new Date();
-  const dateStr = formatDateToYYYYMMDD(today);
+  // getNextSchoolDay(): 주말/19시 이후 로직을 적용한 "다음 학교일" 반환
+  const schoolDay = getNextSchoolDay();
+  const dateStr = formatDateToYYYYMMDD(schoolDay);
 
   try {
     const data = await fetchTimetableData(dateStr, grade, classNum);
@@ -84,17 +99,17 @@ export const getTodayTimetable = async (grade = "2", classNum = "6") => {
 
     return {
       date: dateStr,
-      day: getDayName(today),
+      day: getDayName(schoolDay), // schoolDay 사용 (다음 학교일 요일)
       grade: data.grade,
       classNum: data.classNum,
       timetable: parsedTimetable,
       raw: data.timetable // 원본 데이터도 포함
     };
   } catch (error) {
-    console.error('오늘 시간표 데이터 가져오기 실패:', error);
+    console.error('시간표 데이터 가져오기 실패:', error);
     return {
       date: dateStr,
-      day: getDayName(today),
+      day: getDayName(schoolDay), // schoolDay 사용
       grade,
       classNum,
       timetable: [],
@@ -105,12 +120,15 @@ export const getTodayTimetable = async (grade = "2", classNum = "6") => {
 
 /**
  * 주간 시간표 정보를 가져오는 함수 (월~금)
+ *
+ * 한국 시간 기준으로 이번 주 월~금 시간표 데이터 fetch
+ *
  * @param {string} grade - 학년 (기본값: "2")
  * @param {string} classNum - 반 (기본값: "6")
  * @returns {Promise<Array>} 이번 주 시간표 정보 배열
  */
 export const getWeekTimetable = async (grade = "2", classNum = "6") => {
-  const today = new Date();
+  const today = getKoreanTime(); // 한국 시간 기준
   const currentDay = today.getDay(); // 0: 일요일, 1: 월요일, ...
 
   // 이번 주 월요일 계산
@@ -188,22 +206,6 @@ export const getTimetableByDate = async (date, grade = "2", classNum = "6") => {
   }
 };
 
-/**
- * 요일 이름 반환
- * @param {Date} date - Date 객체
- * @returns {string} 요일 이름
- */
-const getDayName = (date) => {
-  const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
-  return days[date.getDay()];
-};
-
-/**
- * 요일 짧은 이름 반환
- * @param {Date} date - Date 객체
- * @returns {string} 요일 짧은 이름
- */
-export const getShortDayName = (date) => {
-  const days = ['일', '월', '화', '수', '목', '금', '토'];
-  return days[date.getDay()];
-};
+// getDayName, getShortDayName 함수는 dateUtils.js에서 import하여 사용
+// 외부에서 사용할 수 있도록 re-export
+export { getShortDayName } from './dateUtils';

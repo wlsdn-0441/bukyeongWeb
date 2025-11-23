@@ -1,10 +1,23 @@
 // src/components/widgets/TimetableWidget.jsx
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query'; // React Query 훅 import
 import { getTodayTimetable } from '../../services/timetableService';
+import { getNextSchoolDay, formatDateToYYYYMMDD } from '../../services/dateUtils';
 import './TimetableWidget.css';
 
 const TimetableWidget = memo(({ grade = "2", classNum = "6" }) => {
+  // ============================================
+  // 다음 학교일 계산 (캐싱 키에 사용)
+  // ============================================
+  // useMemo: 컴포넌트가 리렌더링되어도 날짜 계산을 한 번만 수행
+  // - 평일 19시 이전: 오늘 날짜
+  // - 평일 19시 이후: 다음 학교일 날짜
+  // - 주말: 다음 주 월요일 날짜
+  const schoolDateStr = useMemo(() => {
+    const schoolDay = getNextSchoolDay();
+    return formatDateToYYYYMMDD(schoolDay);
+  }, []); // 빈 배열: 컴포넌트 마운트 시 한 번만 계산
+
   // ============================================
   // React Query를 사용한 시간표 데이터 캐싱
   // ============================================
@@ -12,19 +25,20 @@ const TimetableWidget = memo(({ grade = "2", classNum = "6" }) => {
   // - 장점 1: 홈에서 불러온 시간표를 Timetable 페이지에서 재사용 가능
   // - 장점 2: 학년/반이 바뀌면 자동으로 새 데이터 요청 (queryKey 변경 감지)
   // - 장점 3: 중복 요청 자동 제거
+  // - 장점 4: 날짜가 바뀌면 자동으로 새 캐시 생성 (queryKey에 날짜 포함)
   const {
     data: todayTimetable,    // 서버에서 받아온 시간표 데이터
     isLoading: loading,      // 로딩 중 여부 (true/false)
     error,                   // 에러 객체 (에러 발생 시)
   } = useQuery({
     // queryKey: 캐시를 식별하는 고유 키
-    // ['timetable', 'today', grade, classNum] → "특정 학년/반의 오늘 시간표" 식별
-    // grade나 classNum이 바뀌면 자동으로 새로운 데이터 요청
-    // 예: ['timetable', 'today', '2', '6'] → 2학년 6반 오늘 시간표
-    queryKey: ['timetable', 'today', grade, classNum],
+    // ['timetable', schoolDateStr, grade, classNum] → "특정 날짜/학년/반의 시간표" 식별
+    // 예: ['timetable', '20251123', '2', '6'] → 2025년 11월 23일 2학년 6반 시간표
+    // 19시가 지나거나 날짜가 바뀌면 schoolDateStr이 변경되어 새 캐시 생성
+    queryKey: ['timetable', schoolDateStr, grade, classNum],
 
     // queryFn: 실제 데이터를 가져오는 함수
-    // getTodayTimetable(grade, classNum)를 호출하여 오늘 시간표 fetch
+    // getTodayTimetable(grade, classNum)를 호출하여 다음 학교일 시간표 fetch
     queryFn: () => getTodayTimetable(grade, classNum),
 
     // staleTime: 시간표는 하루 단위로 변경되므로 5분간 캐시 유지
