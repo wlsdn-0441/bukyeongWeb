@@ -3,6 +3,7 @@ import { memo, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query'; // React Query 훅 import
 import { getTodayTimetable } from '../../services/timetableService';
 import { getNextSchoolDay, formatDateToYYYYMMDD } from '../../services/dateUtils';
+import TimetableSkeleton from '../common/TimetableSkeleton';
 import './TimetableWidget.css';
 
 const TimetableWidget = memo(({ grade = "2", classNum = "6" }) => {
@@ -46,11 +47,7 @@ const TimetableWidget = memo(({ grade = "2", classNum = "6" }) => {
   });
 
   if (loading) {
-    return (
-      <div className="timetable-widget">
-        <div className="timetable-widget-loading">시간표 정보 로딩 중...</div>
-      </div>
-    );
+    return <TimetableSkeleton />;
   }
 
   if (error || !todayTimetable) {

@@ -1,12 +1,55 @@
 // src/Pages/Home.jsx
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import Card from '../components/common/Card';
 import MealWidget from '../components/widgets/MealWidget';
 import TimetableWidget from '../components/widgets/TimetableWidget';
+import { getWeekMealData } from '../services/mealService';
+import { getWeekTimetable } from '../services/timetableService';
 import './Home.css';
 
 const Home = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  // ============================================
+  // Prefetching: 백그라운드에서 미리 데이터 로딩
+  // ============================================
+  // 홈 화면 로딩 후 브라우저 유휴 시간에 주간 데이터를 미리 가져옴
+  // - 급식표/시간표 페이지 진입 시 캐시에서 즉시 표시
+  // - requestIdleCallback: 브라우저가 한가할 때 실행 (우선순위 낮음)
+  useEffect(() => {
+    // requestIdleCallback 지원 여부 확인 (구형 브라우저 대응)
+    if (typeof requestIdleCallback === 'function') {
+      requestIdleCallback(() => {
+        // 주간 급식 데이터 미리 로딩
+        queryClient.prefetchQuery({
+          queryKey: ['meal', 'week'],
+          queryFn: getWeekMealData,
+        });
+
+        // 주간 시간표 데이터 미리 로딩 (2학년 6반)
+        queryClient.prefetchQuery({
+          queryKey: ['timetable', 'week', '2', '6'],
+          queryFn: () => getWeekTimetable('2', '6'),
+        });
+      });
+    } else {
+      // requestIdleCallback 미지원 시 setTimeout 사용 (fallback)
+      setTimeout(() => {
+        queryClient.prefetchQuery({
+          queryKey: ['meal', 'week'],
+          queryFn: getWeekMealData,
+        });
+
+        queryClient.prefetchQuery({
+          queryKey: ['timetable', 'week', '2', '6'],
+          queryFn: () => getWeekTimetable('2', '6'),
+        });
+      }, 2000); // 2초 후 실행
+    }
+  }, [queryClient]);
 
   const dashboardCards = [
     {

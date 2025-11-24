@@ -3,6 +3,7 @@ import { memo, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query'; // React Query 훅 import
 import { getTodayMealData } from '../../services/mealService';
 import { getNextSchoolDay, formatDateToYYYYMMDD } from '../../services/dateUtils';
+import MealSkeleton from '../common/MealSkeleton';
 import './MealWidget.css';
 
 const MealWidget = memo(() => {
@@ -47,11 +48,7 @@ const MealWidget = memo(() => {
   });
 
   if (loading) {
-    return (
-      <div className="meal-widget">
-        <div className="meal-widget-loading">급식 정보 로딩 중...</div>
-      </div>
-    );
+    return <MealSkeleton />;
   }
 
   if (error || !todayMeal) {
