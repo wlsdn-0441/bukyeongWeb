@@ -5,8 +5,10 @@
 // - Cold Start 0ms (vs Serverless 250-980ms)
 // - 전 세계 엣지 로케이션에서 실행
 // - Web Standard API 사용 (Request/Response)
+// - maxDuration: 30초 타임아웃 (Pro 플랜, 5개 병렬 API 요청 처리)
 export const config = {
   runtime: 'edge',
+  maxDuration: 30,
 };
 
 export default async function handler(req) {
