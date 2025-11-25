@@ -23,6 +23,9 @@ import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persist
 import HelpLayout from "./components/layout/HelpLayout";
 import RootLayout from "./components/layout/RootLayout";
 
+// common components (온보딩 모달)
+import OnboardingModal from "./components/common/OnboardingModal";
+
 // pages (지연 로딩 - 필요할 때만 로딩)
 const Home = lazy(() => import("./Pages/Home"));
 const About = lazy(() => import("./Pages/About"));
@@ -145,6 +148,7 @@ export default function App() {
     // QueryClientProvider: 앱 전체에 React Query 기능 제공
     // 모든 하위 컴포넌트에서 useQuery 훅 사용 가능
     <QueryClientProvider client={queryClient}>
+      <OnboardingModal />
       <RouterProvider router={router} />
     </QueryClientProvider>
   );

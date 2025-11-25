@@ -1,0 +1,340 @@
+/* ============================================
+   About 페이지 - 포털 소개 (Trendy Edition)
+   ============================================ */
+
+.about {
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 2.5rem 2rem;
+  background: linear-gradient(
+    180deg,
+    var(--bg-primary) 0%,
+    var(--bg-secondary) 100%
+  );
+}
+
+.about-container {
+  max-width: 900px;
+  margin: 0 auto;
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.about-title {
+  font-size: 2.75rem;
+  font-weight: 800;
+  margin-bottom: 2.5rem;
+  text-align: center;
+  background: linear-gradient(135deg,
+    #6366f1 0%,
+    #8b5cf6 25%,
+    #d946ef 50%,
+    #f97316 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.about-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Section Styles (Enhanced) */
+.about-section {
+  background: var(--card-bg);
+  border-radius: 20px;
+  padding: 2.25rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(99, 102, 241, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.about-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6, #d946ef);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.about-section:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+  border-color: rgba(99, 102, 241, 0.2);
+}
+
+.about-section:hover::before {
+  opacity: 1;
+}
+
+.about-section h2 {
+  font-size: 1.625rem;
+  font-weight: 700;
+  margin: 0 0 1.25rem 0;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.about-section p {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin: 0 0 1.125rem 0;
+}
+
+.about-section p:last-child {
+  margin-bottom: 0;
+}
+
+/* Feature List (Modern) */
+.feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.875rem;
+}
+
+.feature-list li {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  padding: 1rem 1.25rem;
+  background: var(--bg-secondary);
+  border-radius: 14px;
+  border-left: 4px solid transparent;
+  background-image: linear-gradient(var(--bg-secondary), var(--bg-secondary)),
+                    linear-gradient(135deg, #6366f1, #8b5cf6, #d946ef);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-list li::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.feature-list li:hover {
+  background: var(--bg-hover);
+  transform: translateX(8px) scale(1.02);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+}
+
+.feature-list li:hover::before {
+  opacity: 1;
+}
+
+/* Onboarding Restart Button (Trendy) */
+.onboarding-restart-button {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6, #d946ef);
+  color: white;
+  border: none;
+  border-radius: 100px;
+  padding: 1.25rem 2.5rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.25);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  margin: 1.25rem 0;
+  position: relative;
+  overflow: hidden;
+  letter-spacing: -0.01em;
+}
+
+.onboarding-restart-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #d946ef, #8b5cf6, #6366f1);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.onboarding-restart-button:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(99, 102, 241, 0.35);
+}
+
+.onboarding-restart-button:hover::before {
+  opacity: 1;
+}
+
+.onboarding-restart-button:active {
+  transform: translateY(-1px) scale(1.01);
+}
+
+.onboarding-restart-button span {
+  position: relative;
+  z-index: 1;
+}
+
+.onboarding-hint-text {
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+  text-align: center;
+  font-style: italic;
+  margin: 0.5rem 0 0 0;
+}
+
+/* Info Grid */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.info-item:hover {
+  background: var(--bg-hover);
+}
+
+.info-item strong {
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.info-item span {
+  font-size: 1rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* Mobile Responsive (Optimized) */
+@media (max-width: 768px) {
+  .about {
+    padding: 2rem 1.25rem;
+  }
+
+  .about-title {
+    font-size: 2.25rem;
+  }
+
+  .about-section {
+    padding: 1.875rem;
+  }
+
+  .about-section h2 {
+    font-size: 1.425rem;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .onboarding-restart-button {
+    font-size: 1.075rem;
+    padding: 1.125rem 2.25rem;
+  }
+
+  .feature-list li {
+    font-size: 1rem;
+    padding: 0.875rem 1.125rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .about {
+    padding: 1.75rem 1rem;
+  }
+
+  .about-title {
+    font-size: 2rem;
+  }
+
+  .about-section {
+    padding: 1.625rem;
+  }
+
+  .about-section h2 {
+    font-size: 1.325rem;
+  }
+
+  .about-section p {
+    font-size: 1rem;
+  }
+
+  .feature-list li {
+    font-size: 0.975rem;
+    padding: 0.85rem 1rem;
+  }
+
+  .onboarding-restart-button {
+    font-size: 1.025rem;
+    padding: 1.025rem 2rem;
+  }
+
+  .info-item strong {
+    font-size: 0.8rem;
+  }
+
+  .info-item span {
+    font-size: 0.95rem;
+  }
+}
+
+/* Dark Mode Support */
+:root[data-theme="dark"] .about-section {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+:root[data-theme="dark"] .feature-list li {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+:root[data-theme="dark"] .feature-list li:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+:root[data-theme="dark"] .info-item {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+:root[data-theme="dark"] .info-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
