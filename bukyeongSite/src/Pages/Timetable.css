@@ -127,6 +127,71 @@
   color: #9ca3af;
 }
 
+/* Empty State (No Student ID) */
+.timetable-empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  max-width: 500px;
+  margin: 2rem auto;
+}
+
+.timetable-empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.8;
+}
+
+.timetable-empty-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 1rem 0;
+}
+
+.timetable-empty-description {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  margin: 0 0 2rem 0;
+  line-height: 1.6;
+}
+
+.timetable-settings-button {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6, #d946ef);
+  color: white;
+  border: none;
+  border-radius: 100px;
+  padding: 1.25rem 2.5rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.timetable-settings-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #d946ef, #8b5cf6, #6366f1);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.timetable-settings-button:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(99, 102, 241, 0.35);
+}
+
+.timetable-settings-button:hover::before {
+  opacity: 1;
+}
+
+.timetable-settings-button:active {
+  transform: translateY(-1px) scale(1.01);
+}
+
 /* 반응형 - 태블릿 이상 */
 @media (min-width: 768px) {
   .timetable-page {

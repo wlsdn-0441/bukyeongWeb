@@ -1,0 +1,417 @@
+/* 학번 입력 모달 - 트렌디한 디자인 */
+
+.student-id-overlay {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg,
+    rgba(99, 102, 241, 0.95) 0%,
+    rgba(139, 92, 246, 0.95) 50%,
+    rgba(217, 70, 239, 0.95) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1.5rem;
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.student-id-modal {
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 28px;
+  padding: 3rem 2.5rem;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+  animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 닫기 버튼 (X) */
+.student-id-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: rgba(107, 114, 128, 0.1);
+  border: none;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  line-height: 1;
+  padding: 0.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.student-id-close:hover {
+  background: rgba(107, 114, 128, 0.2);
+  color: #374151;
+  transform: scale(1.1);
+}
+
+.student-id-close:active {
+  transform: scale(0.95);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 헤더 */
+.student-id-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.student-id-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: bounce 1s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.student-id-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0 0 0.75rem 0;
+  letter-spacing: -0.02em;
+}
+
+.student-id-subtitle {
+  font-size: 1.05rem;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* 입력 폼 */
+.student-id-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.student-id-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.student-id-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #374151;
+  text-align: center;
+}
+
+.student-id-input {
+  width: 100%;
+  padding: 1.5rem;
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  border: 3px solid #e5e7eb;
+  border-radius: 16px;
+  outline: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: 0.3rem;
+  font-family: 'Courier New', monospace;
+  background: #f9fafb;
+  box-sizing: border-box;
+}
+
+.student-id-input:focus {
+  border-color: #6366f1;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+.student-id-input.valid {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.student-id-input.error {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.05);
+  animation: shake 0.4s;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+.student-id-hint {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  text-align: center;
+  margin: 0;
+}
+
+/* 미리보기 */
+.student-id-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+  border: 2px solid #10b981;
+  border-radius: 14px;
+  animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.preview-icon {
+  font-size: 1.5rem;
+  color: #10b981;
+}
+
+.preview-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #059669;
+}
+
+/* 에러 메시지 */
+.student-id-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 2px solid #ef4444;
+  border-radius: 14px;
+  animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.error-icon {
+  font-size: 1.5rem;
+}
+
+.error-text {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #dc2626;
+}
+
+/* 제출 버튼 */
+.student-id-button {
+  width: 100%;
+  padding: 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: white;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6, #d946ef);
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.student-id-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #d946ef, #8b5cf6, #6366f1);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.student-id-button:hover:not(:disabled) {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(99, 102, 241, 0.4);
+}
+
+.student-id-button:hover:not(:disabled)::before {
+  opacity: 1;
+}
+
+.student-id-button:active:not(:disabled) {
+  transform: translateY(-1px) scale(1.01);
+}
+
+.student-id-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.student-id-button span {
+  position: relative;
+  z-index: 1;
+}
+
+/* 푸터 */
+.student-id-footer {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.student-id-note {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+/* 반응형 - 태블릿/모바일 */
+@media (max-width: 768px) {
+  .student-id-modal {
+    padding: 2.5rem 2rem;
+  }
+
+  .student-id-header {
+    margin-bottom: 2.5rem;
+  }
+}
+
+/* 반응형 - 작은 모바일 */
+@media (max-width: 480px) {
+  .student-id-overlay {
+    padding: 1rem;
+  }
+
+  .student-id-modal {
+    padding: 2rem 1.5rem;
+  }
+
+  .student-id-close {
+    top: 1rem;
+    right: 1rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 1.35rem;
+  }
+
+  .student-id-header {
+    margin-bottom: 2rem;
+  }
+
+  .student-id-icon {
+    font-size: 3.5rem;
+    margin-bottom: 0.875rem;
+  }
+
+  .student-id-title {
+    font-size: 1.65rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .student-id-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .student-id-form {
+    gap: 1.5rem;
+  }
+
+  .student-id-input {
+    font-size: 1.75rem;
+    padding: 1.25rem;
+    letter-spacing: 0.3rem;
+  }
+
+  .student-id-button {
+    padding: 1.25rem;
+    font-size: 1.125rem;
+  }
+
+  .preview-text {
+    font-size: 1.125rem;
+  }
+
+  .student-id-footer {
+    margin-top: 1.5rem;
+  }
+}
+
+/* 다크모드 지원 */
+:root[data-theme="dark"] .student-id-modal {
+  background: rgba(26, 26, 26, 0.98);
+}
+
+:root[data-theme="dark"] .student-id-title {
+  color: #f9fafb;
+}
+
+:root[data-theme="dark"] .student-id-subtitle {
+  color: #9ca3af;
+}
+
+:root[data-theme="dark"] .student-id-label {
+  color: #d1d5db;
+}
+
+:root[data-theme="dark"] .student-id-input {
+  background: #1f2937;
+  border-color: #374151;
+  color: white;
+}
+
+:root[data-theme="dark"] .student-id-input:focus {
+  background: #111827;
+}
+
+:root[data-theme="dark"] .student-id-close {
+  background: rgba(255, 255, 255, 0.1);
+  color: #9ca3af;
+}
+
+:root[data-theme="dark"] .student-id-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #d1d5db;
+}
+
+/* Hide navigation components during student ID modal */
+body.student-id-modal-active .theme-toggle,
+body.student-id-modal-active .draggable-nav-wrapper {
+  display: none !important;
+  pointer-events: none;
+}

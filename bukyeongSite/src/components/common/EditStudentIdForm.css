@@ -1,0 +1,386 @@
+/* ============================================
+   학번 변경/삭제 인라인 폼 스타일
+   ============================================ */
+
+.edit-student-form {
+  width: 100%;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 현재 학번 표시 */
+.edit-current-student {
+  background: rgba(107, 114, 128, 0.1);
+  border: 2px solid rgba(107, 114, 128, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2.5rem;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.edit-current-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.edit-current-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.edit-current-id {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.05em;
+}
+
+/* 폼 스타일 */
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* 입력 그룹 */
+.edit-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.edit-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+/* 입력 필드 */
+.edit-input {
+  width: 100%;
+  font-size: 3rem;
+  font-weight: 700;
+  text-align: center;
+  padding: 1.25rem;
+  border: 3px solid rgba(99, 102, 241, 0.2);
+  border-radius: 16px;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  letter-spacing: 0.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'Courier New', monospace;
+  outline: none;
+}
+
+.edit-input::placeholder {
+  color: var(--text-tertiary);
+  opacity: 0.4;
+}
+
+.edit-input:focus {
+  border-color: rgba(99, 102, 241, 0.5);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+  transform: scale(1.02);
+}
+
+.edit-input.valid {
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+.edit-input.valid:focus {
+  border-color: rgba(16, 185, 129, 0.6);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+}
+
+.edit-input.error {
+  border-color: rgba(239, 68, 68, 0.4);
+  animation: shake 0.4s;
+}
+
+.edit-input.error:focus {
+  border-color: rgba(239, 68, 68, 0.6);
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+.edit-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 미리보기 */
+.edit-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.05));
+  border: 2px solid rgba(16, 185, 129, 0.3);
+  border-radius: 12px;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.preview-icon {
+  font-size: 1.5rem;
+}
+
+.preview-text {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #059669;
+}
+
+/* 에러 메시지 */
+.edit-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.05));
+  border: 2px solid rgba(239, 68, 68, 0.3);
+  border-radius: 12px;
+  animation: slideIn 0.3s ease-out;
+}
+
+.error-icon {
+  font-size: 1.5rem;
+}
+
+.error-text {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #dc2626;
+}
+
+/* 버튼 그룹 */
+.edit-button-group {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+/* 버튼 공통 스타일 */
+.edit-button {
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-button span {
+  position: relative;
+  z-index: 1;
+}
+
+.edit-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.edit-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.edit-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.edit-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 변경 버튼 */
+.edit-button.change {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+}
+
+.edit-button.change::before {
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+}
+
+.edit-button.change:hover:not(:disabled) {
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
+}
+
+.edit-button.change:hover:not(:disabled)::before {
+  opacity: 1;
+}
+
+/* 삭제 버튼 */
+.edit-button.delete {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+}
+
+.edit-button.delete::before {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+}
+
+.edit-button.delete:hover:not(:disabled) {
+  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.35);
+}
+
+.edit-button.delete:hover:not(:disabled)::before {
+  opacity: 1;
+}
+
+/* 취소 버튼 */
+.edit-button.cancel {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 2px solid rgba(107, 114, 128, 0.3);
+  box-shadow: none;
+}
+
+.edit-button.cancel:hover:not(:disabled) {
+  background: rgba(107, 114, 128, 0.1);
+  border-color: rgba(107, 114, 128, 0.5);
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+  .edit-current-student {
+    padding: 1.25rem;
+    margin-bottom: 2rem;
+  }
+
+  .edit-current-value {
+    font-size: 1.25rem;
+  }
+
+  .edit-form {
+    gap: 1.75rem;
+  }
+
+  .edit-input-group {
+    gap: 1rem;
+  }
+
+  .edit-input {
+    font-size: 2.5rem;
+    padding: 1rem;
+    letter-spacing: 0.4rem;
+  }
+
+  .edit-button-group {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 1.25rem;
+  }
+
+  .edit-button {
+    padding: 1rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .edit-current-student {
+    padding: 1rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .edit-current-value {
+    font-size: 1.125rem;
+  }
+
+  .edit-form {
+    gap: 1.5rem;
+  }
+
+  .edit-input-group {
+    gap: 0.875rem;
+  }
+
+  .edit-input {
+    font-size: 2rem;
+    padding: 0.875rem;
+    letter-spacing: 0.3rem;
+  }
+
+  .edit-button-group {
+    gap: 0.875rem;
+    margin-top: 1rem;
+  }
+
+  .edit-button {
+    padding: 0.875rem 1.25rem;
+    font-size: 0.95rem;
+  }
+
+  .preview-text {
+    font-size: 1.125rem;
+  }
+}
+
+/* 다크모드 지원 */
+:root[data-theme="dark"] .edit-current-student {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+:root[data-theme="dark"] .edit-input {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+:root[data-theme="dark"] .edit-button.cancel {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+:root[data-theme="dark"] .edit-button.cancel:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+}

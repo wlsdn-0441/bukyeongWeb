@@ -4,7 +4,7 @@ import {
   createRoutesFromElements,
   RouterProvider
 } from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState } from "react";
 
 // React Query - 데이터 캐싱 및 서버 상태 관리
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -23,8 +23,10 @@ import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persist
 import HelpLayout from "./components/layout/HelpLayout";
 import RootLayout from "./components/layout/RootLayout";
 
-// common components (온보딩 모달)
+// common components (온보딩 모달, 학번 입력 모달)
 import OnboardingModal from "./components/common/OnboardingModal";
+import StudentIdModal from "./components/common/StudentIdModal";
+import { hasStudentId } from "./services/studentService";
 
 // pages (지연 로딩 - 필요할 때만 로딩)
 const Home = lazy(() => import("./Pages/Home"));
@@ -143,12 +145,64 @@ const router = createBrowserRouter(
   )
 );
 
+// localStorage 키 상수
+const FIRST_VISIT_COMPLETE_KEY = 'bukyeongFirstVisitComplete';
+const SHOW_STUDENT_ID_MODAL_KEY = 'showStudentIdModal';
+
 export default function App() {
+  // 마운트 시 학번 입력 모달 표시 플래그 확인
+  const [showStudentIdModal, setShowStudentIdModal] = useState(() => {
+    const shouldShow = localStorage.getItem(SHOW_STUDENT_ID_MODAL_KEY) === 'true';
+    if (shouldShow) {
+      // 플래그 확인 후 즉시 제거
+      localStorage.removeItem(SHOW_STUDENT_ID_MODAL_KEY);
+      console.log('[App] 학번 입력 모달 표시 플래그 감지 - 모달 표시');
+    }
+    return shouldShow;
+  });
+
+  // 온보딩 완료 후 학번 입력 모달 표시 (첫 방문 시만)
+  const handleOnboardingComplete = () => {
+    const hasCompletedFirstVisit = localStorage.getItem(FIRST_VISIT_COMPLETE_KEY);
+
+    console.log('[App] 온보딩 완료');
+    console.log('[App] 첫 방문 완료 여부:', hasCompletedFirstVisit || 'false (첫 방문)');
+    console.log('[App] 학번 등록 여부:', hasStudentId());
+
+    // 첫 방문이고 학번이 없으면 학번 입력 모달 표시
+    if (!hasStudentId() && !hasCompletedFirstVisit) {
+      console.log('[App] 첫 방문 - 학번 입력 모달 표시');
+      setShowStudentIdModal(true);
+    } else {
+      console.log('[App] 온보딩 재생 또는 학번 등록 완료 - 모달 표시 안 함');
+    }
+  };
+
+  // 학번 입력 완료 후 페이지 새로고침
+  const handleStudentIdComplete = () => {
+    setShowStudentIdModal(false);
+
+    // 첫 방문 완료 플래그 설정
+    localStorage.setItem(FIRST_VISIT_COMPLETE_KEY, 'true');
+    console.log('[App] 첫 방문 완료 플래그 설정');
+    console.log('[App] localStorage 업데이트:', {
+      key: FIRST_VISIT_COMPLETE_KEY,
+      value: 'true'
+    });
+
+    // 학번 저장 후 페이지 새로고침하여 시간표 표시
+    window.location.reload();
+  };
+
   return (
     // QueryClientProvider: 앱 전체에 React Query 기능 제공
     // 모든 하위 컴포넌트에서 useQuery 훅 사용 가능
     <QueryClientProvider client={queryClient}>
-      <OnboardingModal />
+      <OnboardingModal onComplete={handleOnboardingComplete} />
+      <StudentIdModal
+        show={showStudentIdModal}
+        onComplete={handleStudentIdComplete}
+      />
       <RouterProvider router={router} />
     </QueryClientProvider>
   );

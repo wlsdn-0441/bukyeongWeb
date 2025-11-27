@@ -1,6 +1,15 @@
+import { useState } from 'react';
+import { getStudentIdFromStorage, clearStudentId } from '../services/studentService';
+import EditStudentIdForm from '../components/common/EditStudentIdForm';
 import './About.css';
 
 export default function About() {
+  // 현재 등록된 학번 정보 가져오기
+  const studentData = getStudentIdFromStorage();
+
+  // 편집 모드 상태
+  const [isEditingStudentId, setIsEditingStudentId] = useState(false);
+
   const handleShowOnboarding = () => {
     // localStorage에서 방문 기록 제거
     localStorage.removeItem('bukyeongPortalVisited');
@@ -9,6 +18,40 @@ export default function About() {
     console.log('[About] 페이지 새로고침 중...');
 
     // 페이지 새로고침하여 온보딩 표시
+    location.reload();
+  };
+
+  const handleStartEdit = () => {
+    console.log('[About] 학번 편집 모드 시작');
+    setIsEditingStudentId(true);
+  };
+
+  const handleCancelEdit = () => {
+    console.log('[About] 학번 편집 취소');
+    setIsEditingStudentId(false);
+  };
+
+  const handleEditComplete = () => {
+    console.log('[About] 학번 편집 완료');
+    // EditStudentIdForm에서 reload 처리하므로 여기서는 상태만 변경
+    setIsEditingStudentId(false);
+  };
+
+  const handleDeleteStudentId = () => {
+    if (confirm('학번을 삭제하시겠습니까? 시간표를 이용하려면 다시 등록해야 합니다.')) {
+      console.log('[About] 학번 삭제');
+      clearStudentId();
+      console.log('[About] 페이지 새로고침 중...');
+      location.reload();
+    }
+  };
+
+  const handleRegisterStudentId = () => {
+    console.log('[About] 학번 등록 - 학번 입력 모달 표시 플래그 설정');
+    // 온보딩을 건너뛰고 학번 입력 모달만 표시
+    localStorage.setItem('bukyeongPortalVisited', 'true');
+    localStorage.setItem('showStudentIdModal', 'true');
+    console.log('[About] 페이지 새로고침 중...');
     location.reload();
   };
 
@@ -37,6 +80,59 @@ export default function About() {
               <li>🌓 다크모드 지원</li>
               <li>📱 PWA - 홈 화면에 추가 가능</li>
             </ul>
+          </section>
+
+          <section className="about-section">
+            <h2>🎓 학번 관리</h2>
+            {studentData ? (
+              <>
+                {!isEditingStudentId ? (
+                  <>
+                    <div className="student-info-display">
+                      <div className="student-info-label">현재 등록된 학번</div>
+                      <div className="student-info-value">
+                        {studentData.formatted}
+                      </div>
+                      <div className="student-info-id">
+                        학번: {studentData.studentId}
+                      </div>
+                    </div>
+                    <div className="student-button-group">
+                      <button
+                        className="student-action-button change"
+                        onClick={handleStartEdit}
+                      >
+                        <span>🔄 학번 변경하기</span>
+                      </button>
+                      <button
+                        className="student-action-button delete"
+                        onClick={handleDeleteStudentId}
+                      >
+                        <span>🗑️ 학번 삭제하기</span>
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <EditStudentIdForm
+                    currentStudentData={studentData}
+                    onCancel={handleCancelEdit}
+                    onComplete={handleEditComplete}
+                  />
+                )}
+              </>
+            ) : (
+              <>
+                <p>
+                  학번이 등록되어 있지 않습니다. 학번을 등록하면 우리 반 시간표를 확인할 수 있습니다.
+                </p>
+                <button
+                  className="student-action-button register"
+                  onClick={handleRegisterStudentId}
+                >
+                  <span>➕ 학번 등록하기</span>
+                </button>
+              </>
+            )}
           </section>
 
           <section className="about-section">

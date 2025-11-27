@@ -3,10 +3,43 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query'; // React Query 훅 import
 import Card from '../components/common/Card';
 import { getWeekTimetable } from '../services/timetableService';
+import { getStudentIdFromStorage } from '../services/studentService';
 import './Timetable.css';
 
-const Timetable = ({ grade = "2", classNum = "6" }) => {
+const Timetable = () => {
   const navigate = useNavigate();
+
+  // localStorage에서 학번 정보 읽기
+  const studentData = getStudentIdFromStorage();
+
+  // 학번이 없으면 설정 페이지로 안내
+  if (!studentData) {
+    return (
+      <div className="timetable-page">
+        <button
+          onClick={() => navigate('/')}
+          className="timetable-back-button"
+        >
+          ← 홈으로 돌아가기
+        </button>
+        <div className="timetable-empty-state">
+          <div className="timetable-empty-icon">📚</div>
+          <h2 className="timetable-empty-title">학번을 먼저 등록해주세요</h2>
+          <p className="timetable-empty-description">
+            학번을 등록하면 우리 반 시간표를 확인할 수 있습니다
+          </p>
+          <button
+            onClick={() => navigate('/about')}
+            className="timetable-settings-button"
+          >
+            설정으로 이동 →
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const { grade, classNum } = studentData;
 
   // ============================================
   // React Query를 사용한 주간 시간표 데이터 캐싱

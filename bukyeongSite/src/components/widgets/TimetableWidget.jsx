@@ -3,10 +3,30 @@ import { memo, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query'; // React Query 훅 import
 import { getTodayTimetable } from '../../services/timetableService';
 import { getNextSchoolDay, formatDateToYYYYMMDD } from '../../services/dateUtils';
+import { getStudentIdFromStorage } from '../../services/studentService';
 import TimetableSkeleton from '../common/TimetableSkeleton';
 import './TimetableWidget.css';
 
-const TimetableWidget = memo(({ grade = "2", classNum = "6" }) => {
+const TimetableWidget = memo(() => {
+  // localStorage에서 학번 정보 읽기
+  const studentData = getStudentIdFromStorage();
+
+  // 학번이 없으면 메시지 표시
+  if (!studentData) {
+    return (
+      <div className="timetable-widget">
+        <div className="timetable-widget-header">
+          <h2 className="timetable-widget-title">오늘의 시간표</h2>
+        </div>
+        <div className="timetable-widget-empty">
+          <p>학번을 먼저 등록해주세요</p>
+          <p className="timetable-hint">설정 페이지에서 등록 가능합니다</p>
+        </div>
+      </div>
+    );
+  }
+
+  const { grade, classNum } = studentData;
   // ============================================
   // 다음 학교일 계산 (캐싱 키에 사용)
   // ============================================

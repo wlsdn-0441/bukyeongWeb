@@ -318,6 +318,213 @@
   }
 }
 
+/* ============================================
+   Student ID Management Section
+   ============================================ */
+
+/* Student Info Display */
+.student-info-display {
+  background: linear-gradient(135deg,
+    rgba(99, 102, 241, 0.08) 0%,
+    rgba(139, 92, 246, 0.08) 50%,
+    rgba(217, 70, 239, 0.08) 100%
+  );
+  border: 2px solid rgba(99, 102, 241, 0.2);
+  border-radius: 16px;
+  padding: 2rem;
+  margin: 1.5rem 0;
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.student-info-display:hover {
+  transform: translateY(-2px);
+  border-color: rgba(99, 102, 241, 0.3);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.15);
+}
+
+.student-info-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+}
+
+.student-info-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6, #d946ef);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.01em;
+}
+
+.student-info-id {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.1em;
+}
+
+/* Student Action Buttons */
+.student-button-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.student-action-button {
+  border: none;
+  border-radius: 100px;
+  padding: 1.125rem 2rem;
+  font-size: 1.075rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
+  letter-spacing: -0.01em;
+}
+
+.student-action-button span {
+  position: relative;
+  z-index: 1;
+}
+
+/* Register Button */
+.student-action-button.register {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.25);
+}
+
+.student-action-button.register::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #059669, #047857);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.student-action-button.register:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 28px rgba(16, 185, 129, 0.35);
+}
+
+.student-action-button.register:hover::before {
+  opacity: 1;
+}
+
+/* Change Button */
+.student-action-button.change {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.25);
+}
+
+.student-action-button.change::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.student-action-button.change:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 28px rgba(99, 102, 241, 0.35);
+}
+
+.student-action-button.change:hover::before {
+  opacity: 1;
+}
+
+/* Delete Button */
+.student-action-button.delete {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.25);
+}
+
+.student-action-button.delete::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.student-action-button.delete:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 28px rgba(239, 68, 68, 0.35);
+}
+
+.student-action-button.delete:hover::before {
+  opacity: 1;
+}
+
+.student-action-button:active {
+  transform: translateY(-1px) scale(1.01);
+}
+
+/* Mobile Responsive for Student Section */
+@media (max-width: 768px) {
+  .student-info-display {
+    padding: 1.75rem;
+  }
+
+  .student-info-value {
+    font-size: 1.75rem;
+  }
+
+  .student-info-id {
+    font-size: 1rem;
+  }
+
+  .student-button-group {
+    grid-template-columns: 1fr;
+  }
+
+  .student-action-button {
+    font-size: 1.05rem;
+    padding: 1.05rem 1.875rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .student-info-display {
+    padding: 1.5rem;
+  }
+
+  .student-info-value {
+    font-size: 1.5rem;
+  }
+
+  .student-info-id {
+    font-size: 0.95rem;
+  }
+
+  .student-action-button {
+    font-size: 1rem;
+    padding: 0.975rem 1.75rem;
+  }
+}
+
 /* Dark Mode Support */
 :root[data-theme="dark"] .about-section {
   background: rgba(255, 255, 255, 0.05);
@@ -337,4 +544,17 @@
 
 :root[data-theme="dark"] .info-item:hover {
   background: rgba(255, 255, 255, 0.08);
+}
+
+:root[data-theme="dark"] .student-info-display {
+  background: linear-gradient(135deg,
+    rgba(99, 102, 241, 0.12) 0%,
+    rgba(139, 92, 246, 0.12) 50%,
+    rgba(217, 70, 239, 0.12) 100%
+  );
+  border-color: rgba(99, 102, 241, 0.25);
+}
+
+:root[data-theme="dark"] .student-info-display:hover {
+  border-color: rgba(99, 102, 241, 0.4);
 }

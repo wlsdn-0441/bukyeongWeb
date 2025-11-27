@@ -369,7 +369,7 @@
 /* Mobile Responsive - 모바일 반응형 (Optimized) */
 @media (max-width: 768px) {
   .onboarding-modal {
-    padding: 7rem 1.5rem 5rem; /* Safe area 유지 */
+    padding: 8rem 1.5rem 3rem; /* 상단 여백 증가, 하단 여백 감소 (힌트 없음) */
   }
 
   .onboarding-icon {
@@ -412,16 +412,15 @@
     padding: 0.65rem 1rem;
   }
 
+  /* 모바일에서는 힌트 텍스트 숨김 (버튼만 사용) */
   .onboarding-hint {
-    bottom: 1.5rem;
-    font-size: 0.875rem;
-    padding: 0.65rem 1.25rem;
+    display: none !important;
   }
 }
 
 @media (max-width: 480px) {
   .onboarding-modal {
-    padding: 6.5rem 1.25rem 4.5rem; /* Safe area 유지 */
+    padding: 7rem 1.25rem 2.5rem; /* 상단 여백 증가, 하단 여백 감소 (힌트 없음) */
   }
 
   .onboarding-icon {
@@ -471,21 +470,20 @@
     width: 28px;
   }
 
+  /* 모바일에서는 힌트 텍스트 숨김 (버튼만 사용) */
   .onboarding-hint {
-    bottom: 1.25rem;
-    font-size: 0.85rem;
-    padding: 0.6rem 1.125rem;
+    display: none !important;
   }
 }
 
-/* Hint Text - 힌트 텍스트 (Enhanced) */
+/* Hint Text - 힌트 텍스트 (데스크톱 전용) */
 .onboarding-hint {
   font-size: 0.95rem;
   color: rgba(255, 255, 255, 0.75);
   margin: 3rem 0 0 0;
   text-align: center;
   font-weight: 500;
-  position: fixed; /* absolute → fixed로 변경 */
+  position: fixed;
   bottom: 2rem;
   left: 50%;
   transform: translateX(-50%);
@@ -496,6 +494,7 @@
   border-radius: 100px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   animation: hintPulse 2s ease-in-out infinite;
+  display: block;
 }
 
 @keyframes hintPulse {

@@ -5,10 +5,24 @@ const STORAGE_KEY = 'bukyeongPortalVisited';
 const CONSOLE_PREFIX = '[Onboarding]';
 const TOTAL_PAGES = 4;
 
-export default function OnboardingModal() {
+export default function OnboardingModal({ onComplete }) {
   const [showModal, setShowModal] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // 모바일/데스크톱 감지
+  useEffect(() => {
+    const checkMobile = () => {
+      // 768px 이하를 모바일로 간주
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // 페이지 콘텐츠 정의
   const pages = [
@@ -174,17 +188,28 @@ export default function OnboardingModal() {
         value: 'true'
       });
       console.log(`${CONSOLE_PREFIX} 온보딩 완료 ✓`);
+
+      // 온보딩 완료 콜백 호출
+      if (onComplete) {
+        onComplete();
+      }
     }, 300);
   };
 
   const handleOverlayClick = (e) => {
+    // 모바일에서는 클릭으로 넘어가기 비활성화 (버튼만 사용)
+    if (isMobile) {
+      console.log(`${CONSOLE_PREFIX} 모바일 환경 - 화면 클릭 무시`);
+      return;
+    }
+
     // Skip 버튼 클릭은 무시
     if (e.target.closest('.onboarding-skip')) return;
 
     // 모달 내부 클릭만 무시
     if (e.target === e.currentTarget) return;
 
-    console.log(`${CONSOLE_PREFIX} 화면 클릭 감지`);
+    console.log(`${CONSOLE_PREFIX} 데스크톱 - 화면 클릭 감지`);
     handleAdvance();
   };
 
