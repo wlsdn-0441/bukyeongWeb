@@ -4,7 +4,7 @@ import {
   createRoutesFromElements,
   RouterProvider
 } from "react-router-dom";
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 
 // React Query - 데이터 캐싱 및 서버 상태 관리
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -26,7 +26,11 @@ import RootLayout from "./components/layout/RootLayout";
 // common components (온보딩 모달, 학번 입력 모달)
 import OnboardingModal from "./components/common/OnboardingModal";
 import StudentIdModal from "./components/common/StudentIdModal";
-import { hasStudentId } from "./services/studentService";
+import { hasStudentId, smartSync, getStudentIdFromStorage } from "./services/studentService";
+
+// Firebase services
+import { onAuthChange, signInAnonymous } from "./services/authService";
+import { syncStudentDataToFirestore } from "./services/firebaseService";
 
 // pages (지연 로딩 - 필요할 때만 로딩)
 const Home = lazy(() => import("./Pages/Home"));
@@ -150,6 +154,10 @@ const FIRST_VISIT_COMPLETE_KEY = 'bukyeongFirstVisitComplete';
 const SHOW_STUDENT_ID_MODAL_KEY = 'showStudentIdModal';
 
 export default function App() {
+  // Firebase 인증 상태
+  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+
   // 마운트 시 학번 입력 모달 표시 플래그 확인
   const [showStudentIdModal, setShowStudentIdModal] = useState(() => {
     const shouldShow = localStorage.getItem(SHOW_STUDENT_ID_MODAL_KEY) === 'true';
@@ -160,6 +168,67 @@ export default function App() {
     }
     return shouldShow;
   });
+
+  // Firebase 인증 상태 구독
+  useEffect(() => {
+    console.log('[App] Firebase 인증 상태 구독 시작');
+
+    const unsubscribe = onAuthChange(async (user) => {
+      if (user) {
+        console.log('[App] 사용자 로그인:', user.uid, user.isAnonymous ? '(익명)' : `(${user.email})`);
+        setUser(user);
+
+        // Firestore와 동기화
+        try {
+          await smartSync(user.uid);
+          console.log('[App] Firestore 동기화 완료');
+        } catch (error) {
+          console.error('[App] Firestore 동기화 실패:', error);
+        }
+      } else {
+        console.log('[App] 사용자 없음 - 익명 로그인 시도');
+        try {
+          await signInAnonymous();
+        } catch (error) {
+          console.error('[App] 익명 로그인 실패:', error);
+        }
+      }
+      setAuthLoading(false);
+    });
+
+    return () => {
+      console.log('[App] Firebase 인증 상태 구독 해제');
+      unsubscribe();
+    };
+  }, []);
+
+  // 기존 localStorage 사용자 자동 마이그레이션
+  useEffect(() => {
+    const migrateExistingUser = async () => {
+      if (!user) return;
+
+      const migrationFlag = localStorage.getItem('firebaseMigrationComplete');
+      if (migrationFlag) {
+        console.log('[Migration] 이미 마이그레이션 완료');
+        return;
+      }
+
+      const localData = getStudentIdFromStorage();
+      if (localData) {
+        console.log('[Migration] 기존 localStorage 데이터 발견 - Firestore로 마이그레이션');
+        try {
+          await syncStudentDataToFirestore(user.uid, localData);
+          localStorage.setItem('firebaseMigrationComplete', 'true');
+          console.log('[Migration] 마이그레이션 완료!');
+        } catch (error) {
+          console.error('[Migration] 마이그레이션 실패:', error);
+          // Don't block user - localStorage still works
+        }
+      }
+    };
+
+    migrateExistingUser();
+  }, [user]);
 
   // 온보딩 완료 후 학번 입력 모달 표시 (첫 방문 시만)
   const handleOnboardingComplete = () => {
@@ -193,6 +262,22 @@ export default function App() {
     // 학번 저장 후 페이지 새로고침하여 시간표 표시
     window.location.reload();
   };
+
+  // 인증 로딩 중 표시
+  if (authLoading) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        fontSize: '16px',
+        color: '#666'
+      }}>
+        인증 확인 중...
+      </div>
+    );
+  }
 
   return (
     // QueryClientProvider: 앱 전체에 React Query 기능 제공

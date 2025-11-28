@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getStudentIdFromStorage, clearStudentId } from '../services/studentService';
 import EditStudentIdForm from '../components/common/EditStudentIdForm';
+import AuthButton from '../components/common/AuthButton';
+import { getCurrentUser } from '../services/authService';
 import './About.css';
 
 export default function About() {
@@ -9,6 +11,16 @@ export default function About() {
 
   // 편집 모드 상태
   const [isEditingStudentId, setIsEditingStudentId] = useState(false);
+
+  // Firebase 인증 상태
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // Get current user on mount
+    const currentUser = getCurrentUser();
+    setUser(currentUser);
+    console.log('[About] Current user:', currentUser?.email || currentUser?.uid || 'anonymous');
+  }, []);
 
   const handleShowOnboarding = () => {
     // localStorage에서 방문 기록 제거
@@ -132,6 +144,42 @@ export default function About() {
                   <span>➕ 학번 등록하기</span>
                 </button>
               </>
+            )}
+          </section>
+
+          <section className="about-section">
+            <h2>🔐 계정 관리</h2>
+            {user ? (
+              <>
+                {user.isAnonymous ? (
+                  <>
+                    <p>
+                      현재 익명 사용자로 이용 중입니다.
+                    </p>
+                    <p>
+                      Google 로그인 시 여러 기기에서 학번을 동기화할 수 있습니다.
+                      브라우저 데이터가 삭제되어도 학번이 안전하게 보관됩니다.
+                    </p>
+                    <div className="auth-button-container">
+                      <AuthButton user={user} />
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <p>
+                      Google 계정으로 로그인되었습니다.
+                    </p>
+                    <p>
+                      학번 데이터가 안전하게 저장되며, 다른 기기에서도 자동으로 동기화됩니다.
+                    </p>
+                    <div className="auth-info-container">
+                      <AuthButton user={user} />
+                    </div>
+                  </>
+                )}
+              </>
+            ) : (
+              <p>인증 정보를 불러오는 중...</p>
             )}
           </section>
 

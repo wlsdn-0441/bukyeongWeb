@@ -1,0 +1,86 @@
+/* Authentication Button Styles */
+
+.auth-button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.auth-button.signin {
+  background: #4285f4;
+  color: white;
+}
+
+.auth-button.signin:hover:not(:disabled) {
+  background: #3367d6;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+}
+
+.auth-button.signin:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(66, 133, 244, 0.2);
+}
+
+.auth-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.auth-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  background: var(--bg-secondary, #f5f5f5);
+  border-radius: 0.5rem;
+}
+
+.auth-email {
+  font-size: 0.9rem;
+  color: var(--text-primary, #333);
+  font-weight: 500;
+}
+
+/* Dark mode support */
+:root[data-theme="dark"] .auth-info {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+:root[data-theme="dark"] .auth-email {
+  color: #e0e0e0;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .auth-button {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+
+  .auth-email {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .auth-email {
+    font-size: 0.8rem;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
