@@ -6,13 +6,27 @@
  * - User email for authenticated users
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { signInWithGoogle, linkAnonymousToGoogle, isAnonymous, signOut } from '../../services/authService';
 import './AuthButton.css';
 
 export default function AuthButton({ user }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // 리다이렉트 후 에러 확인
+  useEffect(() => {
+    const savedError = localStorage.getItem('authError');
+    if (savedError) {
+      try {
+        const parsedError = JSON.parse(savedError);
+        setError(parsedError);
+        localStorage.removeItem('authError');
+      } catch (e) {
+        console.error('[AuthButton] 에러 파싱 실패:', e);
+      }
+    }
+  }, []);
 
   const handleSignIn = async () => {
     setLoading(true);
@@ -25,28 +39,13 @@ export default function AuthButton({ user }) {
         console.log('[AuthButton] Google 로그인 시도');
         await signInWithGoogle();
       }
-      console.log('[AuthButton] 로그인 성공');
-      // 페이지 새로고침하여 동기화된 데이터 표시
-      window.location.reload();
+      // 리다이렉트 방식이므로 여기에 도달하지 않음 (페이지가 Google로 이동)
     } catch (error) {
       console.error('[AuthButton] 로그인 실패:', error);
-
-      // Handle domain restriction error
-      if (error.message === 'DOMAIN_NOT_ALLOWED') {
-        setError({
-          type: 'domain',
-          email: error.email
-        });
-      } else if (error.code === 'auth/popup-closed-by-user') {
-        // User closed popup - no error message needed
-        setError(null);
-      } else {
-        setError({
-          type: 'general',
-          message: error.message || '로그인에 실패했습니다.'
-        });
-      }
-    } finally {
+      setError({
+        type: 'general',
+        message: error.message || '로그인에 실패했습니다.'
+      });
       setLoading(false);
     }
   };

@@ -29,7 +29,7 @@ import StudentIdModal from "./components/common/StudentIdModal";
 import { hasStudentId, smartSync, getStudentIdFromStorage } from "./services/studentService";
 
 // Firebase services
-import { onAuthChange, signInAnonymous } from "./services/authService";
+import { onAuthChange, signInAnonymous, handleRedirectResult } from "./services/authService";
 import { syncStudentDataToFirestore } from "./services/firebaseService";
 
 // pages (지연 로딩 - 필요할 때만 로딩)
@@ -168,6 +168,23 @@ export default function App() {
     }
     return shouldShow;
   });
+
+  // Firebase 리다이렉트 결과 처리 (앱 시작 시 1회만 실행)
+  useEffect(() => {
+    const processRedirectResult = async () => {
+      const result = await handleRedirectResult();
+
+      if (!result.success && result.error?.message === 'DOMAIN_NOT_ALLOWED') {
+        // 도메인 제한 에러를 localStorage에 저장 (AuthButton에서 표시)
+        localStorage.setItem('authError', JSON.stringify({
+          type: 'domain',
+          email: result.error.email
+        }));
+      }
+    };
+
+    processRedirectResult();
+  }, []);
 
   // Firebase 인증 상태 구독
   useEffect(() => {

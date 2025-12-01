@@ -10,8 +10,9 @@
 
 import {
   signInAnonymously,
-  signInWithPopup,
-  linkWithPopup,
+  signInWithRedirect,
+  linkWithRedirect,
+  getRedirectResult,
   onAuthStateChanged
 } from 'firebase/auth';
 import { auth, googleProvider } from '../config/firebase';
@@ -45,28 +46,15 @@ export const signInAnonymous = async () => {
 };
 
 /**
- * Sign in with Google
- * @returns {Promise<User>} Firebase user object
+ * Sign in with Google (redirect method - no popup blocker)
+ * This will redirect the page to Google sign-in
+ * Use handleRedirectResult() to get the result after redirect
  */
 export const signInWithGoogle = async () => {
   try {
-    const result = await signInWithPopup(auth, googleProvider);
-    const email = result.user.email;
-
-    // Check if email domain is allowed
-    if (!isAllowedDomain(email)) {
-      console.warn(`${CONSOLE_PREFIX} 허용되지 않은 도메인:`, email);
-      // Sign out immediately and re-login as anonymous
-      await auth.signOut();
-      await signInAnonymously(auth);
-
-      const error = new Error('DOMAIN_NOT_ALLOWED');
-      error.email = email;
-      throw error;
-    }
-
-    console.log(`${CONSOLE_PREFIX} Google 로그인 성공:`, email);
-    return result.user;
+    console.log(`${CONSOLE_PREFIX} Google 로그인 시작 (redirect)`);
+    await signInWithRedirect(auth, googleProvider);
+    // Page will redirect - no return value
   } catch (error) {
     console.error(`${CONSOLE_PREFIX} Google 로그인 실패:`, error);
     throw error;
@@ -74,13 +62,39 @@ export const signInWithGoogle = async () => {
 };
 
 /**
- * Link anonymous account to Google account
- * @returns {Promise<User>} Firebase user object
+ * Link anonymous account to Google account (redirect method)
+ * This will redirect the page to Google sign-in
+ * Use handleRedirectResult() to get the result after redirect
  */
 export const linkAnonymousToGoogle = async () => {
   try {
-    const result = await linkWithPopup(auth.currentUser, googleProvider);
+    console.log(`${CONSOLE_PREFIX} 계정 연결 시작 (redirect)`);
+    await linkWithRedirect(auth.currentUser, googleProvider);
+    // Page will redirect - no return value
+  } catch (error) {
+    console.error(`${CONSOLE_PREFIX} 계정 연결 실패:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Handle redirect result after Google sign-in
+ * Call this on app initialization to process redirect results
+ * @returns {Promise<{success: boolean, user?: User, error?: Error}>}
+ */
+export const handleRedirectResult = async () => {
+  try {
+    console.log(`${CONSOLE_PREFIX} 리다이렉트 결과 확인 중...`);
+    const result = await getRedirectResult(auth);
+
+    if (!result) {
+      // No redirect result (normal page load)
+      console.log(`${CONSOLE_PREFIX} 리다이렉트 결과 없음`);
+      return { success: true };
+    }
+
     const email = result.user.email;
+    console.log(`${CONSOLE_PREFIX} 리다이렉트 로그인 성공:`, email);
 
     // Check if email domain is allowed
     if (!isAllowedDomain(email)) {
@@ -91,19 +105,18 @@ export const linkAnonymousToGoogle = async () => {
 
       const error = new Error('DOMAIN_NOT_ALLOWED');
       error.email = email;
-      throw error;
+      return { success: false, error };
     }
 
-    console.log(`${CONSOLE_PREFIX} 계정 연결 성공:`, email);
-    return result.user;
+    return { success: true, user: result.user };
   } catch (error) {
     if (error.code === 'auth/credential-already-in-use') {
-      // User already has Google account - sign in instead
-      console.warn(`${CONSOLE_PREFIX} Google 계정이 이미 존재 - 로그인으로 전환`);
-      return await signInWithGoogle();
+      // User already has Google account - this is OK
+      console.warn(`${CONSOLE_PREFIX} Google 계정이 이미 존재`);
+      return { success: true };
     }
-    console.error(`${CONSOLE_PREFIX} 계정 연결 실패:`, error);
-    throw error;
+    console.error(`${CONSOLE_PREFIX} 리다이렉트 결과 처리 실패:`, error);
+    return { success: false, error };
   }
 };
 
