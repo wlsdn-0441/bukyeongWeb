@@ -60,6 +60,11 @@ export const fetchStudentDataFromFirestore = async (userId) => {
 
     if (userSnap.exists()) {
       const data = userSnap.data();
+      // studentData가 null이거나 undefined면 null 반환
+      if (!data.studentData) {
+        console.log(`${CONSOLE_PREFIX} No student data in user document`);
+        return null;
+      }
       console.log(`${CONSOLE_PREFIX} Student data fetched:`, data.studentData);
       return data.studentData;
     } else {
@@ -119,7 +124,15 @@ const createStudentRegistration = async (userId, studentData) => {
  */
 export const markStudentDataInactive = async (userId) => {
   try {
-    // Mark all active registrations as inactive
+    // 1. Remove studentData from users/{userId} document
+    const userRef = doc(db, 'users', userId);
+    await updateDoc(userRef, {
+      studentData: null,
+      lastSyncAt: serverTimestamp()
+    });
+    console.log(`${CONSOLE_PREFIX} User document studentData removed`);
+
+    // 2. Mark all active registrations as inactive
     const q = query(
       collection(db, 'studentRegistrations'),
       where('userId', '==', userId),

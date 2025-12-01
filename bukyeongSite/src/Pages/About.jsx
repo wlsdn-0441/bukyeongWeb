@@ -49,10 +49,10 @@ export default function About() {
     setIsEditingStudentId(false);
   };
 
-  const handleDeleteStudentId = () => {
+  const handleDeleteStudentId = async () => {
     if (confirm('학번을 삭제하시겠습니까? 시간표를 이용하려면 다시 등록해야 합니다.')) {
       console.log('[About] 학번 삭제');
-      clearStudentId();
+      await clearStudentId();
       console.log('[About] 페이지 새로고침 중...');
       location.reload();
     }
@@ -160,6 +160,15 @@ export default function About() {
                       Google 로그인 시 여러 기기에서 학번을 동기화할 수 있습니다.
                       브라우저 데이터가 삭제되어도 학번이 안전하게 보관됩니다.
                     </p>
+                    <div className="auth-notice">
+                      <span className="notice-icon">ℹ️</span>
+                      <div className="notice-content">
+                        <strong>학교 공식계정만 로그인 가능합니다</strong>
+                        <div className="notice-detail">
+                          <strong>@saja.hs.kr</strong> 도메인의 이메일만 사용할 수 있습니다.
+                        </div>
+                      </div>
+                    </div>
                     <div className="auth-button-container">
                       <AuthButton user={user} />
                     </div>

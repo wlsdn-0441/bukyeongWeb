@@ -59,7 +59,7 @@ export default function EditStudentIdForm({ currentStudentData, onCancel, onComp
 
     try {
       // 기존 학번 삭제
-      clearStudentId();
+      await clearStudentId();
       console.log('[EditStudentIdForm] 기존 학번 삭제 완료');
 
       // 새 학번 등록
@@ -76,10 +76,10 @@ export default function EditStudentIdForm({ currentStudentData, onCancel, onComp
   };
 
   // 학번 삭제
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (confirm('학번을 삭제하시겠습니까? 시간표를 이용하려면 다시 등록해야 합니다.')) {
       console.log('[EditStudentIdForm] 학번 삭제');
-      clearStudentId();
+      await clearStudentId();
       console.log('[EditStudentIdForm] 페이지 새로고침 중...');
       window.location.reload();
     }

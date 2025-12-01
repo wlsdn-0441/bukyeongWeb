@@ -17,6 +17,17 @@ import {
 import { auth, googleProvider } from '../config/firebase';
 
 const CONSOLE_PREFIX = '[AuthService]';
+const ALLOWED_DOMAIN = '@saja.hs.kr';
+
+/**
+ * Check if email domain is allowed
+ * @param {string} email - Email to check
+ * @returns {boolean} True if domain is allowed
+ */
+const isAllowedDomain = (email) => {
+  if (!email) return false;
+  return email.toLowerCase().endsWith(ALLOWED_DOMAIN);
+};
 
 /**
  * Sign in anonymously (for first-time users)
@@ -40,7 +51,21 @@ export const signInAnonymous = async () => {
 export const signInWithGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, googleProvider);
-    console.log(`${CONSOLE_PREFIX} Google 로그인 성공:`, result.user.email);
+    const email = result.user.email;
+
+    // Check if email domain is allowed
+    if (!isAllowedDomain(email)) {
+      console.warn(`${CONSOLE_PREFIX} 허용되지 않은 도메인:`, email);
+      // Sign out immediately and re-login as anonymous
+      await auth.signOut();
+      await signInAnonymously(auth);
+
+      const error = new Error('DOMAIN_NOT_ALLOWED');
+      error.email = email;
+      throw error;
+    }
+
+    console.log(`${CONSOLE_PREFIX} Google 로그인 성공:`, email);
     return result.user;
   } catch (error) {
     console.error(`${CONSOLE_PREFIX} Google 로그인 실패:`, error);
@@ -55,7 +80,21 @@ export const signInWithGoogle = async () => {
 export const linkAnonymousToGoogle = async () => {
   try {
     const result = await linkWithPopup(auth.currentUser, googleProvider);
-    console.log(`${CONSOLE_PREFIX} 계정 연결 성공:`, result.user.email);
+    const email = result.user.email;
+
+    // Check if email domain is allowed
+    if (!isAllowedDomain(email)) {
+      console.warn(`${CONSOLE_PREFIX} 허용되지 않은 도메인:`, email);
+      // Sign out immediately and re-login as anonymous
+      await auth.signOut();
+      await signInAnonymously(auth);
+
+      const error = new Error('DOMAIN_NOT_ALLOWED');
+      error.email = email;
+      throw error;
+    }
+
+    console.log(`${CONSOLE_PREFIX} 계정 연결 성공:`, email);
     return result.user;
   } catch (error) {
     if (error.code === 'auth/credential-already-in-use') {
