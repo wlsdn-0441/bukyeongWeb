@@ -267,3 +267,58 @@
 .card-clickable:focus:not(:focus-visible) {
   outline: none;
 }
+
+/* ============================================
+   드래그 앤 드롭 스타일
+   ============================================ */
+
+/* 드래그 가능한 카드 커서 */
+.card[draggable="true"] {
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.card[draggable="true"]:active {
+  cursor: grabbing;
+}
+
+/* 드래그 중인 카드 스타일 */
+.card-dragging {
+  opacity: 0.5;
+  transform: scale(1.05);
+  cursor: grabbing !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  position: relative;
+}
+
+/* 드롭 영역 하이라이트 */
+.card-drag-over {
+  border: 2px dashed #4a9eff;
+  background: rgba(74, 158, 255, 0.05);
+}
+
+/* 드래그 애니메이션 */
+.card {
+  transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* 드래그 중에는 fadeIn 애니메이션 비활성화 */
+.card-dragging {
+  animation: none;
+}
+
+/* 다크모드 드롭 영역 */
+@media (prefers-color-scheme: dark) {
+  .card-drag-over {
+    border-color: #6bb6ff;
+    background: rgba(107, 182, 255, 0.1);
+  }
+
+  .card-dragging {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  }
+}
