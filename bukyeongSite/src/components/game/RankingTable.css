@@ -1,0 +1,258 @@
+/* Ranking Table Component */
+
+.ranking-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  background: var(--card-bg, #fff);
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ranking-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+/* Table Header */
+.ranking-table thead {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.ranking-table th {
+  padding: 1rem 0.75rem;
+  font-weight: 600;
+  text-align: center;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Table Body */
+.ranking-table tbody tr {
+  border-bottom: 1px solid var(--card-border, #e0e0e0);
+  transition: background-color 0.2s ease;
+}
+
+.ranking-table tbody tr:hover {
+  background: rgba(102, 126, 234, 0.05);
+}
+
+.ranking-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.ranking-table td {
+  padding: 0.875rem 0.75rem;
+  text-align: center;
+  color: var(--text-color, #000);
+}
+
+/* Column Widths */
+.rank-col {
+  width: 15%;
+  min-width: 60px;
+}
+
+.name-col {
+  width: 35%;
+  min-width: 100px;
+  text-align: left;
+}
+
+.class-col {
+  width: 20%;
+  min-width: 60px;
+}
+
+.score-col {
+  width: 30%;
+  min-width: 80px;
+}
+
+/* Rank Display */
+.rank-medal {
+  font-size: 1.5rem;
+  display: inline-block;
+}
+
+.rank-number {
+  font-weight: 600;
+  color: var(--card-subtitle-color, #666);
+}
+
+/* Top 3 Highlight */
+.ranking-row.top-three {
+  background: rgba(255, 215, 0, 0.05);
+}
+
+.ranking-row.top-three:hover {
+  background: rgba(255, 215, 0, 0.1);
+}
+
+/* Current User Highlight */
+.ranking-row.current-user {
+  background: rgba(102, 126, 234, 0.1);
+  border-left: 4px solid #667eea;
+  border-right: 4px solid #764ba2;
+}
+
+.ranking-row.current-user:hover {
+  background: rgba(102, 126, 234, 0.15);
+}
+
+/* "나" Badge */
+.you-badge {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.125rem 0.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 1rem;
+}
+
+/* Score Display */
+.score-value {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-color, #000);
+}
+
+.score-unit {
+  margin-left: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--card-subtitle-color, #666);
+}
+
+/* Loading State */
+.ranking-table-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  background: var(--card-bg, #fff);
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  gap: 1rem;
+}
+
+.ranking-table-loading .loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--card-border, #e0e0e0);
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.ranking-table-loading p {
+  color: var(--card-subtitle-color, #666);
+  font-size: 0.9rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Empty State */
+.ranking-table-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  background: var(--card-bg, #fff);
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.empty-message {
+  color: var(--card-subtitle-color, #666);
+  font-size: 0.9rem;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .ranking-table {
+    font-size: 0.85rem;
+  }
+
+  .ranking-table th,
+  .ranking-table td {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .rank-col {
+    width: 15%;
+    min-width: 50px;
+  }
+
+  .name-col {
+    width: 30%;
+    min-width: 80px;
+  }
+
+  .class-col {
+    width: 20%;
+    min-width: 50px;
+  }
+
+  .score-col {
+    width: 35%;
+    min-width: 70px;
+  }
+
+  .rank-medal {
+    font-size: 1.25rem;
+  }
+
+  .score-value {
+    font-size: 0.9rem;
+  }
+
+  .you-badge {
+    font-size: 0.7rem;
+    padding: 0.1rem 0.4rem;
+  }
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  .ranking-table-wrapper {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .ranking-table tbody tr:hover {
+    background: rgba(102, 126, 234, 0.1);
+  }
+
+  .ranking-row.top-three {
+    background: rgba(255, 215, 0, 0.08);
+  }
+
+  .ranking-row.top-three:hover {
+    background: rgba(255, 215, 0, 0.15);
+  }
+
+  .ranking-row.current-user {
+    background: rgba(102, 126, 234, 0.15);
+  }
+
+  .ranking-row.current-user:hover {
+    background: rgba(102, 126, 234, 0.2);
+  }
+
+  .ranking-table-loading,
+  .ranking-table-empty {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+}

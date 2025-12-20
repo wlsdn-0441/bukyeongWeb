@@ -41,6 +41,12 @@ const Faq = lazy(() => import("./Pages/help/Faq"));
 const Contact = lazy(() => import("./Pages/help/Contant"));
 const NotFound = lazy(() => import("./Pages/NotFound"));
 
+// game pages (부스 게임 점수 수령 및 랭킹)
+const ClaimScore = lazy(() => import("./Pages/ClaimScore"));
+const Ranking = lazy(() => import("./Pages/Ranking"));
+const MyScore = lazy(() => import("./Pages/MyScore"));
+const ManualClaim = lazy(() => import("./Pages/admin/ManualClaim"));
+
 // ============================================
 // Suspense Fallback: 페이지 로딩 중 표시할 UI
 // ============================================
@@ -123,6 +129,28 @@ const router = createBrowserRouter(
       <Route path="timetable" element={
         <Suspense fallback={<PageLoadingFallback />}>
           <Timetable />
+        </Suspense>
+      } />
+
+      {/* Game 라우트 - 부스 게임 점수 수령 및 랭킹 */}
+      <Route path="claim" element={
+        <Suspense fallback={<PageLoadingFallback />}>
+          <ClaimScore />
+        </Suspense>
+      } />
+      <Route path="ranking" element={
+        <Suspense fallback={<PageLoadingFallback />}>
+          <Ranking />
+        </Suspense>
+      } />
+      <Route path="my-score" element={
+        <Suspense fallback={<PageLoadingFallback />}>
+          <MyScore />
+        </Suspense>
+      } />
+      <Route path="admin/manual-claim" element={
+        <Suspense fallback={<PageLoadingFallback />}>
+          <ManualClaim />
         </Suspense>
       } />
 

@@ -279,6 +279,8 @@
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+  touch-action: none;
+  -webkit-touch-callout: none;
 }
 
 .card[draggable="true"]:active {
@@ -293,6 +295,9 @@
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
   z-index: 1000;
   position: relative;
+  touch-action: none !important;
+  -webkit-touch-callout: none;
+  overscroll-behavior: contain;
 }
 
 /* 드롭 영역 하이라이트 */
@@ -320,5 +325,19 @@
 
   .card-dragging {
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  }
+}
+
+/* 모바일에서 드래그 시 스크롤 방지 강화 */
+@media (max-width: 768px) {
+  .card[draggable="true"] {
+    touch-action: none !important;
+    -webkit-user-drag: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .card-dragging {
+    touch-action: none !important;
+    pointer-events: auto;
   }
 }

@@ -1,0 +1,100 @@
+/* Student ID Input Component */
+
+.student-id-input-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.student-id-input {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.5rem;
+  text-align: center;
+  letter-spacing: 0.5rem;
+  border: 2px solid var(--card-border, #e0e0e0);
+  border-radius: 0.5rem;
+  background: var(--card-bg, #fff);
+  color: var(--text-color, #000);
+  transition: all 0.2s ease;
+}
+
+.student-id-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.student-id-input.valid {
+  border-color: #10b981;
+}
+
+.student-id-input.error {
+  border-color: #ef4444;
+}
+
+.student-id-input::placeholder {
+  color: var(--card-subtitle-color, #999);
+  letter-spacing: 0.25rem;
+}
+
+.input-preview {
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #10b981;
+  font-weight: 500;
+}
+
+.input-error {
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #ef4444;
+}
+
+.submit-button {
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.submit-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.submit-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.submit-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .student-id-input {
+    font-size: 1.25rem;
+    padding: 0.875rem;
+  }
+
+  .submit-button {
+    padding: 0.875rem;
+  }
+}
