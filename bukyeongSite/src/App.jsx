@@ -187,53 +187,64 @@ export default function App() {
     return shouldShow;
   });
 
-  // Firebase 리다이렉트 결과 처리 (앱 시작 시 1회만 실행)
+  // Firebase 인증 초기화 및 상태 구독
   useEffect(() => {
-    const processRedirectResult = async () => {
-      const result = await handleRedirectResult();
+    console.log('[App] Firebase 인증 초기화 시작');
+    let unsubscribe;
 
-      if (!result.success && result.error?.message === 'DOMAIN_NOT_ALLOWED') {
-        // 도메인 제한 에러를 localStorage에 저장 (AuthButton에서 표시)
-        localStorage.setItem('authError', JSON.stringify({
-          type: 'domain',
-          email: result.error.email
-        }));
+    const initializeAuth = async () => {
+      // 1. 먼저 리다이렉트 결과 처리 (Google 로그인 완료 확인)
+      try {
+        const result = await handleRedirectResult();
+
+        if (!result.success && result.error?.message === 'DOMAIN_NOT_ALLOWED') {
+          // 도메인 제한 에러를 localStorage에 저장 (AuthButton에서 표시)
+          localStorage.setItem('authError', JSON.stringify({
+            type: 'domain',
+            email: result.error.email
+          }));
+        }
+
+        if (result.success && result.user) {
+          console.log('[App] 리다이렉트 로그인 완료:', result.user.email);
+        }
+      } catch (error) {
+        console.error('[App] 리다이렉트 결과 처리 실패:', error);
       }
+
+      // 2. 리다이렉트 처리 완료 후 인증 상태 구독 시작
+      console.log('[App] Firebase 인증 상태 구독 시작');
+      unsubscribe = onAuthChange(async (user) => {
+        if (user) {
+          console.log('[App] 사용자 로그인:', user.uid, user.isAnonymous ? '(익명)' : `(${user.email})`);
+          setUser(user);
+
+          // Firestore와 동기화
+          try {
+            await smartSync(user.uid);
+            console.log('[App] Firestore 동기화 완료');
+          } catch (error) {
+            console.error('[App] Firestore 동기화 실패:', error);
+          }
+        } else {
+          console.log('[App] 사용자 없음 - 익명 로그인 시도');
+          try {
+            await signInAnonymous();
+          } catch (error) {
+            console.error('[App] 익명 로그인 실패:', error);
+          }
+        }
+        setAuthLoading(false);
+      });
     };
 
-    processRedirectResult();
-  }, []);
-
-  // Firebase 인증 상태 구독
-  useEffect(() => {
-    console.log('[App] Firebase 인증 상태 구독 시작');
-
-    const unsubscribe = onAuthChange(async (user) => {
-      if (user) {
-        console.log('[App] 사용자 로그인:', user.uid, user.isAnonymous ? '(익명)' : `(${user.email})`);
-        setUser(user);
-
-        // Firestore와 동기화
-        try {
-          await smartSync(user.uid);
-          console.log('[App] Firestore 동기화 완료');
-        } catch (error) {
-          console.error('[App] Firestore 동기화 실패:', error);
-        }
-      } else {
-        console.log('[App] 사용자 없음 - 익명 로그인 시도');
-        try {
-          await signInAnonymous();
-        } catch (error) {
-          console.error('[App] 익명 로그인 실패:', error);
-        }
-      }
-      setAuthLoading(false);
-    });
+    initializeAuth();
 
     return () => {
-      console.log('[App] Firebase 인증 상태 구독 해제');
-      unsubscribe();
+      if (unsubscribe) {
+        console.log('[App] Firebase 인증 상태 구독 해제');
+        unsubscribe();
+      }
     };
   }, []);
 
