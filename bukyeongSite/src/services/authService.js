@@ -36,8 +36,11 @@ const isAllowedDomain = (email) => {
  */
 export const signInAnonymous = async () => {
   try {
+    const startTime = performance.now();
     const result = await signInAnonymously(auth);
-    console.log(`${CONSOLE_PREFIX} 익명 로그인 성공:`, result.user.uid);
+    const duration = performance.now() - startTime;
+
+    console.log(`${CONSOLE_PREFIX} 익명 로그인 성공 (${duration.toFixed(2)}ms):`, result.user.uid);
     return result.user;
   } catch (error) {
     console.error(`${CONSOLE_PREFIX} 익명 로그인 실패:`, error);
@@ -84,18 +87,24 @@ export const linkAnonymousToGoogle = async () => {
  */
 export const handleRedirectResult = async () => {
   try {
+    const startTime = performance.now();
     console.log(`${CONSOLE_PREFIX} 리다이렉트 결과 확인 중...`);
     const result = await getRedirectResult(auth);
+    const duration = performance.now() - startTime;
 
     if (!result) {
       // No redirect result (normal page load)
-      console.log(`${CONSOLE_PREFIX} 리다이렉트 결과 없음 (일반 페이지 로드)`);
+      console.log(`${CONSOLE_PREFIX} 리다이렉트 결과 없음 (${duration.toFixed(2)}ms)`);
       return { success: true };
     }
 
     const email = result.user?.email;
     const uid = result.user?.uid;
-    console.log(`${CONSOLE_PREFIX} 리다이렉트 로그인 성공:`, { email, uid, isAnonymous: result.user?.isAnonymous });
+    console.log(`${CONSOLE_PREFIX} 리다이렉트 로그인 성공 (${duration.toFixed(2)}ms):`, {
+      email,
+      uid,
+      isAnonymous: result.user?.isAnonymous
+    });
 
     // Check if email domain is allowed
     if (email && !isAllowedDomain(email)) {

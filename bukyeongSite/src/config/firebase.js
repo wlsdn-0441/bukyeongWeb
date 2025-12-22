@@ -33,13 +33,33 @@ googleProvider.setCustomParameters({
   // 리다이렉트 URI를 명시적으로 설정하지 않음 (Firebase가 자동으로 처리)
 });
 
-// Set auth persistence to LOCAL (세션 유지)
-setPersistence(auth, browserLocalPersistence)
-  .then(() => {
-    console.log('[Firebase] Auth persistence 설정 완료 (LOCAL)');
-  })
-  .catch((error) => {
-    console.error('[Firebase] Auth persistence 설정 실패:', error);
-  });
+// Auth initialization state
+let authInitialized = false;
 
-console.log('[Firebase] 초기화 완료');
+/**
+ * Initialize Firebase Auth persistence
+ * Must be called before any auth operations
+ * @returns {Promise<void>}
+ */
+export const initializeFirebaseAuth = async () => {
+  if (authInitialized) {
+    console.log('[Firebase] Auth already initialized');
+    return;
+  }
+
+  console.log('[Firebase] 인증 초기화 시작');
+  const startTime = performance.now();
+
+  try {
+    await setPersistence(auth, browserLocalPersistence);
+    authInitialized = true;
+
+    const duration = performance.now() - startTime;
+    console.log(`[Firebase] Persistence 완료 (${duration.toFixed(2)}ms)`);
+  } catch (error) {
+    console.error('[Firebase] Persistence 설정 실패:', error);
+    throw error;
+  }
+};
+
+console.log('[Firebase] 모듈 로드 시간:', new Date().toISOString());

@@ -29,6 +29,7 @@ import StudentIdModal from "./components/common/StudentIdModal";
 import { hasStudentId, smartSync, getStudentIdFromStorage } from "./services/studentService";
 
 // Firebase services
+import { initializeFirebaseAuth } from "./config/firebase";
 import { onAuthChange, signInAnonymous, handleRedirectResult } from "./services/authService";
 import { syncStudentDataToFirestore } from "./services/firebaseService";
 
@@ -175,6 +176,7 @@ export default function App() {
   // Firebase 인증 상태
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
+  const [authReady, setAuthReady] = useState(false);
 
   // 마운트 시 학번 입력 모달 표시 플래그 확인
   const [showStudentIdModal, setShowStudentIdModal] = useState(() => {
@@ -189,16 +191,25 @@ export default function App() {
 
   // Firebase 인증 초기화 및 상태 구독
   useEffect(() => {
-    console.log('[App] Firebase 인증 초기화 시작');
-    let unsubscribe;
+    let isMounted = true;
+    let unsubscribe = null;
 
     const initializeAuth = async () => {
-      // 1. 먼저 리다이렉트 결과 처리 (Google 로그인 완료 확인)
       try {
+        console.log('[App] 인증 초기화 시작:', new Date().toISOString());
+        const appStartTime = performance.now();
+
+        // 1️⃣ Firebase persistence 설정 완료 대기 (가장 중요!)
+        console.log('[App] Persistence 설정 중...');
+        await initializeFirebaseAuth();
+        console.log('[App] Persistence 준비 완료:', performance.now() - appStartTime, 'ms');
+
+        // 2️⃣ Google 리다이렉트 결과 처리
+        console.log('[App] 리다이렉트 결과 확인 중...');
         const result = await handleRedirectResult();
+        console.log('[App] 리다이렉트 처리 완료:', performance.now() - appStartTime, 'ms');
 
         if (!result.success && result.error?.message === 'DOMAIN_NOT_ALLOWED') {
-          // 도메인 제한 에러를 localStorage에 저장 (AuthButton에서 표시)
           localStorage.setItem('authError', JSON.stringify({
             type: 'domain',
             email: result.error.email
@@ -208,41 +219,55 @@ export default function App() {
         if (result.success && result.user) {
           console.log('[App] 리다이렉트 로그인 완료:', result.user.email);
         }
+
+        // 3️⃣ 인증 상태 구독 시작
+        console.log('[App] Auth 상태 구독 시작:', performance.now() - appStartTime, 'ms');
+        setAuthReady(true);
+
+        unsubscribe = onAuthChange(async (user) => {
+          if (!isMounted) return;
+
+          console.log('[App] Auth 상태 변경:', {
+            user: user ? (user.email || user.uid) : 'null',
+            isAnonymous: user?.isAnonymous,
+            timestamp: performance.now() - appStartTime + 'ms'
+          });
+
+          if (user) {
+            setUser(user);
+
+            // Firestore와 동기화
+            try {
+              await smartSync(user.uid);
+              console.log('[App] Firestore 동기화 완료');
+            } catch (error) {
+              console.error('[App] Firestore 동기화 실패:', error);
+            }
+          } else {
+            // 사용자 없음 - 익명 로그인
+            console.log('[App] 사용자 없음 - 익명 로그인 시도');
+            try {
+              await signInAnonymous();
+            } catch (error) {
+              console.error('[App] 익명 로그인 실패:', error);
+            }
+          }
+
+          setAuthLoading(false);
+        });
+
       } catch (error) {
-        console.error('[App] 리다이렉트 결과 처리 실패:', error);
-      }
-
-      // 2. 리다이렉트 처리 완료 후 인증 상태 구독 시작
-      console.log('[App] Firebase 인증 상태 구독 시작');
-      unsubscribe = onAuthChange(async (user) => {
-        if (user) {
-          console.log('[App] 사용자 로그인:', user.uid, user.isAnonymous ? '(익명)' : `(${user.email})`);
-          setUser(user);
-
-          // Firestore와 동기화
-          try {
-            await smartSync(user.uid);
-            console.log('[App] Firestore 동기화 완료');
-          } catch (error) {
-            console.error('[App] Firestore 동기화 실패:', error);
-          }
-        } else {
-          console.log('[App] 사용자 없음 - 익명 로그인 시도');
-          try {
-            await signInAnonymous();
-          } catch (error) {
-            console.error('[App] 익명 로그인 실패:', error);
-          }
-        }
+        console.error('[App] 인증 초기화 실패:', error);
         setAuthLoading(false);
-      });
+      }
     };
 
     initializeAuth();
 
     return () => {
+      isMounted = false;
       if (unsubscribe) {
-        console.log('[App] Firebase 인증 상태 구독 해제');
+        console.log('[App] Auth 상태 구독 해제');
         unsubscribe();
       }
     };
@@ -314,13 +339,16 @@ export default function App() {
     return (
       <div style={{
         display: 'flex',
+        flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
         minHeight: '100vh',
         fontSize: '16px',
-        color: '#666'
+        color: '#666',
+        gap: '10px'
       }}>
-        인증 확인 중...
+        <div>인증 확인 중...</div>
+        {!authReady && <div style={{ fontSize: '12px', color: '#999' }}>Firebase 초기화 중</div>}
       </div>
     );
   }
