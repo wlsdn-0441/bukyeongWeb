@@ -1,0 +1,400 @@
+/* GameStatsPage.css */
+
+/* ============================================
+   페이지 컨테이너
+   ============================================ */
+.game-stats-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  padding-bottom: 120px; /* 하단 네비게이션 공간 확보 */
+}
+
+/* ============================================
+   로딩 상태
+   ============================================ */
+.stats-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  min-height: 50vh;
+  color: var(--card-subtitle-color);
+}
+
+.loading-spinner {
+  width: 3rem;
+  height: 3rem;
+  border: 4px solid rgba(255, 59, 48, 0.1);
+  border-top-color: #ff3b30;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================
+   헤더
+   ============================================ */
+.stats-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stats-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--card-title-color);
+  margin: 0;
+  text-align: center;
+}
+
+/* ============================================
+   개인 통계 카드
+   ============================================ */
+.my-stats-card {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(255, 59, 48, 0.05) 0%, rgba(255, 107, 107, 0.05) 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 59, 48, 0.1);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.my-stats-card .stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.my-stats-card .label {
+  font-size: 0.8rem;
+  color: var(--card-subtitle-color);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.my-stats-card .value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--card-title-color);
+  line-height: 1;
+}
+
+/* ============================================
+   그라디언트 텍스트
+   ============================================ */
+.gradient-text {
+  background: linear-gradient(135deg, #ff3b30 0%, #ff6b6b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================
+   필터
+   ============================================ */
+.stats-filters {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-select {
+  padding: 0.625rem 1rem;
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  background: var(--card-bg);
+  color: var(--card-title-color);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.filter-select:hover {
+  border-color: rgba(255, 59, 48, 0.3);
+}
+
+.filter-select:focus {
+  border-color: #ff3b30;
+  box-shadow: 0 0 0 3px rgba(255, 59, 48, 0.1);
+}
+
+.filter-reset {
+  padding: 0.625rem 1rem;
+  border: 1px solid rgba(255, 59, 48, 0.3);
+  border-radius: 8px;
+  background: rgba(255, 59, 48, 0.05);
+  color: #ff3b30;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-reset:hover {
+  background: rgba(255, 59, 48, 0.1);
+  border-color: rgba(255, 59, 48, 0.5);
+}
+
+.filter-info {
+  margin-left: auto;
+  font-size: 0.9rem;
+  color: var(--card-subtitle-color);
+  font-weight: 600;
+}
+
+/* ============================================
+   랭킹 테이블 컨테이너
+   ============================================ */
+.ranking-table-container {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* ============================================
+   랭킹 테이블
+   ============================================ */
+.ranking-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.ranking-table thead {
+  background: var(--card-footer-bg);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.ranking-table th {
+  padding: 1rem 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--card-subtitle-color);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.ranking-table tbody tr {
+  border-bottom: 1px solid var(--card-border);
+  transition: all 0.2s ease;
+}
+
+.ranking-table tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.ranking-table tbody tr:hover {
+  background: rgba(255, 59, 48, 0.05);
+}
+
+.ranking-table td {
+  padding: 0.875rem 0.75rem;
+  color: var(--card-body-color);
+}
+
+/* 컬럼 정렬 */
+.col-rank {
+  text-align: center;
+  width: 80px;
+}
+
+.col-id {
+  font-weight: 600;
+  color: var(--card-title-color);
+}
+
+.col-class {
+  text-align: center;
+  width: 80px;
+}
+
+.col-score {
+  text-align: right;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* 메달 */
+.medal {
+  font-size: 1.25rem;
+  margin-right: 0.25rem;
+}
+
+/* 내 순위 행 하이라이트 */
+.ranking-table tbody tr.my-row {
+  background: linear-gradient(90deg, rgba(255, 59, 48, 0.1) 0%, rgba(255, 107, 107, 0.1) 100%) !important;
+  font-weight: 700;
+}
+
+.ranking-table tbody tr.my-row td {
+  color: var(--card-title-color);
+}
+
+.ranking-table tbody tr.my-row:hover {
+  background: linear-gradient(90deg, rgba(255, 59, 48, 0.15) 0%, rgba(255, 107, 107, 0.15) 100%) !important;
+}
+
+/* ============================================
+   결과 없음
+   ============================================ */
+.no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 3rem;
+  color: var(--card-subtitle-color);
+}
+
+.no-results-icon {
+  font-size: 3rem;
+  opacity: 0.5;
+}
+
+.no-results p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* ============================================
+   다크모드
+   ============================================ */
+:root[data-theme="dark"] .my-stats-card {
+  background: linear-gradient(135deg, rgba(255, 59, 48, 0.08) 0%, rgba(255, 107, 107, 0.08) 100%);
+  border-color: rgba(255, 59, 48, 0.15);
+}
+
+:root[data-theme="dark"] .ranking-table tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+:root[data-theme="dark"] .ranking-table tbody tr:hover {
+  background: rgba(255, 59, 48, 0.08);
+}
+
+/* ============================================
+   반응형 디자인
+   ============================================ */
+@media (max-width: 768px) {
+  .game-stats-page {
+    padding: 1rem 0.75rem;
+    padding-bottom: 100px;
+  }
+
+  .stats-header {
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .stats-title {
+    font-size: 1.5rem;
+  }
+
+  .my-stats-card {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+
+  .my-stats-card .label {
+    font-size: 0.75rem;
+  }
+
+  .my-stats-card .value {
+    font-size: 1.75rem;
+  }
+
+  .stats-filters {
+    gap: 0.5rem;
+  }
+
+  .filter-select,
+  .filter-reset {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .filter-info {
+    font-size: 0.85rem;
+    margin-left: 0;
+    width: 100%;
+    text-align: center;
+  }
+
+  /* 모바일 테이블 스크롤 */
+  .ranking-table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .ranking-table {
+    min-width: 500px;
+    font-size: 0.85rem;
+  }
+
+  .ranking-table th {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .ranking-table td {
+    padding: 0.625rem 0.5rem;
+  }
+
+  .col-score {
+    font-size: 1rem;
+  }
+
+  .medal {
+    font-size: 1.1rem;
+  }
+}
+
+/* ============================================
+   애니메이션
+   ============================================ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.game-stats-page {
+  animation: fadeIn 0.4s ease;
+}
+
+.ranking-table tbody tr {
+  animation: fadeIn 0.3s ease;
+  animation-fill-mode: both;
+}

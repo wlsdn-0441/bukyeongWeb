@@ -5,6 +5,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import Card from '../components/common/Card';
 import MealWidget from '../components/widgets/MealWidget';
 import TimetableWidget from '../components/widgets/TimetableWidget';
+import GameStatsWidget from '../components/widgets/GameStatsWidget';
 import { getWeekMealData } from '../services/mealService';
 import { getWeekTimetable } from '../services/timetableService';
 import { getStudentIdFromStorage } from '../services/studentService';
@@ -90,27 +91,34 @@ const Home = () => {
     },
     {
       id: 3,
-      title: '날씨',
-      component: (
-        <div className="weather-widget">
-          <p className="weather-icon">☀️</p>
-          <p className="weather-temp">23°C</p>
-          <p className="weather-status">맑음</p>
-        </div>
-      ),
-      isClickable: false,
+      title: '게임 랭킹',
+      component: <GameStatsWidget />,
+      route: '/game-stats',
+      isClickable: true,
     },
-    {
-      id: 4,
-      title: '공지사항',
-      component: (
-        <div className="notice-widget">
-          <p className="notice-item">📢 내일은 체육대회가 있습니다.</p>
-          <p className="notice-item">📌 급식 시간이 30분 앞당겨집니다.</p>
-        </div>
-      ),
-      isClickable: false,
-    },
+    // {
+    //   id: 4,
+    //   title: '날씨',
+    //   component: (
+    //     <div className="weather-widget">
+    //       <p className="weather-icon">☀️</p>
+    //       <p className="weather-temp">23°C</p>
+    //       <p className="weather-status">맑음</p>
+    //     </div>
+    //   ),
+    //   isClickable: false,
+    // },
+    // {
+    //   id: 5,
+    //   title: '공지사항',
+    //   component: (
+    //     <div className="notice-widget">
+    //       <p className="notice-item">📢 내일은 체육대회가 있습니다.</p>
+    //       <p className="notice-item">📌 급식 시간이 30분 앞당겨집니다.</p>
+    //     </div>
+    //   ),
+    //   isClickable: false,
+    // },
   ];
 
   // cardOrder에 따라 카드 정렬

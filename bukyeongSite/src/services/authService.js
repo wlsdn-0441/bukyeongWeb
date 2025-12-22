@@ -89,15 +89,16 @@ export const handleRedirectResult = async () => {
 
     if (!result) {
       // No redirect result (normal page load)
-      console.log(`${CONSOLE_PREFIX} 리다이렉트 결과 없음`);
+      console.log(`${CONSOLE_PREFIX} 리다이렉트 결과 없음 (일반 페이지 로드)`);
       return { success: true };
     }
 
-    const email = result.user.email;
-    console.log(`${CONSOLE_PREFIX} 리다이렉트 로그인 성공:`, email);
+    const email = result.user?.email;
+    const uid = result.user?.uid;
+    console.log(`${CONSOLE_PREFIX} 리다이렉트 로그인 성공:`, { email, uid, isAnonymous: result.user?.isAnonymous });
 
     // Check if email domain is allowed
-    if (!isAllowedDomain(email)) {
+    if (email && !isAllowedDomain(email)) {
       console.warn(`${CONSOLE_PREFIX} 허용되지 않은 도메인:`, email);
       // Sign out immediately and re-login as anonymous
       await auth.signOut();
@@ -108,14 +109,30 @@ export const handleRedirectResult = async () => {
       return { success: false, error };
     }
 
+    console.log(`${CONSOLE_PREFIX} 로그인 성공 및 세션 저장 완료`);
     return { success: true, user: result.user };
   } catch (error) {
+    // 일반적인 에러 코드 처리
     if (error.code === 'auth/credential-already-in-use') {
       // User already has Google account - this is OK
       console.warn(`${CONSOLE_PREFIX} Google 계정이 이미 존재`);
       return { success: true };
     }
-    console.error(`${CONSOLE_PREFIX} 리다이렉트 결과 처리 실패:`, error);
+
+    if (error.code === 'auth/account-exists-with-different-credential') {
+      console.error(`${CONSOLE_PREFIX} 다른 인증 방법으로 이미 계정이 존재합니다.`);
+      return { success: false, error };
+    }
+
+    if (error.code === 'auth/popup-blocked') {
+      console.error(`${CONSOLE_PREFIX} 팝업이 차단되었습니다.`);
+      return { success: false, error };
+    }
+
+    console.error(`${CONSOLE_PREFIX} 리다이렉트 결과 처리 실패:`, {
+      code: error.code,
+      message: error.message
+    });
     return { success: false, error };
   }
 };

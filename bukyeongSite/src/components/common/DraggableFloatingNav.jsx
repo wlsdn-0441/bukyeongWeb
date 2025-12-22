@@ -17,6 +17,7 @@ function DraggableFloatingNav() {
   const [indicatorPos, setIndicatorPos] = useState({ left: 0, width: 0 }); // 인디케이터 위치/크기
   const [hoveredItems, setHoveredItems] = useState([]); // 인디케이터와 겹치는 항목들
   const [isAnimating, setIsAnimating] = useState(false); // 인디케이터 이동 애니메이션 중 여부
+  const [isLongPressActive, setIsLongPressActive] = useState(false); // 롱프레스 활성화 여부
 
   // ==============================================
   // Ref 참조 (References)
@@ -28,6 +29,8 @@ function DraggableFloatingNav() {
   const animationTimerRef = useRef(null); // 애니메이션 타이머 ID
   const targetPosRef = useRef({ left: 0, width: 0 }); // 드래그 중 목표 위치
   const dragRafRef = useRef(null); // 드래그 애니메이션 RAF ID
+  const longPressTimerRef = useRef(null); // 롱프레스 타이머 ID
+  const touchStartPosRef = useRef({ x: 0, y: 0 }); // 터치 시작 위치
 
   // ==============================================
   // 메뉴 항목 데이터 (Navigation Items)
@@ -201,10 +204,26 @@ function DraggableFloatingNav() {
   };
 
   const handleTouchStart = (e) => {
-    setIsDragging(true);
-    setIsAnimating(false); // 드래그 중에는 출렁임 애니메이션 비활성화
-    // 목표 위치를 현재 위치로 초기화
-    targetPosRef.current = { ...indicatorPos };
+    // 터치 시작 위치 저장
+    const touch = e.touches[0];
+    touchStartPosRef.current = {
+      x: touch.clientX,
+      y: touch.clientY
+    };
+
+    // 롱프레스 타이머 시작 (500ms)
+    longPressTimerRef.current = setTimeout(() => {
+      // 롱프레스 활성화
+      setIsLongPressActive(true);
+      setIsDragging(true);
+      setIsAnimating(false);
+      targetPosRef.current = { ...indicatorPos };
+
+      // 햅틱 피드백 (지원하는 기기에서만)
+      if (navigator.vibrate) {
+        navigator.vibrate(50);
+      }
+    }, 500);
   };
 
   // ==============================================
@@ -243,12 +262,33 @@ function DraggableFloatingNav() {
 
   // 터치 이동
   const handleTouchMove = (e) => {
-    if (!isDragging) return;
-
     const hasTouchPoints = e.touches?.length > 0;
     if (!hasTouchPoints) return;
 
-    handleMove(e.touches[0].clientX);
+    const touch = e.touches[0];
+
+    // 롱프레스 대기 중일 때: 이동 거리 체크
+    if (longPressTimerRef.current && !isLongPressActive) {
+      const moveDistance = Math.sqrt(
+        Math.pow(touch.clientX - touchStartPosRef.current.x, 2) +
+        Math.pow(touch.clientY - touchStartPosRef.current.y, 2)
+      );
+
+      // 10px 이상 이동하면 롱프레스 취소 (일반 스크롤 허용)
+      if (moveDistance > 10) {
+        clearTimeout(longPressTimerRef.current);
+        longPressTimerRef.current = null;
+      }
+      return;
+    }
+
+    // 롱프레스 활성화 상태에서만 드래그
+    if (!isDragging || !isLongPressActive) return;
+
+    // 스크롤 방지
+    e.preventDefault();
+
+    handleMove(touch.clientX);
   };
 
   // 드래그 종료
@@ -275,10 +315,21 @@ function DraggableFloatingNav() {
 
   // 터치 드래그 종료
   const handleTouchEnd = (e) => {
-    const hasChangedTouches = e.changedTouches?.length > 0;
-    if (!hasChangedTouches) return;
+    // 롱프레스 타이머 취소
+    if (longPressTimerRef.current) {
+      clearTimeout(longPressTimerRef.current);
+      longPressTimerRef.current = null;
+    }
 
-    handleDragEnd(e.changedTouches[0].clientX);
+    const hasChangedTouches = e.changedTouches?.length > 0;
+
+    // 롱프레스 활성화 상태였으면 드래그 종료 처리
+    if (isLongPressActive && hasChangedTouches) {
+      handleDragEnd(e.changedTouches[0].clientX);
+    }
+
+    // 롱프레스 상태 초기화
+    setIsLongPressActive(false);
   };
 
   // ==============================================
@@ -395,15 +446,19 @@ function DraggableFloatingNav() {
       if (animationTimerRef.current) {
         clearTimeout(animationTimerRef.current);
       }
+      if (longPressTimerRef.current) {
+        clearTimeout(longPressTimerRef.current);
+      }
     };
   }, []);
 
   // 전역 이벤트 리스너
   useEffect(() => {
-    if (isDragging) {
+    if (isDragging && isLongPressActive) {
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
-      document.addEventListener('touchmove', handleTouchMove);
+      // passive: false로 설정하여 preventDefault 작동 허용
+      document.addEventListener('touchmove', handleTouchMove, { passive: false });
       document.addEventListener('touchend', handleTouchEnd);
 
       return () => {
@@ -413,7 +468,7 @@ function DraggableFloatingNav() {
         document.removeEventListener('touchend', handleTouchEnd);
       };
     }
-  }, [isDragging, indicatorPos]);
+  }, [isDragging, isLongPressActive, indicatorPos]);
 
   return (
     <div className={`draggable-nav-wrapper ${isDragging ? 'is-dragging' : ''}`}>

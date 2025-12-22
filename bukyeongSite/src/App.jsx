@@ -20,7 +20,7 @@ import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persist
 // - 네트워크 대역폭 절약 + 초기 로딩 속도 향상
 
 // layouts (즉시 로딩 - 항상 필요)
-import HelpLayout from "./components/layout/HelpLayout";
+
 import RootLayout from "./components/layout/RootLayout";
 
 // common components (온보딩 모달, 학번 입력 모달)
@@ -37,8 +37,7 @@ const Home = lazy(() => import("./Pages/Home"));
 const About = lazy(() => import("./Pages/About"));
 const Meal = lazy(() => import("./Pages/Meal"));
 const Timetable = lazy(() => import("./Pages/Timetable"));
-const Faq = lazy(() => import("./Pages/help/Faq"));
-const Contact = lazy(() => import("./Pages/help/Contant"));
+
 const NotFound = lazy(() => import("./Pages/NotFound"));
 
 // game pages (부스 게임 점수 수령 및 랭킹)
@@ -46,6 +45,7 @@ const ClaimScore = lazy(() => import("./Pages/ClaimScore"));
 const Ranking = lazy(() => import("./Pages/Ranking"));
 const MyScore = lazy(() => import("./Pages/MyScore"));
 const ManualClaim = lazy(() => import("./Pages/admin/ManualClaim"));
+const GameStatsPage = lazy(() => import("./Pages/GameStatsPage"));
 
 // ============================================
 // Suspense Fallback: 페이지 로딩 중 표시할 UI
@@ -148,26 +148,16 @@ const router = createBrowserRouter(
           <MyScore />
         </Suspense>
       } />
+      <Route path="game-stats" element={
+        <Suspense fallback={<PageLoadingFallback />}>
+          <GameStatsPage />
+        </Suspense>
+      } />
       <Route path="admin/manual-claim" element={
         <Suspense fallback={<PageLoadingFallback />}>
           <ManualClaim />
         </Suspense>
       } />
-
-      {/* Help 라우트 수정 */}
-      <Route path="help" element={<HelpLayout />}>
-        <Route path="faq" element={
-          <Suspense fallback={<PageLoadingFallback />}>
-            <Faq />
-          </Suspense>
-        } />
-        <Route path="contact" element={
-          <Suspense fallback={<PageLoadingFallback />}>
-            <Contact />
-          </Suspense>
-        } />
-      </Route>
-
       <Route path="*" element={
         <Suspense fallback={<PageLoadingFallback />}>
           <NotFound />
