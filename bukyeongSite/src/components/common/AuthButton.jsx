@@ -14,12 +14,27 @@ export default function AuthButton({ user }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // 사용자 상태 로그 (디버깅용)
+  useEffect(() => {
+    console.log('[AuthButton] ========== 렌더링됨 ==========');
+    console.log('[AuthButton] 사용자 정보:');
+    if (user) {
+      console.log('  - UID:', user.uid);
+      console.log('  - 이메일:', user.email || '(없음)');
+      console.log('  - 익명 여부:', user.isAnonymous);
+      console.log('  - isAnonymous():', isAnonymous());
+    } else {
+      console.log('  - user = null');
+    }
+  }, [user]);
+
   // 리다이렉트 후 에러 확인
   useEffect(() => {
     const savedError = localStorage.getItem('authError');
     if (savedError) {
       try {
         const parsedError = JSON.parse(savedError);
+        console.log('[AuthButton] localStorage에서 에러 발견:', parsedError);
         setError(parsedError);
         localStorage.removeItem('authError');
       } catch (e) {
@@ -31,17 +46,26 @@ export default function AuthButton({ user }) {
   const handleSignIn = async () => {
     setLoading(true);
     setError(null);
+
+    console.log('[AuthButton] ========== 로그인 버튼 클릭 ==========');
+    console.log('[AuthButton] 현재 상태:', {
+      userExists: !!user,
+      isAnonymous: isAnonymous(),
+      userEmail: user?.email,
+      userUid: user?.uid
+    });
+
     try {
       if (isAnonymous()) {
-        console.log('[AuthButton] 익명 계정을 Google 계정에 연결');
+        console.log('[AuthButton] ✅ 익명 계정 감지 → linkAnonymousToGoogle() 호출');
         await linkAnonymousToGoogle();
       } else {
-        console.log('[AuthButton] Google 로그인 시도');
+        console.log('[AuthButton] ✅ 인증된 계정 → signInWithGoogle() 호출');
         await signInWithGoogle();
       }
       // 리다이렉트 방식이므로 여기에 도달하지 않음 (페이지가 Google로 이동)
     } catch (error) {
-      console.error('[AuthButton] 로그인 실패:', error);
+      console.error('[AuthButton] ❌ 로그인 실패:', error);
       setError({
         type: 'general',
         message: error.message || '로그인에 실패했습니다.'

@@ -71,11 +71,32 @@ export const signInWithGoogle = async () => {
  */
 export const linkAnonymousToGoogle = async () => {
   try {
-    console.log(`${CONSOLE_PREFIX} 계정 연결 시작 (redirect)`);
-    await linkWithRedirect(auth.currentUser, googleProvider);
+    const currentUser = auth.currentUser;
+    console.log(`${CONSOLE_PREFIX} ========== 계정 연결 시작 ==========`);
+    console.log(`${CONSOLE_PREFIX} 현재 사용자:`, {
+      uid: currentUser?.uid,
+      email: currentUser?.email,
+      isAnonymous: currentUser?.isAnonymous,
+      providerId: currentUser?.providerId
+    });
+
+    if (!currentUser) {
+      throw new Error('현재 로그인된 사용자가 없습니다');
+    }
+
+    if (!currentUser.isAnonymous) {
+      throw new Error('이미 인증된 계정입니다');
+    }
+
+    console.log(`${CONSOLE_PREFIX} linkWithRedirect() 호출 중...`);
+    await linkWithRedirect(currentUser, googleProvider);
+    console.log(`${CONSOLE_PREFIX} linkWithRedirect() 호출 완료 (페이지 리다이렉트 예정)`);
     // Page will redirect - no return value
   } catch (error) {
-    console.error(`${CONSOLE_PREFIX} 계정 연결 실패:`, error);
+    console.error(`${CONSOLE_PREFIX} ========== 계정 연결 실패 ==========`);
+    console.error(`${CONSOLE_PREFIX} 에러 코드:`, error.code);
+    console.error(`${CONSOLE_PREFIX} 에러 메시지:`, error.message);
+    console.error(`${CONSOLE_PREFIX} 전체 에러:`, error);
     throw error;
   }
 };
@@ -88,36 +109,67 @@ export const linkAnonymousToGoogle = async () => {
 export const handleRedirectResult = async () => {
   try {
     const startTime = performance.now();
-    console.log(`${CONSOLE_PREFIX} 리다이렉트 결과 확인 중...`);
+    console.log(`${CONSOLE_PREFIX} ========== 리다이렉트 결과 확인 시작 ==========`);
+    console.log(`${CONSOLE_PREFIX} 현재 Auth 상태:`, {
+      currentUser: auth.currentUser ? {
+        uid: auth.currentUser.uid,
+        email: auth.currentUser.email,
+        isAnonymous: auth.currentUser.isAnonymous
+      } : 'null'
+    });
+
     const result = await getRedirectResult(auth);
     const duration = performance.now() - startTime;
 
+    console.log(`${CONSOLE_PREFIX} getRedirectResult() 완료 (${duration.toFixed(2)}ms)`);
+    console.log(`${CONSOLE_PREFIX} 결과 타입:`, result ? 'UserCredential' : 'null');
+
     if (!result) {
       // No redirect result (normal page load)
-      console.log(`${CONSOLE_PREFIX} 리다이렉트 결과 없음 (${duration.toFixed(2)}ms)`);
+      console.log(`${CONSOLE_PREFIX} ========== 리다이렉트 결과 없음 (일반 페이지 로드) ==========`);
       return { success: true };
     }
 
     const email = result.user?.email;
     const uid = result.user?.uid;
-    console.log(`${CONSOLE_PREFIX} 리다이렉트 로그인 성공 (${duration.toFixed(2)}ms):`, {
+    const isAnonymous = result.user?.isAnonymous;
+    const providerId = result.user?.providerId;
+    const providerData = result.user?.providerData;
+
+    console.log(`${CONSOLE_PREFIX} ========== 리다이렉트 로그인 성공! ==========`);
+    console.log(`${CONSOLE_PREFIX} 사용자 정보:`, {
       email,
       uid,
-      isAnonymous: result.user?.isAnonymous
+      isAnonymous,
+      providerId,
+      providerData: providerData?.map(p => ({
+        providerId: p.providerId,
+        email: p.email,
+        uid: p.uid
+      }))
     });
 
     // Check if email domain is allowed
     if (email && !isAllowedDomain(email)) {
+      console.warn(`${CONSOLE_PREFIX} ========== 도메인 체크 실패 ==========`);
       console.warn(`${CONSOLE_PREFIX} 허용되지 않은 도메인:`, email);
+      console.warn(`${CONSOLE_PREFIX} 허용 도메인: @saja.hs.kr`);
+      console.warn(`${CONSOLE_PREFIX} 로그아웃 후 익명 계정으로 전환합니다...`);
+
       // Sign out immediately and re-login as anonymous
       await auth.signOut();
-      await signInAnonymously(auth);
+      console.log(`${CONSOLE_PREFIX} 로그아웃 완료`);
+
+      await signInAnonymous();
+      console.log(`${CONSOLE_PREFIX} 익명 로그인 완료`);
 
       const error = new Error('DOMAIN_NOT_ALLOWED');
       error.email = email;
       return { success: false, error };
     }
 
+    console.log(`${CONSOLE_PREFIX} ========== 도메인 체크 통과! ==========`);
+    console.log(`${CONSOLE_PREFIX} 이메일: ${email} (@saja.hs.kr 확인됨)`);
     console.log(`${CONSOLE_PREFIX} 로그인 성공 및 세션 저장 완료`);
     return { success: true, user: result.user };
   } catch (error) {

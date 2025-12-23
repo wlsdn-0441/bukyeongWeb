@@ -227,32 +227,43 @@ export default function App() {
         unsubscribe = onAuthChange(async (user) => {
           if (!isMounted) return;
 
-          console.log('[App] Auth 상태 변경:', {
-            user: user ? (user.email || user.uid) : 'null',
-            isAnonymous: user?.isAnonymous,
-            timestamp: performance.now() - appStartTime + 'ms'
-          });
+          console.log('[App] ========== Auth 상태 변경 콜백 ==========');
+          console.log('[App] 타임스탬프:', performance.now() - appStartTime + 'ms');
 
           if (user) {
+            console.log('[App] 사용자 정보:');
+            console.log('  - UID:', user.uid);
+            console.log('  - 이메일:', user.email || '(없음)');
+            console.log('  - 익명 여부:', user.isAnonymous);
+            console.log('  - Provider ID:', user.providerId);
+            console.log('  - Provider Data:', user.providerData?.map(p => ({
+              providerId: p.providerId,
+              email: p.email
+            })));
+
             setUser(user);
 
             // Firestore와 동기화
             try {
+              console.log('[App] Firestore 동기화 시작...');
               await smartSync(user.uid);
-              console.log('[App] Firestore 동기화 완료');
+              console.log('[App] ✅ Firestore 동기화 완료');
             } catch (error) {
-              console.error('[App] Firestore 동기화 실패:', error);
+              console.error('[App] ❌ Firestore 동기화 실패:', error);
             }
           } else {
             // 사용자 없음 - 익명 로그인
-            console.log('[App] 사용자 없음 - 익명 로그인 시도');
+            console.log('[App] ⚠️ 사용자 없음 (user = null)');
+            console.log('[App] 익명 로그인 시도...');
             try {
               await signInAnonymous();
+              console.log('[App] ✅ 익명 로그인 완료');
             } catch (error) {
-              console.error('[App] 익명 로그인 실패:', error);
+              console.error('[App] ❌ 익명 로그인 실패:', error);
             }
           }
 
+          console.log('[App] ========== Auth 로딩 완료 ==========');
           setAuthLoading(false);
         });
 
