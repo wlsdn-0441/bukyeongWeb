@@ -110,10 +110,10 @@ export default defineConfig({
     minify: 'terser',
     terserOptions: {
       compress: {
-        // 프로덕션 환경에서 console 제거 (번들 크기 감소)
-        drop_console: true,
-        drop_debugger: true,
-        pure_funcs: ['console.log', 'console.info'],
+        // 디버깅을 위해 console 유지
+        drop_console: false,  // ✅ console.log 유지
+        drop_debugger: false, // ✅ debugger 유지
+        // pure_funcs 제거 - console을 유지
       },
     },
   },

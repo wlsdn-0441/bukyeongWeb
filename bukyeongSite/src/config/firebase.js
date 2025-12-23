@@ -10,6 +10,20 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, setPersistence, browserLocalPersistence } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
+// ============================================
+// 환경 변수 검증
+// ============================================
+console.log('[Firebase] ========== 환경 변수 확인 ==========');
+console.log('[Firebase] 환경:', import.meta.env.MODE);
+console.log('[Firebase] 환경 변수 상태:', {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY ? '✅ 설정됨' : '❌ 없음',
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN ? '✅ 설정됨' : '❌ 없음',
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID ? '✅ 설정됨' : '❌ 없음',
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET ? '✅ 설정됨' : '❌ 없음',
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID ? '✅ 설정됨' : '❌ 없음',
+  appId: import.meta.env.VITE_FIREBASE_APP_ID ? '✅ 설정됨' : '❌ 없음',
+});
+
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -18,6 +32,23 @@ const firebaseConfig = {
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
+
+// 필수 환경 변수 체크
+const missingVars = [];
+if (!firebaseConfig.apiKey) missingVars.push('VITE_FIREBASE_API_KEY');
+if (!firebaseConfig.authDomain) missingVars.push('VITE_FIREBASE_AUTH_DOMAIN');
+if (!firebaseConfig.projectId) missingVars.push('VITE_FIREBASE_PROJECT_ID');
+if (!firebaseConfig.appId) missingVars.push('VITE_FIREBASE_APP_ID');
+
+if (missingVars.length > 0) {
+  console.error('[Firebase] ❌ 필수 환경 변수가 설정되지 않았습니다!');
+  console.error('[Firebase] 누락된 변수:', missingVars);
+  console.error('[Firebase] Vercel Dashboard에서 환경 변수를 설정하세요');
+  throw new Error(`Missing Firebase environment variables: ${missingVars.join(', ')}`);
+}
+
+console.log('[Firebase] ✅ 모든 필수 환경 변수 확인 완료');
+console.log('[Firebase] =========================================');
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
