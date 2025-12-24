@@ -205,17 +205,17 @@ const Home = () => {
     setIsTouchDragging(false);
     console.log('[Home] 터치 시작:', cardId);
 
-    // 800ms 후 드래그 모드 활성화 (긴 시간으로 설정)
+    // 1200ms 후 드래그 모드 활성화 (더 긴 시간으로 설정)
     const timer = setTimeout(() => {
       setIsTouchDragging(true);
       document.body.style.overflow = 'hidden';
       console.log('[Home] Long press 감지 - 드래그 모드 활성화');
 
-      // 진동 피드백 (지원하는 기기에서)
+      // 진동 피드백 (지원하는 기기에서) - 더 강한 피드백
       if (navigator.vibrate) {
-        navigator.vibrate(50);
+        navigator.vibrate([100, 50, 100]); // 진동 패턴: 100ms 진동, 50ms 정지, 100ms 진동
       }
-    }, 800); // 800ms = 0.8초 (이전보다 훨씬 긴 시간)
+    }, 1200); // 1200ms = 1.2초 (더 길게 설정)
 
     setLongPressTimer(timer);
   };
