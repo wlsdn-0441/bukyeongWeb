@@ -30,7 +30,7 @@ import { hasStudentId, smartSync, getStudentIdFromStorage } from "./services/stu
 
 // Firebase services
 import { initializeFirebaseAuth } from "./config/firebase";
-import { onAuthChange, signInAnonymous, handleRedirectResult } from "./services/authService";
+import { onAuthChange, signInAnonymous } from "./services/authService";
 import { syncStudentDataToFirestore } from "./services/firebaseService";
 
 // pages (지연 로딩 - 필요할 때만 로딩)
@@ -199,28 +199,12 @@ export default function App() {
         console.log('[App] 인증 초기화 시작:', new Date().toISOString());
         const appStartTime = performance.now();
 
-        // 1️⃣ Firebase persistence 설정 완료 대기 (가장 중요!)
-        console.log('[App] Persistence 설정 중...');
+        // Firebase Auth 초기화
+        console.log('[App] Firebase Auth 초기화 중...');
         await initializeFirebaseAuth();
-        console.log('[App] Persistence 준비 완료:', performance.now() - appStartTime, 'ms');
+        console.log('[App] Firebase Auth 준비 완료:', performance.now() - appStartTime, 'ms');
 
-        // 2️⃣ Google 리다이렉트 결과 처리
-        console.log('[App] 리다이렉트 결과 확인 중...');
-        const result = await handleRedirectResult();
-        console.log('[App] 리다이렉트 처리 완료:', performance.now() - appStartTime, 'ms');
-
-        if (!result.success && result.error?.message === 'DOMAIN_NOT_ALLOWED') {
-          localStorage.setItem('authError', JSON.stringify({
-            type: 'domain',
-            email: result.error.email
-          }));
-        }
-
-        if (result.success && result.user) {
-          console.log('[App] 리다이렉트 로그인 완료:', result.user.email);
-        }
-
-        // 3️⃣ 인증 상태 구독 시작
+        // 인증 상태 구독 시작
         console.log('[App] Auth 상태 구독 시작:', performance.now() - appStartTime, 'ms');
         setAuthReady(true);
 

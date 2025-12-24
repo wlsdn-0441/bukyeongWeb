@@ -2,12 +2,12 @@
  * Firebase Configuration
  *
  * Initializes Firebase services:
- * - Authentication (Google + Anonymous)
+ * - Authentication (Anonymous only)
  * - Firestore (Student data storage)
  */
 
 import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, setPersistence, browserLocalPersistence } from 'firebase/auth';
+import { getAuth, setPersistence, browserLocalPersistence } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 // ============================================
@@ -56,13 +56,6 @@ const app = initializeApp(firebaseConfig);
 // Initialize services
 export const auth = getAuth(app);
 export const db = getFirestore(app);
-export const googleProvider = new GoogleAuthProvider();
-
-// Configure Google provider
-googleProvider.setCustomParameters({
-  prompt: 'select_account',
-  // 리다이렉트 URI를 명시적으로 설정하지 않음 (Firebase가 자동으로 처리)
-});
 
 // Auth initialization state
 let authInitialized = false;
