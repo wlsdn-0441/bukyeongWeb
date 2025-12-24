@@ -9,7 +9,6 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { getGameSession, validateSession, claimScore } from '../services/gameService';
 import { getStudentIdFromStorage } from '../services/studentService';
-import { getCurrentUser, signInWithGoogle } from '../services/authService';
 import ScoreDisplay from '../components/game/ScoreDisplay';
 import StudentIdInput from '../components/game/StudentIdInput';
 import './ClaimScore.css';
@@ -37,7 +36,6 @@ export default function ClaimScore() {
 
   // Auto-fill from localStorage if available
   const storedStudent = getStudentIdFromStorage();
-  const user = getCurrentUser();
 
   // Load session on mount
   useEffect(() => {
@@ -89,16 +87,6 @@ export default function ClaimScore() {
       setError('점수 등록 중 오류가 발생했습니다. 다시 시도해주세요.');
     } finally {
       setClaiming(false);
-    }
-  };
-
-  const handleGoogleLogin = async () => {
-    try {
-      await signInWithGoogle();
-      // Will redirect to Google
-    } catch (err) {
-      console.error('Google 로그인 실패:', err);
-      setError('Google 로그인에 실패했습니다.');
     }
   };
 
@@ -222,22 +210,6 @@ export default function ClaimScore() {
           initialValue={storedStudent?.studentId || ''}
           autoFocus={true}
         />
-
-        {user?.isAnonymous && (
-          <div className="or-divider">
-            <span>또는</span>
-          </div>
-        )}
-
-        {user?.isAnonymous && (
-          <button
-            className="action-button google"
-            onClick={handleGoogleLogin}
-          >
-            <span className="google-icon">G</span>
-            Google로 시작하기
-          </button>
-        )}
 
         {error && (
           <div className="error-banner">
