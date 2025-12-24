@@ -29,6 +29,7 @@ const Home = () => {
   // 터치 드래그 추적
   const [touchStartY, setTouchStartY] = useState(null);
   const [isTouchDragging, setIsTouchDragging] = useState(false);
+  const [longPressTimer, setLongPressTimer] = useState(null);
 
   // ============================================
   // Prefetching: 백그라운드에서 미리 데이터 로딩
@@ -203,6 +204,20 @@ const Home = () => {
     setDraggedCardId(cardId);
     setIsTouchDragging(false);
     console.log('[Home] 터치 시작:', cardId);
+
+    // 800ms 후 드래그 모드 활성화 (긴 시간으로 설정)
+    const timer = setTimeout(() => {
+      setIsTouchDragging(true);
+      document.body.style.overflow = 'hidden';
+      console.log('[Home] Long press 감지 - 드래그 모드 활성화');
+
+      // 진동 피드백 (지원하는 기기에서)
+      if (navigator.vibrate) {
+        navigator.vibrate(50);
+      }
+    }, 800); // 800ms = 0.8초 (이전보다 훨씬 긴 시간)
+
+    setLongPressTimer(timer);
   };
 
   // 터치 이동
@@ -212,13 +227,17 @@ const Home = () => {
     const touch = e.touches[0];
     const deltaY = Math.abs(touch.clientY - touchStartY);
 
-    // 10px 이상 움직였을 때 드래그로 인식 (스크롤과 구분)
-    if (deltaY > 10) {
-      if (!isTouchDragging) {
-        setIsTouchDragging(true);
-        // 드래그 모드로 전환 시 스크롤 방지
-        document.body.style.overflow = 'hidden';
-      }
+    // 움직임이 크면 long press 타이머 취소 (스크롤 의도로 간주)
+    if (deltaY > 15 && !isTouchDragging && longPressTimer) {
+      clearTimeout(longPressTimer);
+      setLongPressTimer(null);
+      setDraggedCardId(null);
+      console.log('[Home] 스크롤 감지 - long press 취소');
+      return;
+    }
+
+    // 드래그 모드가 활성화된 경우에만 드래그 처리
+    if (isTouchDragging) {
       e.preventDefault(); // 스크롤 방지
 
       // 터치 위치 아래의 요소 찾기
@@ -236,11 +255,17 @@ const Home = () => {
 
   // 터치 종료
   const handleTouchEnd = (e, cardId) => {
+    // Long press 타이머 취소
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      setLongPressTimer(null);
+    }
+
     // 스크롤 다시 허용
     document.body.style.overflow = '';
 
     if (!isTouchDragging || !draggedCardId || !dragOverCardId) {
-      // 드래그가 아닌 단순 탭
+      // 드래그가 아닌 단순 탭 또는 long press 미완료
       setDraggedCardId(null);
       setDragOverCardId(null);
       setTouchStartY(null);
