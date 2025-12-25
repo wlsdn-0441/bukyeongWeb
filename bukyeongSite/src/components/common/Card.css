@@ -36,11 +36,10 @@
     0 8px 32px rgba(0, 0, 0, 0.1),
     0 1px 2px rgba(0, 0, 0, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s ease;
   overflow: hidden;
   margin-bottom: 1.5rem;
   position: relative;
-  will-change: transform, opacity;
 }
 
 /* 그라디언트 테두리 효과 */
@@ -267,129 +266,5 @@
 
 .card-clickable:focus:not(:focus-visible) {
   outline: none;
-}
-
-/* ============================================
-   화살표 버튼 스타일
-   ============================================ */
-
-/* 화살표 컨트롤 컨테이너 */
-.card-arrow-controls {
-  display: flex;
-  align-items: center;
-  margin-left: auto;
-  flex-shrink: 0;
-}
-
-/* 모바일 화살표 버튼 그룹 (상하만) */
-.card-arrow-mobile {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-/* PC 화살표 버튼 그룹 (상하좌우) */
-.card-arrow-desktop {
-  display: none;
-}
-
-/* 화살표 버튼 공통 스타일 */
-.card-arrow-button {
-  width: 32px;
-  height: 32px;
-  border: 1.5px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(8px);
-  color: var(--card-title-color);
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
-
-.card-arrow-button:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.25);
-  border-color: rgba(255, 255, 255, 0.4);
-  transform: scale(1.1);
-  box-shadow:
-    0 4px 8px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-}
-
-.card-arrow-button:active:not(:disabled) {
-  transform: scale(0.95);
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.1),
-    inset 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.card-arrow-button:disabled {
-  opacity: 0.25;
-  cursor: not-allowed;
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-/* 다크모드 화살표 버튼 */
-:root[data-theme="dark"] .card-arrow-button {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-:root[data-theme="dark"] .card-arrow-button:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.18);
-  border-color: rgba(255, 255, 255, 0.3);
-}
-
-/* PC 환경 (768px 이상) */
-@media (min-width: 769px) {
-  /* 모바일 버튼 숨김 */
-  .card-arrow-mobile {
-    display: none;
-  }
-
-  /* PC 버튼 표시 */
-  .card-arrow-desktop {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .card-arrow-row {
-    display: flex;
-    gap: 4px;
-    justify-content: center;
-  }
-
-  /* 첫 번째 행과 세 번째 행은 중앙에 버튼 하나만 */
-  .card-arrow-row:first-child,
-  .card-arrow-row:last-child {
-    justify-content: center;
-  }
-
-  /* PC에서 버튼 크기 약간 증가 */
-  .card-arrow-button {
-    width: 36px;
-    height: 36px;
-    font-size: 18px;
-  }
-}
-
-/* 모바일 환경 (768px 이하) */
-@media (max-width: 768px) {
-  .card-arrow-button {
-    width: 28px;
-    height: 28px;
-    font-size: 14px;
-  }
 }
 
