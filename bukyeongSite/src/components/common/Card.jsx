@@ -20,6 +20,7 @@ const Card = memo(({
   onDragEnd,
   isDragging = false,
   isDragOver = false,
+  isLongPressing = false,
   // 터치 이벤트 props (모바일 지원)
   cardId,
   onTouchStart,
@@ -89,7 +90,7 @@ const Card = memo(({
 
   return (
     <article
-      className={`card ${isClickable ? 'card-clickable' : ''} ${isDragging ? 'card-dragging' : ''} ${isDragOver ? 'card-drag-over' : ''} ${className}`}
+      className={`card ${isClickable ? 'card-clickable' : ''} ${isDragging ? 'card-dragging' : ''} ${isDragOver ? 'card-drag-over' : ''} ${isLongPressing ? 'card-long-pressing' : ''} ${className}`}
       onClick={onClick}
       role={isClickable ? 'button' : 'article'}
       tabIndex={isClickable ? 0 : -1}

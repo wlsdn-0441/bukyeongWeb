@@ -28,8 +28,10 @@ const Home = () => {
 
   // 터치 드래그 추적
   const [touchStartY, setTouchStartY] = useState(null);
+  const [touchStartX, setTouchStartX] = useState(null);
   const [isTouchDragging, setIsTouchDragging] = useState(false);
   const [longPressTimer, setLongPressTimer] = useState(null);
+  const [isLongPressing, setIsLongPressing] = useState(false);
 
   // ============================================
   // Prefetching: 백그라운드에서 미리 데이터 로딩
@@ -201,44 +203,62 @@ const Home = () => {
   const handleTouchStart = (e, cardId) => {
     const touch = e.touches[0];
     setTouchStartY(touch.clientY);
+    setTouchStartX(touch.clientX);
     setDraggedCardId(cardId);
     setIsTouchDragging(false);
+    setIsLongPressing(false);
     console.log('[Home] 터치 시작:', cardId);
 
-    // 1200ms 후 드래그 모드 활성화 (더 긴 시간으로 설정)
+    // 800ms 후 long press 시각적 피드백 시작
     const timer = setTimeout(() => {
-      setIsTouchDragging(true);
-      document.body.style.overflow = 'hidden';
-      console.log('[Home] Long press 감지 - 드래그 모드 활성화');
+      setIsLongPressing(true);
+      console.log('[Home] Long press 감지 - 카드 떠오름 시작');
 
-      // 진동 피드백 (지원하는 기기에서) - 더 강한 피드백
+      // 진동 피드백 (지원하는 기기에서)
       if (navigator.vibrate) {
-        navigator.vibrate([100, 50, 100]); // 진동 패턴: 100ms 진동, 50ms 정지, 100ms 진동
+        navigator.vibrate([50, 30, 50]); // 짧은 진동으로 피드백
       }
-    }, 1200); // 1200ms = 1.2초 (더 길게 설정)
+
+      // 300ms 후 드래그 모드 활성화 (카드가 완전히 떠오른 후)
+      setTimeout(() => {
+        setIsTouchDragging(true);
+        document.body.style.overflow = 'hidden';
+        console.log('[Home] 드래그 모드 활성화');
+
+        // 더 강한 진동
+        if (navigator.vibrate) {
+          navigator.vibrate(100);
+        }
+      }, 300);
+    }, 800); // 800ms 동안 누르고 있으면 카드 떠오름 시작
 
     setLongPressTimer(timer);
   };
 
   // 터치 이동
-  const handleTouchMove = (e, cardId) => {
-    if (!touchStartY || !draggedCardId) return;
+  const handleTouchMove = (e) => {
+    if (!touchStartY || !touchStartX || !draggedCardId) return;
 
     const touch = e.touches[0];
     const deltaY = Math.abs(touch.clientY - touchStartY);
+    const deltaX = Math.abs(touch.clientX - touchStartX);
 
-    // 움직임이 크면 long press 타이머 취소 (스크롤 의도로 간주)
-    if (deltaY > 15 && !isTouchDragging && longPressTimer) {
-      clearTimeout(longPressTimer);
-      setLongPressTimer(null);
-      setDraggedCardId(null);
-      console.log('[Home] 스크롤 감지 - long press 취소');
-      return;
+    // 움직임이 있으면 long press 타이머 취소 (스크롤/탭 의도로 간주)
+    // 드래그 모드 활성화 전에만 취소
+    if (!isTouchDragging && !isLongPressing && longPressTimer) {
+      if (deltaY > 10 || deltaX > 10) {
+        clearTimeout(longPressTimer);
+        setLongPressTimer(null);
+        setDraggedCardId(null);
+        setIsLongPressing(false);
+        console.log('[Home] 움직임 감지 - long press 취소 (스크롤/탭)');
+        return;
+      }
     }
 
     // 드래그 모드가 활성화된 경우에만 드래그 처리
     if (isTouchDragging) {
-      e.preventDefault(); // 스크롤 방지
+      e.preventDefault(); // 스크롤 방지 (드래그 모드일 때만)
 
       // 터치 위치 아래의 요소 찾기
       const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
@@ -254,7 +274,7 @@ const Home = () => {
   };
 
   // 터치 종료
-  const handleTouchEnd = (e, cardId) => {
+  const handleTouchEnd = () => {
     // Long press 타이머 취소
     if (longPressTimer) {
       clearTimeout(longPressTimer);
@@ -269,7 +289,9 @@ const Home = () => {
       setDraggedCardId(null);
       setDragOverCardId(null);
       setTouchStartY(null);
+      setTouchStartX(null);
       setIsTouchDragging(false);
+      setIsLongPressing(false);
       return;
     }
 
@@ -278,7 +300,9 @@ const Home = () => {
       setDraggedCardId(null);
       setDragOverCardId(null);
       setTouchStartY(null);
+      setTouchStartX(null);
       setIsTouchDragging(false);
+      setIsLongPressing(false);
       return;
     }
 
@@ -301,7 +325,9 @@ const Home = () => {
     setDraggedCardId(null);
     setDragOverCardId(null);
     setTouchStartY(null);
+    setTouchStartX(null);
     setIsTouchDragging(false);
+    setIsLongPressing(false);
   };
 
   return (
@@ -337,8 +363,9 @@ const Home = () => {
                 // 터치 이벤트 추가 (모바일 지원)
                 cardId={card.id}
                 onTouchStart={(e) => handleTouchStart(e, card.id)}
-                onTouchMove={(e) => handleTouchMove(e, card.id)}
-                onTouchEnd={(e) => handleTouchEnd(e, card.id)}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+                isLongPressing={isLongPressing && draggedCardId === card.id}
               >
                 {card.component}
 
