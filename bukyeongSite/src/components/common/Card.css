@@ -297,7 +297,7 @@
   width: 32px;
   height: 32px;
   border: none;
-  border-radius: 6px;
+  border-radius: 50%;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(8px);
   color: var(--card-title-color);
