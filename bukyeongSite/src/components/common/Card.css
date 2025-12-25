@@ -268,3 +268,112 @@
   outline: none;
 }
 
+/* ============================================
+   화살표 버튼 스타일
+   ============================================ */
+
+/* 화살표 컨트롤 컨테이너 */
+.card-arrow-controls {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* 모바일 화살표 버튼 그룹 (상하만) */
+.card-arrow-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* PC 화살표 버튼 그룹 (상하좌우) */
+.card-arrow-desktop {
+  display: none;
+}
+
+/* 화살표 버튼 공통 스타일 */
+.card-arrow-button {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  color: var(--card-title-color);
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.card-arrow-button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.card-arrow-button:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.card-arrow-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* 다크모드 화살표 버튼 */
+:root[data-theme="dark"] .card-arrow-button {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+:root[data-theme="dark"] .card-arrow-button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* PC 환경 (768px 이상) */
+@media (min-width: 769px) {
+  /* 모바일 버튼 숨김 */
+  .card-arrow-mobile {
+    display: none;
+  }
+
+  /* PC 버튼 표시 */
+  .card-arrow-desktop {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .card-arrow-row {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+  }
+
+  /* 첫 번째 행과 세 번째 행은 중앙에 버튼 하나만 */
+  .card-arrow-row:first-child,
+  .card-arrow-row:last-child {
+    justify-content: center;
+  }
+
+  /* PC에서 버튼 크기 약간 증가 */
+  .card-arrow-button {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+}
+
+/* 모바일 환경 (768px 이하) */
+@media (max-width: 768px) {
+  .card-arrow-button {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+}
+

@@ -9,7 +9,7 @@ import GameStatsWidget from '../components/widgets/GameStatsWidget';
 import { getWeekMealData } from '../services/mealService';
 import { getWeekTimetable } from '../services/timetableService';
 import { getStudentIdFromStorage } from '../services/studentService';
-import { loadCardOrderFromStorage } from '../utils/cardOrderService';
+import { loadCardOrderFromStorage, saveCardOrderToStorage } from '../utils/cardOrderService';
 import './Home.css';
 
 const Home = () => {
@@ -19,8 +19,8 @@ const Home = () => {
   // localStorage에서 학번 정보 읽기
   const studentData = getStudentIdFromStorage();
 
-  // 카드 순서 상태 관리 (드래그 기능 제거, 순서만 유지)
-  const [cardOrder] = useState(() => loadCardOrderFromStorage());
+  // 카드 순서 상태 관리 (화살표 버튼으로 순서 변경 가능)
+  const [cardOrder, setCardOrder] = useState(() => loadCardOrderFromStorage());
 
   // ============================================
   // Prefetching: 백그라운드에서 미리 데이터 로딩
@@ -120,6 +120,70 @@ const Home = () => {
       .filter(Boolean);
   }, [cardOrder]);
 
+  // ============================================
+  // 카드 순서 변경 핸들러
+  // ============================================
+
+  // 카드를 위로 이동 (이전 카드와 위치 교환)
+  const handleMoveUp = (cardId) => {
+    const currentIndex = cardOrder.indexOf(cardId);
+    if (currentIndex <= 0) return; // 첫 번째 카드는 위로 이동 불가
+
+    const newOrder = [...cardOrder];
+    // 이전 카드와 위치 교환
+    [newOrder[currentIndex - 1], newOrder[currentIndex]] =
+      [newOrder[currentIndex], newOrder[currentIndex - 1]];
+
+    setCardOrder(newOrder);
+    saveCardOrderToStorage(newOrder);
+    console.log('[Home] 카드 위로 이동:', cardId, '→', newOrder);
+  };
+
+  // 카드를 아래로 이동 (다음 카드와 위치 교환)
+  const handleMoveDown = (cardId) => {
+    const currentIndex = cardOrder.indexOf(cardId);
+    if (currentIndex >= cardOrder.length - 1) return; // 마지막 카드는 아래로 이동 불가
+
+    const newOrder = [...cardOrder];
+    // 다음 카드와 위치 교환
+    [newOrder[currentIndex], newOrder[currentIndex + 1]] =
+      [newOrder[currentIndex + 1], newOrder[currentIndex]];
+
+    setCardOrder(newOrder);
+    saveCardOrderToStorage(newOrder);
+    console.log('[Home] 카드 아래로 이동:', cardId, '→', newOrder);
+  };
+
+  // 카드를 왼쪽으로 이동 (PC 환경, 2열 그리드 기준)
+  const handleMoveLeft = (cardId) => {
+    const currentIndex = cardOrder.indexOf(cardId);
+    if (currentIndex < 2) return; // 첫 번째 행의 카드는 왼쪽으로 이동 불가
+
+    const newOrder = [...cardOrder];
+    // 2칸 위의 카드와 위치 교환
+    [newOrder[currentIndex - 2], newOrder[currentIndex]] =
+      [newOrder[currentIndex], newOrder[currentIndex - 2]];
+
+    setCardOrder(newOrder);
+    saveCardOrderToStorage(newOrder);
+    console.log('[Home] 카드 왼쪽으로 이동:', cardId, '→', newOrder);
+  };
+
+  // 카드를 오른쪽으로 이동 (PC 환경, 2열 그리드 기준)
+  const handleMoveRight = (cardId) => {
+    const currentIndex = cardOrder.indexOf(cardId);
+    if (currentIndex >= cardOrder.length - 2) return; // 마지막 행의 카드는 오른쪽으로 이동 불가
+
+    const newOrder = [...cardOrder];
+    // 2칸 아래의 카드와 위치 교환
+    [newOrder[currentIndex], newOrder[currentIndex + 2]] =
+      [newOrder[currentIndex + 2], newOrder[currentIndex]];
+
+    setCardOrder(newOrder);
+    saveCardOrderToStorage(newOrder);
+    console.log('[Home] 카드 오른쪽으로 이동:', cardId, '→', newOrder);
+  };
+
   return (
     <div className="home-page">
       {/* <div className="home-container">
@@ -136,12 +200,22 @@ const Home = () => {
       <div className="home-content-wrapper">
         <div className="home-content">
           <div className="home-grid">
-            {orderedCards.map((card) => (
+            {orderedCards.map((card, index) => (
               <Card
                 key={card.id}
                 title={card.title}
                 isClickable={card.isClickable}
                 onClick={card.isClickable ? () => navigate(card.route) : undefined}
+                // 화살표 버튼 핸들러
+                onMoveUp={() => handleMoveUp(card.id)}
+                onMoveDown={() => handleMoveDown(card.id)}
+                onMoveLeft={() => handleMoveLeft(card.id)}
+                onMoveRight={() => handleMoveRight(card.id)}
+                // 화살표 버튼 활성화 상태
+                canMoveUp={index > 0}
+                canMoveDown={index < orderedCards.length - 1}
+                canMoveLeft={index >= 2}
+                canMoveRight={index < orderedCards.length - 2}
               >
                 {card.component}
 
