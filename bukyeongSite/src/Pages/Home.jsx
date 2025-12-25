@@ -67,7 +67,7 @@ const Home = () => {
 
   const dashboardCards = [
     {
-      id: 1,
+      id: 3,
       title: '오늘의 급식',
       component: <MealWidget />,
       route: '/meal',
@@ -82,7 +82,7 @@ const Home = () => {
       isClickable: true,
     },
     {
-      id: 3,
+      id: 1,
       title: '게임 랭킹',
       component: <GameStatsWidget />,
       route: '/game-stats',

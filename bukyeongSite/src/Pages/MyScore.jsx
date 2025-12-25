@@ -11,13 +11,14 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ScoreDisplay from '../components/game/ScoreDisplay';
-import { getStudentRank } from '../services/gameService';
+import { getStudentRank, getAllStudentScores } from '../services/gameService';
 import { getStudentIdFromStorage } from '../services/studentService';
 import './MyScore.css';
 
 export default function MyScore() {
   const navigate = useNavigate();
   const [rankData, setRankData] = useState(null);
+  const [scoreHistory, setScoreHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -25,9 +26,9 @@ export default function MyScore() {
   const studentData = getStudentIdFromStorage();
   const studentId = studentData?.studentId;
 
-  // Fetch student rank on mount
+  // Fetch student rank and all scores on mount
   useEffect(() => {
-    const fetchRank = async () => {
+    const fetchData = async () => {
       // Check if student ID exists
       if (!studentId) {
         setError('학번을 먼저 등록해주세요.');
@@ -36,13 +37,19 @@ export default function MyScore() {
       }
 
       try {
-        console.log('[MyScore] Fetching rank for:', studentId);
-        const data = await getStudentRank(studentId);
+        console.log('[MyScore] Fetching data for:', studentId);
 
-        if (!data) {
+        // Fetch rank and all scores in parallel
+        const [rankResult, scoresResult] = await Promise.all([
+          getStudentRank(studentId),
+          getAllStudentScores(studentId)
+        ]);
+
+        if (!rankResult || scoresResult.length === 0) {
           setError('아직 게임 기록이 없습니다.');
         } else {
-          setRankData(data);
+          setRankData(rankResult);
+          setScoreHistory(scoresResult);
         }
       } catch (err) {
         console.error('[MyScore] Fetch error:', err);
@@ -52,7 +59,7 @@ export default function MyScore() {
       }
     };
 
-    fetchRank();
+    fetchData();
   }, [studentId]);
 
   // Loading state
@@ -155,6 +162,42 @@ export default function MyScore() {
             </p>
           </div>
         </div>
+
+        {/* Score History */}
+        {scoreHistory.length > 0 && (
+          <div className="score-history-section">
+            <h2 className="history-title">📜 전체 기록 ({scoreHistory.length}개)</h2>
+            <div className="score-history-list">
+              {scoreHistory.map((record, index) => (
+                <div key={record.id} className="score-history-item">
+                  <div className="history-item-header">
+                    <span className="history-index">#{index + 1}</span>
+                    <span className="history-date">
+                      {record.claimedAt?.toDate().toLocaleDateString('ko-KR', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </span>
+                  </div>
+                  <div className="history-item-score">
+                    <ScoreDisplay
+                      gameType={record.gameType}
+                      score={record.score}
+                      size="small"
+                      showLabel={false}
+                    />
+                    {record.score === rankData.score && (
+                      <span className="best-badge">🏆 최고 기록</span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Action Buttons */}
         <div className="my-score-actions">

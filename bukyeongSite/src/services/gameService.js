@@ -264,3 +264,40 @@ export const getStudentData = async (studentId) => {
     throw error;
   }
 };
+
+/**
+ * Get all score history for a student
+ * @param {string} studentId - 4-digit student ID
+ * @returns {Promise<Array>} Array of score records sorted by date (newest first)
+ */
+export const getAllStudentScores = async (studentId) => {
+  try {
+    console.log(`${CONSOLE_PREFIX} Fetching all scores for:`, studentId);
+
+    // Query all claimed sessions for this student
+    const sessionsQuery = query(
+      collection(db, 'gameSessions'),
+      where('claimedBy', '==', studentId),
+      orderBy('claimedAt', 'desc') // Newest first
+    );
+
+    const sessionsSnap = await getDocs(sessionsQuery);
+
+    const scores = sessionsSnap.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        gameType: data.gameType,
+        score: data.score,
+        claimedAt: data.claimedAt,
+        createdAt: data.createdAt
+      };
+    });
+
+    console.log(`${CONSOLE_PREFIX} Found ${scores.length} score records`);
+    return scores;
+  } catch (error) {
+    console.error(`${CONSOLE_PREFIX} Get all student scores failed:`, error);
+    throw error;
+  }
+};

@@ -325,6 +325,107 @@
   }
 }
 
+/* Score History Section */
+.score-history-section {
+  padding: 1.5rem;
+  background: var(--card-bg, #fff);
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.5s ease 0.3s both;
+}
+
+.history-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-color, #000);
+  margin: 0 0 1rem 0;
+}
+
+.score-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+/* Custom scrollbar */
+.score-history-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.score-history-list::-webkit-scrollbar-track {
+  background: var(--card-border, #e0e0e0);
+  border-radius: 3px;
+}
+
+.score-history-list::-webkit-scrollbar-thumb {
+  background: rgba(102, 126, 234, 0.5);
+  border-radius: 3px;
+}
+
+.score-history-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(102, 126, 234, 0.7);
+}
+
+.score-history-item {
+  padding: 1rem;
+  background: rgba(102, 126, 234, 0.05);
+  border: 1px solid rgba(102, 126, 234, 0.15);
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.score-history-item:hover {
+  background: rgba(102, 126, 234, 0.1);
+  border-color: rgba(102, 126, 234, 0.25);
+  transform: translateX(4px);
+}
+
+.history-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  gap: 0.5rem;
+}
+
+.history-index {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  flex-shrink: 0;
+}
+
+.history-date {
+  font-size: 0.75rem;
+  color: var(--card-subtitle-color, #666);
+  text-align: right;
+  line-height: 1.3;
+}
+
+.history-item-score {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.best-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.1);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 /* Dark mode */
 @media (prefers-color-scheme: dark) {
   .rank-card {
@@ -333,12 +434,27 @@
 
   .score-card,
   .loading-state,
-  .error-state {
+  .error-state,
+  .score-history-section {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   }
 
   .percentile-card {
     background: rgba(102, 126, 234, 0.15);
     border-color: rgba(102, 126, 234, 0.3);
+  }
+
+  .score-history-item {
+    background: rgba(102, 126, 234, 0.08);
+    border-color: rgba(102, 126, 234, 0.2);
+  }
+
+  .score-history-item:hover {
+    background: rgba(102, 126, 234, 0.15);
+    border-color: rgba(102, 126, 234, 0.3);
+  }
+
+  .score-history-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
   }
 }
