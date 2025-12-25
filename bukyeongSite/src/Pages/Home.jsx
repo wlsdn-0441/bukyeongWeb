@@ -154,30 +154,32 @@ const Home = () => {
     console.log('[Home] 카드 아래로 이동:', cardId, '→', newOrder);
   };
 
-  // 카드를 왼쪽으로 이동 (PC 환경, 2열 그리드 기준)
+  // 카드를 왼쪽으로 이동 (2열 그리드에서 오른쪽 열 → 왼쪽 열)
   const handleMoveLeft = (cardId) => {
     const currentIndex = cardOrder.indexOf(cardId);
-    if (currentIndex < 2) return; // 첫 번째 행의 카드는 왼쪽으로 이동 불가
+    // 오른쪽 열에 있는 카드만 왼쪽으로 이동 가능
+    if (currentIndex % 2 !== 1) return;
 
     const newOrder = [...cardOrder];
-    // 2칸 위의 카드와 위치 교환
-    [newOrder[currentIndex - 2], newOrder[currentIndex]] =
-      [newOrder[currentIndex], newOrder[currentIndex - 2]];
+    // 바로 왼쪽 카드와 위치 교환
+    [newOrder[currentIndex - 1], newOrder[currentIndex]] =
+      [newOrder[currentIndex], newOrder[currentIndex - 1]];
 
     setCardOrder(newOrder);
     saveCardOrderToStorage(newOrder);
     console.log('[Home] 카드 왼쪽으로 이동:', cardId, '→', newOrder);
   };
 
-  // 카드를 오른쪽으로 이동 (PC 환경, 2열 그리드 기준)
+  // 카드를 오른쪽으로 이동 (2열 그리드에서 왼쪽 열 → 오른쪽 열)
   const handleMoveRight = (cardId) => {
     const currentIndex = cardOrder.indexOf(cardId);
-    if (currentIndex >= cardOrder.length - 2) return; // 마지막 행의 카드는 오른쪽으로 이동 불가
+    // 왼쪽 열에 있고, 오른쪽에 카드가 있어야 이동 가능
+    if (currentIndex % 2 !== 0 || currentIndex >= cardOrder.length - 1) return;
 
     const newOrder = [...cardOrder];
-    // 2칸 아래의 카드와 위치 교환
-    [newOrder[currentIndex], newOrder[currentIndex + 2]] =
-      [newOrder[currentIndex + 2], newOrder[currentIndex]];
+    // 바로 오른쪽 카드와 위치 교환
+    [newOrder[currentIndex], newOrder[currentIndex + 1]] =
+      [newOrder[currentIndex + 1], newOrder[currentIndex]];
 
     setCardOrder(newOrder);
     saveCardOrderToStorage(newOrder);
@@ -211,11 +213,11 @@ const Home = () => {
                 onMoveDown={() => handleMoveDown(card.id)}
                 onMoveLeft={() => handleMoveLeft(card.id)}
                 onMoveRight={() => handleMoveRight(card.id)}
-                // 화살표 버튼 활성화 상태
-                canMoveUp={index > 0}
-                canMoveDown={index < orderedCards.length - 1}
-                canMoveLeft={index >= 2}
-                canMoveRight={index < orderedCards.length - 2}
+                // 화살표 버튼 활성화 상태 (2열 그리드 기준)
+                canMoveUp={index >= 2}  // 위에 행이 있음
+                canMoveDown={index < orderedCards.length - 2}  // 아래에 행이 있음
+                canMoveLeft={index % 2 === 1}  // 오른쪽 열에 있음
+                canMoveRight={index % 2 === 0 && index < orderedCards.length - 1}  // 왼쪽 열이고 오른쪽에 카드 있음
               >
                 {card.component}
 

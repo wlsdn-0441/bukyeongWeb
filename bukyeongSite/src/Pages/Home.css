@@ -43,6 +43,13 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 0;
+  /* 카드 순서 변경 시 부드러운 애니메이션 */
+  transition: all 0.3s ease;
+}
+
+/* 그리드 내 카드 애니메이션 */
+.home-grid > * {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .home-card-link {
