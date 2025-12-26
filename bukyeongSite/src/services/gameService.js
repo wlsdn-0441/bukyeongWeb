@@ -223,6 +223,93 @@ export const subscribeToColorRanking = (callback, topN = 100) => {
 };
 
 /**
+ * Subscribe to real-time ranking updates (Memory Game)
+ * @param {Function} callback - Called with ranking data on updates
+ * @param {number} topN - Number of top students to fetch (default 100)
+ * @returns {Function} Unsubscribe function
+ */
+export const subscribeToMemoryRanking = (callback, topN = 100) => {
+  const q = query(
+    collection(db, 'students'),
+    where('scores.memory', '!=', null),
+    orderBy('scores.memory', 'desc'), // Higher is better
+    limit(topN)
+  );
+
+  return onSnapshot(q, (snapshot) => {
+    const ranking = snapshot.docs.map((doc, index) => ({
+      rank: index + 1,
+      studentId: doc.id,
+      ...doc.data()
+    }));
+
+    console.log(`${CONSOLE_PREFIX} Memory ranking updated:`, ranking.length, 'students');
+    callback(ranking);
+  }, (error) => {
+    console.error(`${CONSOLE_PREFIX} Memory ranking subscription error:`, error);
+  });
+};
+
+/**
+ * Subscribe to real-time ranking updates (Balloon Game)
+ * @param {Function} callback - Called with ranking data on updates
+ * @param {number} topN - Number of top students to fetch (default 100)
+ * @returns {Function} Unsubscribe function
+ */
+export const subscribeToBalloonRanking = (callback, topN = 100) => {
+  const q = query(
+    collection(db, 'students'),
+    where('scores.balloon', '!=', null),
+    orderBy('scores.balloon', 'desc'), // Higher is better
+    limit(topN)
+  );
+
+  return onSnapshot(q, (snapshot) => {
+    const ranking = snapshot.docs.map((doc, index) => ({
+      rank: index + 1,
+      studentId: doc.id,
+      ...doc.data()
+    }));
+
+    console.log(`${CONSOLE_PREFIX} Balloon ranking updated:`, ranking.length, 'students');
+    callback(ranking);
+  }, (error) => {
+    console.error(`${CONSOLE_PREFIX} Balloon ranking subscription error:`, error);
+  });
+};
+
+/**
+ * Subscribe to ranking for any game type (unified function)
+ * @param {string} gameType - 'reaction', 'color', 'memory', 'balloon'
+ * @param {Function} callback - Called with ranking data on updates
+ * @param {number} topN - Number of top students to fetch (default 100)
+ * @returns {Function} Unsubscribe function
+ */
+export const subscribeToGameRanking = (gameType, callback, topN = 100) => {
+  const orderDirection = gameType === 'reaction' ? 'asc' : 'desc';
+
+  const q = query(
+    collection(db, 'students'),
+    where(`scores.${gameType}`, '!=', null),
+    orderBy(`scores.${gameType}`, orderDirection),
+    limit(topN)
+  );
+
+  return onSnapshot(q, (snapshot) => {
+    const ranking = snapshot.docs.map((doc, index) => ({
+      rank: index + 1,
+      studentId: doc.id,
+      ...doc.data()
+    }));
+
+    console.log(`${CONSOLE_PREFIX} ${gameType} ranking updated:`, ranking.length, 'students');
+    callback(ranking);
+  }, (error) => {
+    console.error(`${CONSOLE_PREFIX} ${gameType} ranking subscription error:`, error);
+  });
+};
+
+/**
  * Get student rank and score (Reaction Game)
  * @param {string} studentId - 4-digit student ID
  * @returns {Promise<Object|null>} { rank, score, total } or null

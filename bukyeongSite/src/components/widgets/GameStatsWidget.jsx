@@ -1,61 +1,54 @@
 // src/components/widgets/GameStatsWidget.jsx
 import { useState, useEffect } from 'react';
-import { subscribeToRanking, getStudentRank } from '../../services/gameService';
-import { getStudentIdFromStorage } from '../../services/studentService';
+import { subscribeToGameRanking } from '../../services/gameService';
 import './GameStatsWidget.css';
 
-const GameStatsWidget = () => {
-  const [ranking, setRanking] = useState([]);
-  const [myRank, setMyRank] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+// 게임 설정
+const GAMES = [
+  { id: 'reaction', name: '반응속도', icon: '⚡', unit: 'ms' },
+  { id: 'color', name: '색깔 찾기', icon: '🎨', unit: '점' },
+  { id: 'memory', name: '기억력', icon: '🧠', unit: '점' },
+  { id: 'balloon', name: '풍선 터뜨리기', icon: '🎈', unit: '점' },
+];
 
-  // 학번 정보 가져오기
-  const studentData = getStudentIdFromStorage();
-  const studentId = studentData?.studentId;
+const GameStatsWidget = () => {
+  const [rankings, setRankings] = useState({});
+  const [loading, setLoading] = useState(true);
 
   // ============================================
-  // 실시간 TOP 3 랭킹 구독
+  // 실시간 TOP 1 랭킹 구독 (모든 게임)
   // ============================================
   useEffect(() => {
-    setLoading(true);
+    const unsubscribers = [];
 
-    const unsubscribe = subscribeToRanking((rankingData) => {
-      setRanking(rankingData);
-      setLoading(false);
-    }, 3); // TOP 3만 가져오기
+    GAMES.forEach(game => {
+      const unsubscribe = subscribeToGameRanking(game.id, (rankingData) => {
+        setRankings(prev => ({
+          ...prev,
+          [game.id]: rankingData[0] // TOP 1만 가져오기
+        }));
+        setLoading(false);
+      }, 1);
+
+      unsubscribers.push(unsubscribe);
+    });
 
     return () => {
-      unsubscribe();
+      unsubscribers.forEach(unsub => unsub());
     };
   }, []);
 
-  // ============================================
-  // 개인 순위 조회 (로그인 시)
-  // ============================================
-  useEffect(() => {
-    if (!studentId) {
-      setMyRank(null);
-      return;
-    }
+  // 이름 포맷
+  const formatName = (student) => {
+    if (!student) return '-';
+    if (student.name) return student.name;
+    return `학생 ${student.studentId}`;
+  };
 
-    const fetchMyRank = async () => {
-      try {
-        const rankData = await getStudentRank(studentId);
-        setMyRank(rankData);
-      } catch (err) {
-        console.error('[GameStatsWidget] 개인 순위 조회 실패:', err);
-        setMyRank(null);
-      }
-    };
-
-    fetchMyRank();
-  }, [studentId]);
-
-  // 메달 아이콘 반환
-  const getMedal = (index) => {
-    const medals = ['🥇', '🥈', '🥉'];
-    return medals[index] || `${index + 1}위`;
+  // 점수 가져오기
+  const getScore = (student, gameId) => {
+    if (!student) return '-';
+    return student.scores?.[gameId] || '-';
   };
 
   // 로딩 상태
@@ -70,52 +63,35 @@ const GameStatsWidget = () => {
     );
   }
 
-  // 에러 또는 데이터 없음
-  if (error || ranking.length === 0) {
-    return (
-      <div className="game-stats-widget">
-        <div className="stats-empty">
-          <span className="empty-icon">🎮</span>
-          <p>아직 게임 기록이 없습니다</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="game-stats-widget">
-      {/* 개인 통계 (로그인 시) */}
-      {myRank && (
-        <div className="my-stats">
-          <div className="stat-item">
-            <span className="stat-label">내 순위</span>
-            <span className="stat-value gradient-text">
-              {myRank.rank}위
-            </span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-label">내 기록</span>
-            <span className="stat-value gradient-text">
-              {myRank.score}ms
-            </span>
-          </div>
-        </div>
-      )}
+      {/* 게임별 TOP 1 미리보기 */}
+      <div className="game-rankings-preview">
+        {GAMES.map(game => {
+          const topPlayer = rankings[game.id];
 
-      {/* TOP 3 랭킹 */}
-      <div className="top-ranking">
-        <div className="ranking-header">
-          <span className="ranking-title">🏆 TOP 3</span>
-        </div>
-        {ranking.map((student, index) => (
-          <div className="rank-item" key={student.studentId}>
-            <span className="rank-medal">{getMedal(index)}</span>
-            <span className="rank-id">{student.studentId}</span>
-            <span className="rank-score gradient-text">
-              {student.scores.reaction}ms
-            </span>
-          </div>
-        ))}
+          return (
+            <div className="game-rank-item" key={game.id}>
+              <div className="game-rank-header">
+                <span className="game-rank-icon">{game.icon}</span>
+                <span className="game-rank-name">{game.name}</span>
+              </div>
+              <div className="game-rank-leader">
+                {topPlayer ? (
+                  <>
+                    <span className="leader-medal">🥇</span>
+                    <span className="leader-name">{formatName(topPlayer)}</span>
+                    <span className="leader-score">
+                      {getScore(topPlayer, game.id)} {game.unit}
+                    </span>
+                  </>
+                ) : (
+                  <span className="no-data">기록 없음</span>
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

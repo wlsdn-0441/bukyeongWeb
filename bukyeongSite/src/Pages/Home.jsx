@@ -85,7 +85,7 @@ const Home = () => {
       id: 1,
       title: '게임 랭킹',
       component: <GameStatsWidget />,
-      route: '/game-stats',
+      route: '/ranking-hub',
       isClickable: true,
     },
     // {

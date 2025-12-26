@@ -44,6 +44,8 @@ const NotFound = lazy(() => import("./Pages/NotFound"));
 // game pages (부스 게임 점수 수령 및 랭킹)
 const ClaimScore = lazy(() => import("./Pages/ClaimScore"));
 const Ranking = lazy(() => import("./Pages/Ranking"));
+const RankingHub = lazy(() => import("./Pages/RankingHub"));
+const RankingDetail = lazy(() => import("./Pages/RankingDetail"));
 const MyScore = lazy(() => import("./Pages/MyScore"));
 const ManualClaim = lazy(() => import("./Pages/admin/ManualClaim"));
 const GameStatsPage = lazy(() => import("./Pages/GameStatsPage"));
@@ -142,6 +144,16 @@ const router = createBrowserRouter(
       <Route path="ranking" element={
         <Suspense fallback={<PageLoadingFallback />}>
           <Ranking />
+        </Suspense>
+      } />
+      <Route path="ranking-hub" element={
+        <Suspense fallback={<PageLoadingFallback />}>
+          <RankingHub />
+        </Suspense>
+      } />
+      <Route path="ranking/:gameType" element={
+        <Suspense fallback={<PageLoadingFallback />}>
+          <RankingDetail />
         </Suspense>
       } />
       <Route path="my-score" element={
