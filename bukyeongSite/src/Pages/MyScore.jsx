@@ -11,13 +11,14 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ScoreDisplay from '../components/game/ScoreDisplay';
-import { getStudentRank, getAllStudentScores } from '../services/gameService';
+import { getAllStudentScores, getStudentAllRanks } from '../services/gameService';
 import { getStudentIdFromStorage } from '../services/studentService';
+import { GAME_CONFIG } from '../config/gameConfig';
 import './MyScore.css';
 
 export default function MyScore() {
   const navigate = useNavigate();
-  const [rankData, setRankData] = useState(null);
+  const [allRanks, setAllRanks] = useState({});
   const [scoreHistory, setScoreHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -26,7 +27,7 @@ export default function MyScore() {
   const studentData = getStudentIdFromStorage();
   const studentId = studentData?.studentId;
 
-  // Fetch student rank and all scores on mount
+  // Fetch student ranks for all games and score history
   useEffect(() => {
     const fetchData = async () => {
       // Check if student ID exists
@@ -39,16 +40,16 @@ export default function MyScore() {
       try {
         console.log('[MyScore] Fetching data for:', studentId);
 
-        // Fetch rank and all scores in parallel
-        const [rankResult, scoresResult] = await Promise.all([
-          getStudentRank(studentId),
+        // Fetch ranks for all games and all scores in parallel
+        const [ranksResult, scoresResult] = await Promise.all([
+          getStudentAllRanks(studentId),
           getAllStudentScores(studentId)
         ]);
 
-        if (!rankResult || scoresResult.length === 0) {
+        if (!ranksResult || Object.keys(ranksResult).filter(k => ranksResult[k]).length === 0) {
           setError('아직 게임 기록이 없습니다.');
         } else {
-          setRankData(rankResult);
+          setAllRanks(ranksResult);
           setScoreHistory(scoresResult);
         }
       } catch (err) {
@@ -114,7 +115,7 @@ export default function MyScore() {
     );
   }
 
-  // Success state (has score)
+  // Success state (has scores)
   return (
     <div className="my-score-page">
       <div className="my-score-container">
@@ -126,47 +127,56 @@ export default function MyScore() {
           </p>
         </header>
 
-        {/* Rank Card */}
-        <div className="rank-card">
-          <div className="rank-badge">
-            <div className="rank-number">{rankData.rank}</div>
-            <div className="rank-label">순위</div>
-          </div>
-          <div className="rank-total">
-            전체 {rankData.total}명 중
-          </div>
+        {/* 게임별 점수 카드 */}
+        <div className="scores-grid">
+          {Object.entries(GAME_CONFIG).map(([gameType, config]) => {
+            const rankInfo = allRanks[gameType];
+            if (!rankInfo) return null;
+
+            return (
+              <div key={gameType} className="game-score-card">
+                <h2 className="score-card-title">
+                  <span className="card-icon">{config.icon}</span>
+                  {config.name}
+                </h2>
+
+                <div className="rank-badge">
+                  <div className="rank-number">{rankInfo.rank}</div>
+                  <div className="rank-label">순위</div>
+                </div>
+
+                <div className="rank-total">
+                  전체 {rankInfo.total}명 중
+                </div>
+
+                <ScoreDisplay
+                  gameType={gameType}
+                  score={rankInfo.score}
+                  size="large"
+                  showLabel={false}
+                />
+
+                <div className="percentile-info">
+                  <strong>상위 {Math.round((rankInfo.rank / rankInfo.total) * 100)}%</strong>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
-        {/* Score Display */}
-        <div className="score-card">
-          <h2 className="score-card-title">반응속도 게임</h2>
-          <ScoreDisplay
-            gameType="reaction"
-            score={rankData.score}
-            size="large"
-            showLabel={false}
-          />
-          <p className="score-hint">낮을수록 좋아요!</p>
-        </div>
-
-        {/* Percentile Info */}
-        <div className="percentile-card">
-          <div className="percentile-icon">📊</div>
-          <div className="percentile-content">
-            <strong>상위 {Math.round((rankData.rank / rankData.total) * 100)}%</strong>
-            <p className="percentile-description">
-              {rankData.rank <= 3 && '🎉 최상위권입니다!'}
-              {rankData.rank > 3 && rankData.rank <= 10 && '🔥 상위권입니다!'}
-              {rankData.rank > 10 && rankData.rank <= rankData.total * 0.3 && '👍 평균 이상입니다!'}
-              {rankData.rank > rankData.total * 0.3 && '💪 더 좋은 기록에 도전해보세요!'}
-            </p>
+        {/* 기록이 하나도 없을 때 */}
+        {Object.values(allRanks).every(rank => !rank) && (
+          <div className="no-scores-state">
+            <span className="no-scores-icon">🎮</span>
+            <p>아직 게임 기록이 없습니다</p>
+            <p className="no-scores-hint">게임을 플레이하고 QR 코드로 점수를 등록해보세요!</p>
           </div>
-        </div>
+        )}
 
         {/* Score History */}
         {scoreHistory.length > 0 && (
           <div className="score-history-section">
-            <h2 className="history-title">📜 전체 기록 ({scoreHistory.length}개)</h2>
+            <h2 className="history-title">📊 점수 기록 ({scoreHistory.length}개)</h2>
             <div className="score-history-list">
               {scoreHistory.map((record, index) => (
                 <div key={record.id} className="score-history-item">
@@ -187,11 +197,8 @@ export default function MyScore() {
                       gameType={record.gameType}
                       score={record.score}
                       size="small"
-                      showLabel={false}
+                      showLabel={true}
                     />
-                    {record.score === rankData.score && (
-                      <span className="best-badge">🏆 최고 기록</span>
-                    )}
                   </div>
                 </div>
               ))}
@@ -202,26 +209,18 @@ export default function MyScore() {
         {/* Action Buttons */}
         <div className="my-score-actions">
           <button
-            className="action-button primary"
-            onClick={() => navigate('/ranking')}
+            className="action-button secondary"
+            onClick={() => navigate('/ranking-hub')}
           >
             전체 랭킹 보기
           </button>
           <button
-            className="action-button secondary"
+            className="action-button primary"
             onClick={() => navigate('/')}
           >
-            홈으로 돌아가기
+            홈으로
           </button>
         </div>
-
-        {/* Refresh Button */}
-        <button
-          className="refresh-button"
-          onClick={() => window.location.reload()}
-        >
-          🔄 새로고침
-        </button>
       </div>
     </div>
   );

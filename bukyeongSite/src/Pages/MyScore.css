@@ -458,3 +458,176 @@
     background: rgba(255, 255, 255, 0.1);
   }
 }
+
+/* Game Score Cards Grid */
+.scores-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.game-score-card {
+  background: var(--card-bg, #fff);
+  border-radius: 1.25rem;
+  padding: 1.75rem;
+  box-shadow: 0 4px 20px rgba(93, 78, 55, 0.12);
+  border-top: 4px solid var(--beige-medium, #C89F77);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: all 0.3s ease;
+  animation: fadeIn 0.5s ease both;
+}
+
+.game-score-card:nth-child(1) { animation-delay: 0.1s; }
+.game-score-card:nth-child(2) { animation-delay: 0.2s; }
+.game-score-card:nth-child(3) { animation-delay: 0.3s; }
+.game-score-card:nth-child(4) { animation-delay: 0.4s; }
+
+.game-score-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(93, 78, 55, 0.18);
+}
+
+.game-score-card .score-card-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-color, #000);
+  margin: 0 0 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.game-score-card .rank-badge {
+  padding: 1rem;
+  background: linear-gradient(135deg, var(--beige-medium, #C89F77) 0%, var(--beige-dark, #A67C52) 100%);
+  border-radius: 1rem;
+  color: white;
+}
+
+.game-score-card .rank-number {
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.game-score-card .rank-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-top: 0.25rem;
+  opacity: 0.9;
+}
+
+.game-score-card .rank-total {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--card-subtitle-color, #666);
+  font-weight: 500;
+}
+
+.percentile-info {
+  text-align: center;
+  padding: 0.75rem;
+  background: rgba(200, 159, 119, 0.1);
+  border-radius: 0.75rem;
+  font-size: 0.95rem;
+  color: var(--text-color, #000);
+}
+
+.percentile-info strong {
+  color: var(--beige-dark, #A67C52);
+}
+
+/* No Scores State */
+.no-scores-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  background: var(--card-bg, #fff);
+  border-radius: 1.25rem;
+  box-shadow: 0 4px 20px rgba(93, 78, 55, 0.12);
+  gap: 1rem;
+  animation: fadeIn 0.5s ease;
+}
+
+.no-scores-icon {
+  font-size: 5rem;
+  opacity: 0.5;
+}
+
+.no-scores-state p {
+  font-size: 1.1rem;
+  color: var(--text-color, #000);
+  font-weight: 600;
+  margin: 0;
+}
+
+.no-scores-hint {
+  font-size: 0.95rem !important;
+  color: var(--card-subtitle-color, #666) !important;
+  font-style: italic;
+  font-weight: 500 !important;
+}
+
+/* Mobile - Game Cards */
+@media (max-width: 768px) {
+  .my-score-container {
+    max-width: 100%;
+  }
+
+  .scores-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .game-score-card {
+    padding: 1.5rem;
+  }
+
+  .game-score-card .rank-badge {
+    padding: 0.875rem;
+  }
+
+  .game-score-card .rank-number {
+    font-size: 2rem;
+  }
+
+  .no-scores-state {
+    padding: 3rem 1.5rem;
+  }
+
+  .no-scores-icon {
+    font-size: 4rem;
+  }
+}
+
+/* Dark Mode - Game Cards */
+@media (prefers-color-scheme: dark) {
+  .game-score-card {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .game-score-card:hover {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  }
+
+  .percentile-info {
+    background: rgba(200, 159, 119, 0.15);
+  }
+
+  .no-scores-state {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+}

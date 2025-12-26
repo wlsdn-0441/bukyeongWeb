@@ -23,6 +23,7 @@ import {
   Timestamp
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
+import { isNewBestScore, GAME_CONFIG } from '../config/gameConfig';
 
 const CONSOLE_PREFIX = '[GameService]';
 
@@ -102,8 +103,8 @@ export const claimScore = async (sessionId, studentId, session) => {
       const studentData = studentSnap.data();
       const currentBest = studentData.scores?.[gameType];
 
-      // For reaction game: lower is better
-      const isNewBest = !currentBest || score < currentBest;
+      // Check if new score is better (handles all game types)
+      const isNewBest = isNewBestScore(gameType, score, currentBest);
 
       if (isNewBest) {
         const newScores = { ...studentData.scores, [gameType]: score };
@@ -463,6 +464,72 @@ export const getAllStudentScores = async (studentId) => {
     return scores;
   } catch (error) {
     console.error(`${CONSOLE_PREFIX} Get all student scores failed:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Get student ranks and scores for all games
+ *
+ * Returns ranking data for all 4 game types for a specific student
+ * @param {string} studentId - 4-digit student ID
+ * @returns {Promise<Object>} { reaction: {...}, color: {...}, memory: {...}, balloon: {...} }
+ */
+export const getStudentAllRanks = async (studentId) => {
+  try {
+    const studentRef = doc(db, 'students', studentId);
+    const studentSnap = await getDoc(studentRef);
+
+    if (!studentSnap.exists()) {
+      return null;
+    }
+
+    const studentData = studentSnap.data();
+    const scores = studentData.scores || {};
+    const result = {};
+
+    // 각 게임 타입별로 순위 계산
+    for (const gameType of Object.keys(GAME_CONFIG)) {
+      const studentScore = scores[gameType];
+
+      if (!studentScore) {
+        result[gameType] = null;
+        continue;
+      }
+
+      const config = GAME_CONFIG[gameType];
+      const operator = config.betterWhen === 'lower' ? '<' : '>';
+
+      // Count students with better scores
+      const betterScoresQuery = query(
+        collection(db, 'students'),
+        where(`scores.${gameType}`, operator, studentScore)
+      );
+
+      const betterScoresSnap = await getDocs(betterScoresQuery);
+      const rank = betterScoresSnap.size + 1;
+
+      // Get total students
+      const allStudentsQuery = query(
+        collection(db, 'students'),
+        where(`scores.${gameType}`, '!=', null)
+      );
+
+      const allStudentsSnap = await getDocs(allStudentsQuery);
+      const total = allStudentsSnap.size;
+
+      result[gameType] = {
+        rank,
+        score: studentScore,
+        total,
+        gameType
+      };
+    }
+
+    console.log(`${CONSOLE_PREFIX} Fetched ranks for all games:`, studentId);
+    return result;
+  } catch (error) {
+    console.error(`${CONSOLE_PREFIX} Get student all ranks failed:`, error);
     throw error;
   }
 };
