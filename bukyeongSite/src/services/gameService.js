@@ -167,7 +167,7 @@ export const claimScore = async (sessionId, studentId, session) => {
 // ============================================
 
 /**
- * Subscribe to real-time ranking updates
+ * Subscribe to real-time ranking updates (Reaction Game)
  * @param {Function} callback - Called with ranking data on updates
  * @param {number} topN - Number of top students to fetch (default 100)
  * @returns {Function} Unsubscribe function
@@ -187,7 +187,7 @@ export const subscribeToRanking = (callback, topN = 100) => {
       ...doc.data()
     }));
 
-    console.log(`${CONSOLE_PREFIX} Ranking updated:`, ranking.length, 'students');
+    console.log(`${CONSOLE_PREFIX} Reaction ranking updated:`, ranking.length, 'students');
     callback(ranking);
   }, (error) => {
     console.error(`${CONSOLE_PREFIX} Ranking subscription error:`, error);
@@ -195,7 +195,35 @@ export const subscribeToRanking = (callback, topN = 100) => {
 };
 
 /**
- * Get student rank and score
+ * Subscribe to real-time ranking updates (Color Game)
+ * @param {Function} callback - Called with ranking data on updates
+ * @param {number} topN - Number of top students to fetch (default 100)
+ * @returns {Function} Unsubscribe function
+ */
+export const subscribeToColorRanking = (callback, topN = 100) => {
+  const q = query(
+    collection(db, 'students'),
+    where('scores.color', '!=', null),
+    orderBy('scores.color', 'desc'), // Higher is better
+    limit(topN)
+  );
+
+  return onSnapshot(q, (snapshot) => {
+    const ranking = snapshot.docs.map((doc, index) => ({
+      rank: index + 1,
+      studentId: doc.id,
+      ...doc.data()
+    }));
+
+    console.log(`${CONSOLE_PREFIX} Color ranking updated:`, ranking.length, 'students');
+    callback(ranking);
+  }, (error) => {
+    console.error(`${CONSOLE_PREFIX} Color ranking subscription error:`, error);
+  });
+};
+
+/**
+ * Get student rank and score (Reaction Game)
  * @param {string} studentId - 4-digit student ID
  * @returns {Promise<Object|null>} { rank, score, total } or null
  */
@@ -240,6 +268,56 @@ export const getStudentRank = async (studentId) => {
     };
   } catch (error) {
     console.error(`${CONSOLE_PREFIX} Get student rank failed:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Get student rank and score (Color Game)
+ * @param {string} studentId - 4-digit student ID
+ * @returns {Promise<Object|null>} { rank, score, total } or null
+ */
+export const getStudentColorRank = async (studentId) => {
+  try {
+    const studentRef = doc(db, 'students', studentId);
+    const studentSnap = await getDoc(studentRef);
+
+    if (!studentSnap.exists()) {
+      return null;
+    }
+
+    const studentData = studentSnap.data();
+    const studentScore = studentData.scores?.color;
+
+    if (!studentScore) {
+      return null;
+    }
+
+    // Count students with better scores (higher is better for color game)
+    const betterScoresQuery = query(
+      collection(db, 'students'),
+      where('scores.color', '>', studentScore)
+    );
+
+    const betterScoresSnap = await getDocs(betterScoresQuery);
+    const rank = betterScoresSnap.size + 1;
+
+    // Get total students
+    const allStudentsQuery = query(
+      collection(db, 'students'),
+      where('scores.color', '!=', null)
+    );
+
+    const allStudentsSnap = await getDocs(allStudentsQuery);
+    const total = allStudentsSnap.size;
+
+    return {
+      rank,
+      score: studentScore,
+      total
+    };
+  } catch (error) {
+    console.error(`${CONSOLE_PREFIX} Get student color rank failed:`, error);
     throw error;
   }
 };

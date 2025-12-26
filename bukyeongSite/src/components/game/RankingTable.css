@@ -1,5 +1,9 @@
 /* Ranking Table Component */
 
+.ranking-table-container {
+  width: 100%;
+}
+
 .ranking-table-wrapper {
   width: 100%;
   overflow-x: auto;
@@ -254,5 +258,71 @@
   .ranking-table-loading,
   .ranking-table-empty {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Show More Section */
+.show-more-section {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.show-more-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 2rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.show-more-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.show-more-button:active {
+  transform: translateY(0);
+}
+
+.show-more-button.collapse {
+  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+  box-shadow: 0 4px 12px rgba(75, 85, 99, 0.3);
+}
+
+.show-more-button.collapse:hover {
+  box-shadow: 0 6px 20px rgba(75, 85, 99, 0.4);
+}
+
+.show-more-icon {
+  font-size: 0.8rem;
+  transition: transform 0.3s ease;
+}
+
+.show-more-button:hover .show-more-icon {
+  transform: translateY(2px);
+}
+
+.show-more-button.collapse:hover .show-more-icon {
+  transform: translateY(-2px);
+}
+
+.show-more-text {
+  font-size: 0.9rem;
+}
+
+/* Mobile - Show More Button */
+@media (max-width: 768px) {
+  .show-more-button {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.85rem;
   }
 }
