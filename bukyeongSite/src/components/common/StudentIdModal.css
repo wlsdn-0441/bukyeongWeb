@@ -1,12 +1,12 @@
-/* 학번 입력 모달 - 트렌디한 디자인 */
+/* 학번 입력 모달 - Cafe Beige Theme */
 
 .student-id-overlay {
   position: fixed;
   inset: 0;
   background: linear-gradient(135deg,
-    rgba(99, 102, 241, 0.95) 0%,
-    rgba(139, 92, 246, 0.95) 50%,
-    rgba(217, 70, 239, 0.95) 100%
+    rgba(200, 159, 119, 0.95) 0%,
+    rgba(166, 124, 82, 0.95) 50%,
+    rgba(139, 99, 66, 0.95) 100%
   );
   display: flex;
   align-items: center;
@@ -31,10 +31,11 @@
   padding: 3rem 2.5rem;
   max-width: 480px;
   width: 100%;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 24px 60px rgba(93, 78, 55, 0.3);
   animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;
+  border: 2px solid rgba(200, 159, 119, 0.3);
 }
 
 /* 닫기 버튼 (X) */
@@ -42,11 +43,11 @@
   position: absolute;
   top: 1.5rem;
   right: 1.5rem;
-  background: rgba(107, 114, 128, 0.1);
+  background: rgba(139, 115, 85, 0.1);
   border: none;
   border-radius: 50%;
   font-size: 1.5rem;
-  color: #6b7280;
+  color: var(--text-light, #8B7355);
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   line-height: 1;
@@ -60,8 +61,8 @@
 }
 
 .student-id-close:hover {
-  background: rgba(107, 114, 128, 0.2);
-  color: #374151;
+  background: rgba(139, 115, 85, 0.2);
+  color: var(--text-dark, #5D4E37);
   transform: scale(1.1);
 }
 
@@ -104,14 +105,17 @@
 .student-id-title {
   font-size: 2rem;
   font-weight: 800;
-  color: #1a1a1a;
+  background: linear-gradient(135deg, #C89F77 0%, #A67C52 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin: 0 0 0.75rem 0;
   letter-spacing: -0.02em;
 }
 
 .student-id-subtitle {
   font-size: 1.05rem;
-  color: #6b7280;
+  color: var(--text-light, #8B7355);
   margin: 0;
   line-height: 1.6;
 }
@@ -132,7 +136,7 @@
 .student-id-label {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #374151;
+  color: var(--text-dark, #5D4E37);
   text-align: center;
 }
 
@@ -142,30 +146,31 @@
   font-size: 2rem;
   font-weight: 700;
   text-align: center;
-  border: 3px solid #e5e7eb;
+  border: 3px solid rgba(200, 159, 119, 0.3);
   border-radius: 16px;
   outline: none;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   letter-spacing: 0.3rem;
   font-family: 'Courier New', monospace;
-  background: #f9fafb;
+  background: var(--bg-beige, #F5EBE0);
   box-sizing: border-box;
+  color: var(--text-dark, #5D4E37);
 }
 
 .student-id-input:focus {
-  border-color: #6366f1;
+  border-color: var(--latte-brown, #C89F77);
   background: white;
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+  box-shadow: 0 0 0 4px rgba(200, 159, 119, 0.15);
 }
 
 .student-id-input.valid {
-  border-color: #10b981;
-  background: rgba(16, 185, 129, 0.05);
+  border-color: #A0B88E;
+  background: rgba(160, 184, 142, 0.1);
 }
 
 .student-id-input.error {
-  border-color: #ef4444;
-  background: rgba(239, 68, 68, 0.05);
+  border-color: #D4938F;
+  background: rgba(212, 147, 143, 0.1);
   animation: shake 0.4s;
 }
 
@@ -177,7 +182,7 @@
 
 .student-id-hint {
   font-size: 0.875rem;
-  color: #9ca3af;
+  color: var(--text-light, #8B7355);
   text-align: center;
   margin: 0;
 }
@@ -189,8 +194,8 @@
   justify-content: center;
   gap: 0.75rem;
   padding: 1.25rem;
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
-  border: 2px solid #10b981;
+  background: linear-gradient(135deg, rgba(160, 184, 142, 0.15), rgba(139, 167, 120, 0.15));
+  border: 2px solid #A0B88E;
   border-radius: 14px;
   animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -208,13 +213,13 @@
 
 .preview-icon {
   font-size: 1.5rem;
-  color: #10b981;
+  color: #A0B88E;
 }
 
 .preview-text {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #059669;
+  color: #8BA778;
 }
 
 /* 에러 메시지 */
@@ -224,8 +229,8 @@
   justify-content: center;
   gap: 0.75rem;
   padding: 1.25rem;
-  background: rgba(239, 68, 68, 0.1);
-  border: 2px solid #ef4444;
+  background: rgba(212, 147, 143, 0.15);
+  border: 2px solid #D4938F;
   border-radius: 14px;
   animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -237,7 +242,7 @@
 .error-text {
   font-size: 1rem;
   font-weight: 600;
-  color: #dc2626;
+  color: #C67C77;
 }
 
 /* 제출 버튼 */
@@ -247,12 +252,12 @@
   font-size: 1.25rem;
   font-weight: 700;
   color: white;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6, #d946ef);
+  background: linear-gradient(135deg, #C89F77, #A67C52, #8B6342);
   border: none;
   border-radius: 16px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 8px 24px rgba(166, 124, 82, 0.3);
   position: relative;
   overflow: hidden;
 }
@@ -261,14 +266,14 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, #d946ef, #8b5cf6, #6366f1);
+  background: linear-gradient(135deg, #D5BDAF, #C89F77, #A67C52);
   opacity: 0;
   transition: opacity 0.3s;
 }
 
 .student-id-button:hover:not(:disabled) {
   transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 12px 32px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 12px 32px rgba(166, 124, 82, 0.4);
 }
 
 .student-id-button:hover:not(:disabled)::before {
@@ -297,7 +302,7 @@
 
 .student-id-note {
   font-size: 0.875rem;
-  color: #9ca3af;
+  color: var(--text-light, #8B7355);
   margin: 0;
 }
 
@@ -374,39 +379,43 @@
 
 /* 다크모드 지원 */
 :root[data-theme="dark"] .student-id-modal {
-  background: rgba(26, 26, 26, 0.98);
+  background: rgba(44, 36, 24, 0.98);
+  border-color: rgba(200, 159, 119, 0.3);
 }
 
 :root[data-theme="dark"] .student-id-title {
-  color: #f9fafb;
+  background: linear-gradient(135deg, #D5BDAF 0%, #C89F77 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 :root[data-theme="dark"] .student-id-subtitle {
-  color: #9ca3af;
+  color: #B8A99A;
 }
 
 :root[data-theme="dark"] .student-id-label {
-  color: #d1d5db;
+  color: #E3D5CA;
 }
 
 :root[data-theme="dark"] .student-id-input {
-  background: #1f2937;
-  border-color: #374151;
-  color: white;
+  background: #3A2F23;
+  border-color: rgba(200, 159, 119, 0.3);
+  color: #E3D5CA;
 }
 
 :root[data-theme="dark"] .student-id-input:focus {
-  background: #111827;
+  background: #2C2418;
 }
 
 :root[data-theme="dark"] .student-id-close {
-  background: rgba(255, 255, 255, 0.1);
-  color: #9ca3af;
+  background: rgba(200, 159, 119, 0.15);
+  color: #B8A99A;
 }
 
 :root[data-theme="dark"] .student-id-close:hover {
-  background: rgba(255, 255, 255, 0.2);
-  color: #d1d5db;
+  background: rgba(200, 159, 119, 0.25);
+  color: #E3D5CA;
 }
 
 /* Hide navigation components during student ID modal */

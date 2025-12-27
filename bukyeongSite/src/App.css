@@ -32,6 +32,12 @@
   --gradient-button-hover: linear-gradient(135deg, #D5BDAF 0%, #C89F77 100%);
   --gradient-text: linear-gradient(135deg, #5D4E37 0%, #8B7355 100%);
 
+  /* Card Overlay Gradients */
+  --card-glow-color: rgba(200, 159, 119, 0.15);
+  --card-header-overlay: rgba(255, 255, 255, 0.5);
+  --card-footer-overlay: rgba(227, 213, 202, 0.2);
+  --card-footer-overlay-hover: rgba(227, 213, 202, 0.3);
+
   /* Component Variables (for compatibility) */
   --bg-color: #FAF7F2;
   --text-color: #5D4E37;
@@ -87,6 +93,12 @@
     --gradient-button-hover: linear-gradient(135deg, #D5BDAF 0%, #C89F77 100%);
     --gradient-text: linear-gradient(135deg, #E3D5CA 0%, #C5B5A5 100%);
 
+    /* Card Overlay Gradients (다크 버전) */
+    --card-glow-color: rgba(200, 159, 119, 0.08);
+    --card-header-overlay: rgba(58, 47, 35, 0.5);
+    --card-footer-overlay: rgba(74, 61, 46, 0.3);
+    --card-footer-overlay-hover: rgba(74, 61, 46, 0.4);
+
     /* Component Variables */
     --bg-color: #2C2418;
     --text-color: #E3D5CA;
@@ -122,6 +134,10 @@
   --gradient-card: linear-gradient(135deg, #FFFFFF 0%, #F5EBE0 100%);
   --gradient-button: linear-gradient(135deg, #C89F77 0%, #A67C52 100%);
   --gradient-button-hover: linear-gradient(135deg, #D5BDAF 0%, #C89F77 100%);
+  --card-glow-color: rgba(200, 159, 119, 0.15);
+  --card-header-overlay: rgba(255, 255, 255, 0.5);
+  --card-footer-overlay: rgba(227, 213, 202, 0.2);
+  --card-footer-overlay-hover: rgba(227, 213, 202, 0.3);
   --bg-color: #FAF7F2;
   --text-color: #5D4E37;
   --card-bg: #FFFFFF;
@@ -152,6 +168,10 @@
   --gradient-card: linear-gradient(135deg, #3A2F23 0%, #4A3D2E 100%);
   --gradient-button: linear-gradient(135deg, #C89F77 0%, #A67C52 100%);
   --gradient-button-hover: linear-gradient(135deg, #D5BDAF 0%, #C89F77 100%);
+  --card-glow-color: rgba(200, 159, 119, 0.08);
+  --card-header-overlay: rgba(58, 47, 35, 0.5);
+  --card-footer-overlay: rgba(74, 61, 46, 0.3);
+  --card-footer-overlay-hover: rgba(74, 61, 46, 0.4);
   --bg-color: #2C2418;
   --text-color: #E3D5CA;
   --card-bg: #3A2F23;
@@ -165,8 +185,21 @@
 }
 
 /* ============================================ */
-/* Global Body Styles */
+/* Global HTML & Body Styles - 모바일 완벽 대응 */
 /* ============================================ */
+html {
+  /* 📱 오버스크롤 방지 - 흰색 여백 제거 */
+  overscroll-behavior: none;
+  overscroll-behavior-y: none;
+  overscroll-behavior-x: none;
+
+  /* 🎨 배경색 설정 (Safe Area까지 채우기) */
+  background-color: var(--bg-cream);
+
+  /* 📏 Safe Area 패딩 (노치/홈바 대응) */
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
 body {
   margin: 0;
   font-family: 'Segoe UI', 'Noto Sans KR', system-ui, -apple-system, BlinkMacSystemFont, 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
@@ -177,12 +210,21 @@ body {
   min-height: 100vh;
   line-height: 1.6;
 
+  /* 📱 오버스크롤 방지 - Bounce 효과 제거 */
+  overscroll-behavior: none;
+  overscroll-behavior-y: none;
+  -webkit-overflow-scrolling: touch;
+
   /* 모바일 최적화 */
   -webkit-text-size-adjust: 100%;
   -moz-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  -webkit-overflow-scrolling: touch;
   touch-action: manipulation;
+
+  /* iOS Safari 추가 최적화 */
+  position: relative;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 /* ============================================ */

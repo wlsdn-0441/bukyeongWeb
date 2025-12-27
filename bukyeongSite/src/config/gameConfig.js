@@ -45,6 +45,56 @@ export const GAME_CONFIG = {
     desc: '높을수록 좋음',
     color: '#D4A574',
     compareScores: (newScore, currentBest) => newScore > currentBest
+  },
+  wordle: {
+    id: 'wordle',
+    name: '워블',
+    icon: '📝',
+    unit: '점',
+    betterWhen: 'higher',
+    desc: '높을수록 좋음',
+    color: '#B8956A',
+    compareScores: (newScore, currentBest) => newScore > currentBest
+  },
+  capital: {
+    id: 'capital',
+    name: '수도 퀴즈',
+    icon: '🌍',
+    unit: '점',
+    betterWhen: 'higher',
+    desc: '높을수록 좋음',
+    color: '#9A7B5C',
+    compareScores: (newScore, currentBest) => newScore > currentBest
+  },
+  hiddenball: {
+    id: 'hiddenball',
+    name: '숨긴 공 찾기',
+    icon: '⚽',
+    unit: '점',
+    betterWhen: 'higher',
+    desc: '높을수록 좋음',
+    color: '#C5A578',
+    compareScores: (newScore, currentBest) => newScore > currentBest
+  },
+  sudoku: {
+    id: 'sudoku',
+    name: '스도쿠',
+    icon: '🔢',
+    unit: '초',
+    betterWhen: 'lower',
+    desc: '낮을수록 좋음',
+    color: '#A68968',
+    compareScores: (newScore, currentBest) => newScore < currentBest
+  },
+  timing: {
+    id: 'timing',
+    name: '타이밍 맞추기',
+    icon: '⏱️',
+    unit: '점',
+    betterWhen: 'higher',
+    desc: '높을수록 좋음',
+    color: '#D4B896',
+    compareScores: (newScore, currentBest) => newScore > currentBest
   }
 };
 

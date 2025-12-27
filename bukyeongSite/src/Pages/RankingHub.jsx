@@ -11,43 +11,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { subscribeToGameRanking } from '../services/gameService';
+import { GAME_CONFIG } from '../config/gameConfig';
 import './RankingHub.css';
 
-// Game configurations
-const GAMES = [
-  {
-    id: 'reaction',
-    name: '반응속도 게임',
-    icon: '⚡',
-    unit: 'ms',
-    desc: '낮을수록 좋음',
-    color: '#C89F77'
-  },
-  {
-    id: 'color',
-    name: '색깔 찾기 게임',
-    icon: '🎨',
-    unit: '점',
-    desc: '높을수록 좋음',
-    color: '#A67C52'
-  },
-  {
-    id: 'memory',
-    name: '기억력 게임',
-    icon: '🧠',
-    unit: '점',
-    desc: '높을수록 좋음',
-    color: '#8B6F47'
-  },
-  {
-    id: 'balloon',
-    name: '풍선 터뜨리기 게임',
-    icon: '🎈',
-    unit: '점',
-    desc: '높을수록 좋음',
-    color: '#D4A574'
-  }
-];
+// Convert GAME_CONFIG to array
+const GAMES = Object.values(GAME_CONFIG);
 
 export default function RankingHub() {
   const navigate = useNavigate();
@@ -129,6 +97,35 @@ export default function RankingHub() {
 
         {/* Game Cards Grid */}
         <div className="game-cards-grid">
+          {/* 나의 모든 점수 카드 */}
+          <div
+            className="game-card my-scores-card"
+            style={{ '--game-color': '#E8D5C4' }}
+            onClick={() => navigate('/my-score')}
+          >
+            <div className="game-card-header">
+              <span className="game-icon">🎯</span>
+              <div className="game-info">
+                <h3 className="game-name">나의 모든 점수</h3>
+                <p className="game-desc">내 게임 기록 모아보기</p>
+              </div>
+            </div>
+
+            <div className="my-scores-preview">
+              <div className="my-scores-hint">
+                <p>📊 모든 게임의</p>
+                <p>내 점수와 순위를</p>
+                <p>한눈에 확인하세요!</p>
+              </div>
+            </div>
+
+            <button className="view-more-btn">
+              <span>내 점수 보기</span>
+              <span className="arrow">→</span>
+            </button>
+          </div>
+
+          {/* 게임 카드들 */}
           {GAMES.map(game => (
             <div
               key={game.id}

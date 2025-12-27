@@ -51,10 +51,8 @@
   background: radial-gradient(
     ellipse 100% 100% at center,
     transparent 0%,
-    transparent 50%,
-    rgba(200, 159, 119, 0.05) 65%,
-    rgba(200, 159, 119, 0.1) 80%,
-    rgba(200, 159, 119, 0.15) 100%
+    transparent 70%,
+    var(--card-glow-color) 100%
   );
   pointer-events: none;
   z-index: 0;
@@ -94,7 +92,7 @@
   border-bottom: 2px solid var(--bg-beige);
   position: relative;
   z-index: 1;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), transparent);
+  background: linear-gradient(to bottom, var(--card-header-overlay), transparent);
 }
 
 .card-header-content {
@@ -187,7 +185,7 @@
 .card-footer {
   padding: 1rem 1.5rem;
   border-top: 2px solid var(--bg-beige);
-  background: linear-gradient(to top, rgba(227, 213, 202, 0.2), transparent);
+  background: linear-gradient(to top, var(--card-footer-overlay), transparent);
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -197,7 +195,7 @@
 }
 
 .card-footer:hover {
-  background: linear-gradient(to top, rgba(227, 213, 202, 0.3), transparent);
+  background: linear-gradient(to top, var(--card-footer-overlay-hover), transparent);
 }
 
 /* ============================================ */

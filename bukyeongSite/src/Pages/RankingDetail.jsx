@@ -12,40 +12,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { subscribeToGameRanking } from '../services/gameService';
-import { normalizeGameType } from '../config/gameConfig';
+import { normalizeGameType, GAME_CONFIG } from '../config/gameConfig';
 import './RankingDetail.css';
 
-// Game configurations
-const GAME_INFO = {
-  reaction: {
-    name: '반응속도 게임',
-    icon: '⚡',
-    unit: 'ms',
-    desc: '낮을수록 좋음',
-    color: '#C89F77'
-  },
-  color: {
-    name: '색깔 찾기 게임',
-    icon: '🎨',
-    unit: '점',
-    desc: '높을수록 좋음',
-    color: '#A67C52'
-  },
-  memory: {
-    name: '기억력 게임',
-    icon: '🧠',
-    unit: '점',
-    desc: '높을수록 좋음',
-    color: '#8B6F47'
-  },
-  balloon: {
-    name: '풍선 터뜨리기 게임',
-    icon: '🎈',
-    unit: '점',
-    desc: '높을수록 좋음',
-    color: '#D4A574'
-  }
-};
+// Use GAME_CONFIG as GAME_INFO
+const GAME_INFO = GAME_CONFIG;
 
 export default function RankingDetail() {
   const navigate = useNavigate();

@@ -1,4 +1,4 @@
-/* MealWidget.css */
+/* MealWidget.css - Cafe Beige Theme */
 
 .meal-widget {
   display: flex;
@@ -13,36 +13,38 @@
 
 .meal-widget-day {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--text-light, #8B7355);
   margin: 0;
+  font-weight: 600;
 }
 
 .meal-widget-date {
   font-size: 0.75rem;
-  color: #9ca3af;
+  color: var(--espresso-brown, #A67C52);
   margin: 0.25rem 0 0 0;
 }
 
 .meal-section {
   border-left: 4px solid;
   padding-left: 1rem;
+  transition: all 0.3s ease;
 }
 
 .meal-section.breakfast {
-  border-color: #f97316;
+  border-color: var(--latte-brown, #C89F77);
 }
 
 .meal-section.lunch {
-  border-color: #3b82f6;
+  border-color: var(--espresso-brown, #A67C52);
 }
 
 .meal-section.dinner {
-  border-color: #a855f7;
+  border-color: #8B6342;
 }
 
 .meal-section-title {
   font-weight: 600;
-  color: #374151;
+  color: var(--text-dark, #5D4E37);
   margin-bottom: 0.5rem;
   display: flex;
   align-items: center;
@@ -59,23 +61,23 @@
 }
 
 .meal-item {
-  color: #4b5563;
+  color: var(--text-light, #8B7355);
   font-size: 0.875rem;
 }
 
 /* 다크 모드 지원 */
 :root[data-theme="dark"] .meal-widget-day {
-  color: #9ca3af;
+  color: #B8A99A;
 }
 
 :root[data-theme="dark"] .meal-widget-date {
-  color: #6b7280;
+  color: var(--latte-brown, #C89F77);
 }
 
 :root[data-theme="dark"] .meal-section-title {
-  color: #d1d5db;
+  color: #E3D5CA;
 }
 
 :root[data-theme="dark"] .meal-item {
-  color: #9ca3af;
+  color: #B8A99A;
 }

@@ -228,6 +228,51 @@
   font-style: italic;
 }
 
+/* My Scores Card */
+.my-scores-card {
+  background: linear-gradient(135deg, #FFFBF5 0%, #F5EBE0 100%);
+  border: 3px solid var(--game-color);
+}
+
+.my-scores-card::before {
+  background: linear-gradient(90deg, #E8D5C4, #D4A574, #C89F77, #D4A574, #E8D5C4);
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.my-scores-preview {
+  min-height: 180px;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(232, 213, 196, 0.3), rgba(212, 165, 116, 0.2));
+  border-radius: 1rem;
+  padding: 1.5rem;
+}
+
+.my-scores-hint {
+  text-align: center;
+  font-weight: 600;
+  color: var(--beige-darkest);
+  line-height: 1.8;
+}
+
+.my-scores-hint p {
+  margin: 0.25rem 0;
+  font-size: 1.05rem;
+}
+
+.my-scores-card:hover {
+  background: linear-gradient(135deg, #FFF8F0 0%, #F0E5D8 100%);
+  box-shadow: 0 16px 40px rgba(232, 213, 196, 0.4);
+}
+
 /* View More Button */
 .view-more-btn {
   width: 100%;
