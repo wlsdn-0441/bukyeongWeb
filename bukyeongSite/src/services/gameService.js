@@ -23,7 +23,7 @@ import {
   Timestamp
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
-import { isNewBestScore, GAME_CONFIG } from '../config/gameConfig';
+import { isNewBestScore, GAME_CONFIG, normalizeGameType } from '../config/gameConfig';
 
 const CONSOLE_PREFIX = '[GameService]';
 
@@ -96,7 +96,9 @@ export const claimScore = async (sessionId, studentId, session) => {
     const studentSnap = await getDoc(studentRef);
 
     const now = serverTimestamp();
-    const { gameType, score } = session;
+    // gameType 정규화 (부스 'colorfind' → 메인 'color' 호환)
+    const gameType = normalizeGameType(session.gameType);
+    const { score } = session;
 
     if (studentSnap.exists()) {
       // Update existing student

@@ -5,13 +5,19 @@
  * Supports all game types (reaction, color, memory, balloon)
  */
 
-import { GAME_CONFIG } from '../../config/gameConfig';
+import { GAME_CONFIG, normalizeGameType } from '../../config/gameConfig';
 import './ScoreDisplay.css';
 
-export default function ScoreDisplay({ gameType, score, size = 'large', showLabel = true }) {
+export default function ScoreDisplay({ gameType: rawGameType, score, size = 'large', showLabel = true }) {
+  // gameType 정규화 (부스 'colorfind' → 메인 'color' 호환)
+  const gameType = normalizeGameType(rawGameType);
+
   const formatScore = (type, value) => {
     const config = GAME_CONFIG[type];
-    if (!config) return value;
+    if (!config) {
+      console.warn('[ScoreDisplay] Unknown game type:', rawGameType, '→', type);
+      return value;
+    }
     return `${value}${config.unit}`;
   };
 

@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { getGameSession, validateSession, claimScore } from '../services/gameService';
 import { getStudentIdFromStorage } from '../services/studentService';
+import { normalizeGameType } from '../config/gameConfig';
 import ScoreDisplay from '../components/game/ScoreDisplay';
 import StudentIdInput from '../components/game/StudentIdInput';
 import './ClaimScore.css';
@@ -52,6 +53,12 @@ export default function ClaimScore() {
     try {
       setLoading(true);
       const sessionData = await getGameSession(sessionId);
+
+      // gameType 정규화 (부스 'colorfind' → 메인 'color' 호환)
+      if (sessionData && sessionData.gameType) {
+        sessionData.gameType = normalizeGameType(sessionData.gameType);
+      }
+
       const validationResult = validateSession(sessionData);
 
       setSession(sessionData);

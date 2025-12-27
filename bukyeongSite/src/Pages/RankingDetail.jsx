@@ -12,6 +12,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { subscribeToGameRanking } from '../services/gameService';
+import { normalizeGameType } from '../config/gameConfig';
 import './RankingDetail.css';
 
 // Game configurations
@@ -48,13 +49,15 @@ const GAME_INFO = {
 
 export default function RankingDetail() {
   const navigate = useNavigate();
-  const { gameType } = useParams();
+  const { gameType: rawGameType } = useParams();
   const [searchParams] = useSearchParams();
   const [rankings, setRankings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAll, setShowAll] = useState(false);
   const [myRecord, setMyRecord] = useState(null);
 
+  // gameType 정규화 (부스 'colorfind' → 메인 'color' 호환)
+  const gameType = normalizeGameType(rawGameType);
   const sessionId = searchParams.get('session');
   const gameInfo = GAME_INFO[gameType] || GAME_INFO.reaction;
 

@@ -81,3 +81,37 @@ export const getAllGameTypes = () => Object.keys(GAME_CONFIG);
  * @returns {Object|null} 게임 설정 객체 또는 null
  */
 export const getGameConfig = (gameType) => GAME_CONFIG[gameType] || null;
+
+/**
+ * 부스 게임의 gameType을 메인 사이트 형식으로 변환
+ *
+ * 부스 게임에서는 'colorfind'를 사용하지만, 메인 사이트에서는 'color'를 사용
+ * 이 함수가 자동으로 변환하여 호환성을 보장합니다.
+ *
+ * @param {string} gameType - 원본 게임 타입
+ * @returns {string} 정규화된 게임 타입
+ *
+ * @example
+ * normalizeGameType('colorfind') // returns 'color'
+ * normalizeGameType('color') // returns 'color'
+ * normalizeGameType('reaction') // returns 'reaction'
+ */
+export const normalizeGameType = (gameType) => {
+  const mapping = {
+    'colorfind': 'color',  // 부스 게임 호환
+    'color': 'color',
+    'reaction': 'reaction',
+    'memory': 'memory',
+    'balloon': 'balloon',
+    'quiz': 'memory'  // 퀴즈 게임을 기억력으로 매핑 (필요시)
+  };
+
+  const normalized = mapping[gameType] || gameType;
+
+  // 개발 모드에서 변환 로그 출력
+  if (normalized !== gameType) {
+    console.log(`[GameConfig] gameType normalized: '${gameType}' → '${normalized}'`);
+  }
+
+  return normalized;
+};
