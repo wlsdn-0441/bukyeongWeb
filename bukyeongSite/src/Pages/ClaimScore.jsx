@@ -78,9 +78,9 @@ export default function ClaimScore() {
       await claimScore(sessionId, studentId, session);
       setClaimed(true);
 
-      // Redirect to ranking after 2 seconds
+      // Redirect to game-specific ranking after 2 seconds
       setTimeout(() => {
-        navigate('/ranking');
+        navigate(`/ranking/${session.gameType}`);
       }, 2000);
     } catch (err) {
       console.error('점수 등록 실패:', err);
@@ -176,7 +176,7 @@ export default function ClaimScore() {
 
           <button
             className="action-button secondary"
-            onClick={() => navigate('/ranking')}
+            onClick={() => navigate(`/ranking/${session.gameType}`)}
           >
             랭킹 보기
           </button>
