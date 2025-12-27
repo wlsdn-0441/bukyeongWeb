@@ -341,23 +341,9 @@ export default function App() {
     window.location.reload();
   };
 
-  // 인증 로딩 중 표시
+  // 인증 로딩 중에는 아무것도 표시하지 않음 (빈 화면)
   if (authLoading) {
-    return (
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '100vh',
-        fontSize: '16px',
-        color: '#666',
-        gap: '10px'
-      }}>
-        <div>인증 확인 중...</div>
-        {!authReady && <div style={{ fontSize: '12px', color: '#999' }}>Firebase 초기화 중</div>}
-      </div>
-    );
+    return null;
   }
 
   return (

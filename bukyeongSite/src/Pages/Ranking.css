@@ -1,9 +1,9 @@
-/* Ranking Page */
+/* Ranking Page - Cafe Beige Theme */
 
 .ranking-page {
   min-height: 100vh;
   padding: 2rem 1rem;
-  background: var(--bg-color, #f5f5f5);
+  background: var(--gradient-main);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -17,31 +17,43 @@
   gap: 1.5rem;
 }
 
+/* ============================================ */
 /* Header */
+/* ============================================ */
 .ranking-header {
   text-align: center;
+  animation: fadeInUp 0.4s var(--easing);
 }
 
 .ranking-title {
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--text-color, #000);
+  font-size: clamp(1.75rem, 4vw, 2rem);
+  font-weight: 800;
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 0.5rem;
+  letter-spacing: -0.5px;
 }
 
 .ranking-subtitle {
-  font-size: 1rem;
-  color: var(--card-subtitle-color, #666);
+  font-size: clamp(0.875rem, 2vw, 1rem);
+  color: var(--text-light);
+  opacity: 0.9;
 }
 
-/* Game Type Tabs */
+/* ============================================ */
+/* Game Type Tabs - 베이지 그라데이션 */
+/* ============================================ */
 .game-type-tabs {
   display: flex;
   gap: 0.75rem;
-  background: var(--card-bg, #fff);
+  background: var(--gradient-card);
   padding: 0.5rem;
-  border-radius: 0.75rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 1rem;
+  box-shadow: 0 4px 16px var(--shadow-soft);
+  border: 2px solid var(--latte-brown);
+  animation: scaleIn 0.3s var(--easing);
 }
 
 .game-tab {
@@ -53,43 +65,55 @@
   padding: 1rem;
   background: transparent;
   border: none;
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 1rem;
+  transition: all var(--timing-normal) var(--easing);
+  font-size: clamp(0.9rem, 2vw, 1rem);
   font-weight: 600;
-  color: var(--card-subtitle-color, #666);
+  color: var(--text-light);
 }
 
 .game-tab:hover {
-  background: rgba(102, 126, 234, 0.1);
-  color: #667eea;
+  background: rgba(200, 159, 119, 0.15);
+  color: var(--latte-brown);
+  transform: translateY(-2px);
 }
 
 .game-tab.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-button);
   color: white;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 6px 20px rgba(166, 124, 82, 0.35);
+  transform: translateY(-3px);
 }
 
 .tab-icon {
   font-size: 1.25rem;
+  animation: iconFloat 2s ease-in-out infinite;
+}
+
+.game-tab.active .tab-icon {
+  animation: none;
+  transform: scale(1.1);
 }
 
 .tab-label {
   font-size: 0.95rem;
 }
 
+/* ============================================ */
 /* Ranking Filters */
+/* ============================================ */
 .ranking-filters {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 1rem;
-  background: var(--card-bg, #fff);
-  border-radius: 0.75rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.25rem;
+  background: var(--gradient-card);
+  border-radius: 1rem;
+  box-shadow: 0 4px 16px var(--shadow-soft);
+  border: 2px solid var(--latte-brown);
+  animation: slideUp 0.4s var(--easing) 0.1s backwards;
 }
 
 .filter-group {
@@ -101,71 +125,77 @@
 
 .filter-label {
   font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--text-color, #000);
+  font-weight: 700;
+  color: var(--text-dark);
   white-space: nowrap;
 }
 
 .filter-select {
   flex: 1;
   max-width: 200px;
-  padding: 0.75rem 1rem;
+  padding: 0.875rem 1.25rem;
   font-size: 0.95rem;
-  color: var(--text-color, #000);
-  background: var(--bg-color, #f5f5f5);
-  border: 2px solid var(--card-border, #e0e0e0);
-  border-radius: 0.5rem;
+  font-weight: 500;
+  color: var(--text-dark);
+  background: var(--bg-beige);
+  border: 2px solid var(--latte-brown);
+  border-radius: 0.75rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--timing-fast) var(--easing);
 }
 
 .filter-select:hover {
-  border-color: #667eea;
+  border-color: var(--espresso-brown);
+  background: var(--bg-cream);
 }
 
 .filter-select:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: var(--espresso-brown);
+  box-shadow: 0 0 0 3px rgba(200, 159, 119, 0.2);
 }
 
 .filter-reset {
-  padding: 0.75rem 1.25rem;
+  padding: 0.875rem 1.5rem;
   font-size: 0.875rem;
-  font-weight: 600;
-  color: #ef4444;
-  background: rgba(239, 68, 68, 0.1);
-  border: 2px solid rgba(239, 68, 68, 0.2);
-  border-radius: 0.5rem;
+  font-weight: 700;
+  color: var(--text-accent);
+  background: rgba(184, 115, 79, 0.1);
+  border: 2px solid rgba(184, 115, 79, 0.3);
+  border-radius: 0.75rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--timing-fast) var(--easing);
   white-space: nowrap;
 }
 
 .filter-reset:hover {
-  background: rgba(239, 68, 68, 0.15);
-  border-color: rgba(239, 68, 68, 0.3);
+  background: rgba(184, 115, 79, 0.2);
+  border-color: rgba(184, 115, 79, 0.5);
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(184, 115, 79, 0.2);
 }
 
-/* My Rank Badge */
+/* ============================================ */
+/* My Rank Badge - 베이지 그라데이션 */
+/* ============================================ */
 .my-rank-badge {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  padding: 1rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 1.25rem;
+  background: var(--gradient-button);
   color: white;
-  border-radius: 0.75rem;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-  animation: slideDown 0.3s ease;
+  border-radius: 1rem;
+  box-shadow: 0 8px 24px rgba(166, 124, 82, 0.4);
+  animation: slideDown 0.4s var(--easing);
+  border: 2px solid var(--warm-brown);
 }
 
 @keyframes slideDown {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-20px);
   }
   to {
     opacity: 1;
@@ -174,57 +204,68 @@
 }
 
 .badge-icon {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
+  animation: gentlePulse 1.5s ease-in-out infinite;
 }
 
 .badge-text {
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 2vw, 1rem);
   font-weight: 500;
 }
 
 .badge-text strong {
-  font-weight: 700;
-  font-size: 1.25rem;
+  font-weight: 800;
+  font-size: clamp(1.1rem, 2.5vw, 1.25rem);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* ============================================ */
 /* Error State */
+/* ============================================ */
 .ranking-error {
   text-align: center;
-  padding: 2rem;
-  background: var(--card-bg, #fff);
-  border-radius: 0.75rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 3rem 2rem;
+  background: var(--gradient-card);
+  border-radius: 1rem;
+  box-shadow: 0 4px 16px var(--shadow-soft);
+  border: 2px solid var(--latte-brown);
 }
 
 .error-icon {
   font-size: 4rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.6;
 }
 
 .error-message {
-  color: var(--card-subtitle-color, #666);
+  color: var(--text-light);
   margin-bottom: 1.5rem;
-  font-size: 0.9rem;
+  font-size: 1rem;
+  line-height: 1.6;
 }
 
 .retry-button {
-  padding: 0.75rem 1.5rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 1rem 2rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  background: var(--gradient-button);
   color: white;
   border: none;
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--timing-fast) var(--easing);
+  box-shadow: 0 6px 16px rgba(166, 124, 82, 0.3);
 }
 
 .retry-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 10px 28px rgba(166, 124, 82, 0.45);
+  background: var(--gradient-button-hover);
 }
 
+/* ============================================ */
 /* Action Buttons */
+/* ============================================ */
 .ranking-actions {
   display: flex;
   gap: 1rem;
@@ -233,80 +274,93 @@
 
 .action-button {
   flex: 1;
-  padding: 1rem;
-  font-size: 1rem;
-  font-weight: 600;
+  padding: 1.25rem;
+  font-size: clamp(0.9rem, 2vw, 1rem);
+  font-weight: 700;
   border: none;
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--timing-fast) var(--easing);
+  letter-spacing: -0.2px;
 }
 
 .action-button.primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-button);
   color: white;
+  box-shadow: 0 6px 16px rgba(166, 124, 82, 0.3);
 }
 
 .action-button.primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 10px 28px rgba(166, 124, 82, 0.45);
+  background: var(--gradient-button-hover);
 }
 
 .action-button.secondary {
-  background: var(--card-bg, #fff);
-  color: var(--text-color, #000);
-  border: 2px solid var(--card-border, #e0e0e0);
+  background: var(--gradient-card);
+  color: var(--text-dark);
+  border: 2px solid var(--latte-brown);
 }
 
 .action-button.secondary:hover {
-  border-color: #667eea;
-  color: #667eea;
+  border-color: var(--espresso-brown);
+  background: var(--bg-beige);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px var(--shadow-soft);
 }
 
+/* ============================================ */
 /* Live Update Indicator */
+/* ============================================ */
 .live-indicator {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.75rem;
+  padding: 0.875rem 1.25rem;
   background: rgba(34, 197, 94, 0.1);
-  border: 2px solid rgba(34, 197, 94, 0.2);
-  border-radius: 0.5rem;
+  border: 2px solid rgba(34, 197, 94, 0.25);
+  border-radius: 0.75rem;
   color: #22c55e;
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-size: 0.875rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.1);
 }
 
 .live-dot {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   background: #22c55e;
   border-radius: 50%;
   animation: pulse 2s ease-in-out infinite;
+  box-shadow: 0 0 10px #22c55e;
 }
 
 @keyframes pulse {
   0%, 100% {
     opacity: 1;
+    transform: scale(1);
   }
   50% {
     opacity: 0.4;
+    transform: scale(0.8);
   }
 }
 
 .live-text {
-  font-weight: 600;
+  font-weight: 700;
 }
 
-/* Mobile */
+/* ============================================ */
+/* Mobile Responsive */
+/* ============================================ */
 @media (max-width: 768px) {
   .ranking-page {
     padding: 1rem;
   }
 
   .ranking-title {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
   }
 
   .ranking-subtitle {
@@ -315,6 +369,7 @@
 
   .game-type-tabs {
     gap: 0.5rem;
+    padding: 0.4rem;
   }
 
   .game-tab {
@@ -334,6 +389,7 @@
     flex-direction: column;
     align-items: stretch;
     gap: 0.75rem;
+    padding: 1rem;
   }
 
   .filter-group {
@@ -356,11 +412,11 @@
   }
 
   .my-rank-badge {
-    padding: 0.875rem;
+    padding: 1rem;
   }
 
   .badge-icon {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
   }
 
   .badge-text {
@@ -380,27 +436,52 @@
   }
 }
 
-/* Dark mode */
+/* ============================================ */
+/* Dark mode adjustments */
+/* ============================================ */
 @media (prefers-color-scheme: dark) {
   .game-type-tabs,
   .ranking-filters {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 16px var(--shadow-strong);
   }
 
   .game-tab.active {
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
+    box-shadow: 0 8px 24px rgba(166, 124, 82, 0.6);
   }
 
   .my-rank-badge {
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
+    box-shadow: 0 10px 32px rgba(166, 124, 82, 0.6);
   }
 
   .ranking-error {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 16px var(--shadow-strong);
   }
 
   .live-indicator {
-    background: rgba(34, 197, 94, 0.15);
-    border-color: rgba(34, 197, 94, 0.3);
+    background: rgba(34, 197, 94, 0.2);
+    border-color: rgba(34, 197, 94, 0.4);
+  }
+}
+
+/* ============================================ */
+/* Animations - Reduced motion support */
+/* ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  .ranking-header,
+  .game-type-tabs,
+  .ranking-filters {
+    animation: none;
+  }
+
+  .tab-icon,
+  .badge-icon {
+    animation: none;
+  }
+
+  .game-tab:hover,
+  .game-tab.active,
+  .action-button:hover,
+  .retry-button:hover {
+    transform: none;
   }
 }
