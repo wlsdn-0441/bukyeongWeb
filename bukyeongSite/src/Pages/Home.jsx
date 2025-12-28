@@ -121,7 +121,10 @@ const Home = () => {
   }, [cardOrder]);
 
   return (
-    <div className="home-page">
+    <div className="home-page page-with-decorations">
+      {/* Decorative background elements */}
+      <div className="bg-decorations-home" aria-hidden="true"></div>
+
       {/* <div className="home-container">
         <div className="home-header">
           <h1 className="home-title">

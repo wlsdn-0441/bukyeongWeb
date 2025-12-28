@@ -1,4 +1,5 @@
 /* Home.css */
+@import '../styles/BackgroundDecorations.css';
 
 .home-page {
   width: 100%;
@@ -136,4 +137,147 @@
 
 :root[data-theme="dark"] .notice-item {
   color: #d1d5db;
+}
+
+/* ============================================
+   Background Decorations - Home Page
+   ============================================ */
+
+/* Coffee bean shape - top-right */
+.home-page::before {
+  content: '';
+  position: absolute;
+  width: 180px;
+  height: 120px;
+  top: 10%;
+  right: 5%;
+  background: rgba(200, 159, 119, 0.08);
+  border-radius: 50% 40% 50% 40%;
+  animation: floatAndRotate 16s ease-in-out infinite;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Dotted texture background */
+.home-page::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(200, 159, 119, 0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Warm top glow */
+.bg-decorations-home::before {
+  content: '';
+  position: absolute;
+  width: 600px;
+  height: 400px;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse, rgba(200, 159, 119, 0.12) 0%, transparent 60%);
+  filter: blur(80px);
+  animation: gentleGlow 15s ease-in-out infinite,
+             driftHorizontal 20s ease-in-out infinite;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Latte swirl - bottom-left */
+.bg-decorations-home::after {
+  content: '';
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  bottom: 15%;
+  left: 8%;
+  background: radial-gradient(circle at 30% 30%,
+              rgba(227, 213, 202, 0.15),
+              rgba(200, 159, 119, 0.1) 60%,
+              transparent 80%);
+  border-radius: 60% 40% 50% 50%;
+  animation: floatDrift 12s ease-in-out infinite,
+             scalePulse 6s ease-in-out infinite;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Responsive - Tablet */
+@media (max-width: 1024px) {
+  .home-page::before {
+    width: 140px;
+    height: 100px;
+    top: 8%;
+    right: 3%;
+  }
+
+  .bg-decorations-home::before {
+    width: 500px;
+    height: 350px;
+    filter: blur(60px);
+  }
+
+  .bg-decorations-home::after {
+    width: 130px;
+    height: 130px;
+  }
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+  .home-page::before {
+    width: 100px;
+    height: 70px;
+    top: 5%;
+    right: 2%;
+    opacity: 0.7;
+  }
+
+  .bg-decorations-home::before {
+    width: 350px;
+    height: 250px;
+    filter: blur(40px);
+  }
+
+  .bg-decorations-home::after {
+    width: 100px;
+    height: 100px;
+    animation: floatDrift 15s ease-in-out infinite;
+  }
+}
+
+/* Responsive - Small Mobile */
+@media (max-width: 480px) {
+  /* Hide glow effects to reduce visual clutter */
+  .bg-decorations-home::before {
+    display: none;
+  }
+
+  .home-page::before,
+  .bg-decorations-home::after {
+    opacity: 0.5;
+  }
+}
+
+/* Dark Mode */
+:root[data-theme="dark"] .home-page::before {
+  background: rgba(200, 159, 119, 0.05);
+}
+
+:root[data-theme="dark"] .home-page::after {
+  background-image: radial-gradient(circle, rgba(200, 159, 119, 0.02) 1px, transparent 1px);
+}
+
+:root[data-theme="dark"] .bg-decorations-home::before {
+  background: radial-gradient(ellipse, rgba(200, 159, 119, 0.08) 0%, transparent 60%);
+}
+
+:root[data-theme="dark"] .bg-decorations-home::after {
+  background: radial-gradient(circle at 30% 30%,
+              rgba(200, 159, 119, 0.08),
+              rgba(200, 159, 119, 0.05) 60%,
+              transparent 80%);
 }

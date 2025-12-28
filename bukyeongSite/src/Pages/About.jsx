@@ -63,20 +63,19 @@ export default function About() {
             <h2>📱 학교 생활의 모든 정보를 한눈에</h2>
             <p>
               부경고등학교 학생들을 위한 통합 포털 서비스입니다.
-              급식 메뉴, 시간표, 학교 공지사항을
+              급식 메뉴, 시간표, 날씨 정보, 학교 공지사항을
               빠르고 편리하게 확인할 수 있습니다.
             </p>
           </section>
 
           <section className="about-section">
-            <h2>✨ 주요 기능</h2>
+            <h2>주요 기능</h2>
             <ul className="feature-list">
               <li>🍽️ 오늘의 급식 메뉴 및 주간 급식표</li>
               <li>📚 우리 반 시간표 확인</li>
-              <li>☀️ 실시간 날씨 정보</li>
               <li>📢 학교 공지사항 알림</li>
               <li>🌓 다크모드 지원</li>
-              <li>📱 PWA - 홈 화면에 추가 가능</li>
+              <li>📱 앱으로 사용 가능</li>
             </ul>
           </section>
 
@@ -134,7 +133,7 @@ export default function About() {
           </section>
 
           <section className="about-section">
-            <h2> 소개화면 다시 보기</h2>
+            <h2>🔄 소개화면 다시 보기</h2>
             <p>
               처음 방문 시 보여드린 소개 화면을 다시 보고 싶으신가요?
             </p>
@@ -160,17 +159,14 @@ export default function About() {
                 <div className="info-item">
                   <strong>개발</strong>
                   <span>부경고등학교 인코딩 동아리</span>
-                  <span>개발자 문의</span>
+                  <span>개발자 문의시 클릭</span>
                 </div>
               </a>
               <div className="info-item">
                 <strong>플랫폼</strong>
-                <span >React + Vite + Vercel</span>
+                <span >모든 플랫폼에서 사용가능</span>
               </div>
-              <div className="info-item">
-                <strong>최적화</strong>
-                <span>PWA, Edge Functions, 캐싱</span>
-              </div>
+              
             </div>
           </section>
         </div>
