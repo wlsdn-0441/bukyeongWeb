@@ -29,9 +29,33 @@ export default defineConfig({
           }
         ]
       },
+      // 개발 모드에서도 PWA 활성화 (테스트용)
+      devOptions: {
+        enabled: false
+      },
       workbox: {
+        // 즉시 새 Service Worker 활성화
+        skipWaiting: true,
+        clientsClaim: true,
+        // 캐시 정리 전략
+        cleanupOutdatedCaches: true,
+        // 네비게이션 요청은 네트워크 우선으로 처리
+        navigateFallbackDenylist: [/^\/api/],
         // Service Worker 캐싱 전략
         runtimeCaching: [
+          {
+            // HTML 문서는 항상 네트워크 우선 (캐시 불일치 방지)
+            urlPattern: ({ request }) => request.mode === 'navigate',
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'pages-cache',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24, // 24시간
+              },
+              networkTimeoutSeconds: 3,
+            },
+          },
           {
             // API 요청 캐싱 (NetworkFirst 전략)
             // GET 요청만 캐싱 (POST는 캐싱 불가)
