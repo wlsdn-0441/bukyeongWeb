@@ -283,13 +283,17 @@ export const subscribeToBalloonRanking = (callback, topN = 100) => {
 
 /**
  * Subscribe to ranking for any game type (unified function)
- * @param {string} gameType - 'reaction', 'color', 'memory', 'balloon'
+ * @param {string} gameType - All game types from GAME_CONFIG
  * @param {Function} callback - Called with ranking data on updates
  * @param {number} topN - Number of top students to fetch (default 100)
  * @returns {Function} Unsubscribe function
  */
 export const subscribeToGameRanking = (gameType, callback, topN = 100) => {
-  const orderDirection = gameType === 'reaction' ? 'asc' : 'desc';
+  // Get game config to determine sort order
+  const gameConfig = GAME_CONFIG[gameType];
+  const orderDirection = gameConfig?.betterWhen === 'lower' ? 'asc' : 'desc';
+
+  console.log(`${CONSOLE_PREFIX} Subscribing to ${gameType} ranking (${orderDirection})`);
 
   const q = query(
     collection(db, 'students'),
@@ -479,28 +483,42 @@ export const getAllStudentScores = async (studentId) => {
  */
 export const getStudentAllRanks = async (studentId) => {
   try {
+    console.log(`${CONSOLE_PREFIX} 🔍 Getting all ranks for studentId:`, studentId, `(type: ${typeof studentId})`);
+
     const studentRef = doc(db, 'students', studentId);
     const studentSnap = await getDoc(studentRef);
 
+    console.log(`${CONSOLE_PREFIX} 📄 Student document exists:`, studentSnap.exists());
+
     if (!studentSnap.exists()) {
+      console.warn(`${CONSOLE_PREFIX} ❌ Student not found in Firestore:`, studentId);
       return null;
     }
 
     const studentData = studentSnap.data();
+    console.log(`${CONSOLE_PREFIX} 📊 Student data:`, studentData);
+
     const scores = studentData.scores || {};
+    console.log(`${CONSOLE_PREFIX} 🎮 Student scores:`, scores);
+    console.log(`${CONSOLE_PREFIX} 🎮 Score keys:`, Object.keys(scores));
+
     const result = {};
 
     // 각 게임 타입별로 순위 계산
     for (const gameType of Object.keys(GAME_CONFIG)) {
       const studentScore = scores[gameType];
 
-      if (!studentScore) {
+      console.log(`${CONSOLE_PREFIX} Checking ${gameType}: score =`, studentScore);
+
+      if (!studentScore && studentScore !== 0) {
         result[gameType] = null;
         continue;
       }
 
       const config = GAME_CONFIG[gameType];
       const operator = config.betterWhen === 'lower' ? '<' : '>';
+
+      console.log(`${CONSOLE_PREFIX} Calculating rank for ${gameType} (${operator} ${studentScore})`);
 
       // Count students with better scores
       const betterScoresQuery = query(
@@ -526,12 +544,14 @@ export const getStudentAllRanks = async (studentId) => {
         total,
         gameType
       };
+
+      console.log(`${CONSOLE_PREFIX} ✅ ${gameType}: rank ${rank}/${total}, score: ${studentScore}`);
     }
 
-    console.log(`${CONSOLE_PREFIX} Fetched ranks for all games:`, studentId);
+    console.log(`${CONSOLE_PREFIX} ✅ Fetched ranks for all games:`, studentId, result);
     return result;
   } catch (error) {
-    console.error(`${CONSOLE_PREFIX} Get student all ranks failed:`, error);
+    console.error(`${CONSOLE_PREFIX} ❌ Get student all ranks failed:`, error);
     throw error;
   }
 };
