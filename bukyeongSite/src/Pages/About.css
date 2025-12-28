@@ -1,6 +1,7 @@
 /* ============================================
    About 페이지 - 포털 소개 (Cafe Beige Theme)
    ============================================ */
+@import '../styles/BackgroundDecorations.css';
 
 .about {
   min-height: 100vh;
@@ -11,6 +12,7 @@
     var(--bg-cream, #FAF7F2) 0%,
     var(--bg-beige, #F5EBE0) 100%
   );
+  position: relative;
 }
 
 .about-container {
@@ -148,6 +150,16 @@
 
 .feature-list li:hover::before {
   opacity: 1;
+}
+
+/* Clickable Feature Items */
+.feature-clickable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.feature-clickable:active {
+  transform: translateX(6px) scale(1.01);
 }
 
 /* Onboarding Restart Button (Trendy) */
@@ -527,6 +539,209 @@
   }
 }
 
+/* ============================================
+   PWA Installation Modal
+   ============================================ */
+
+.pwa-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1rem;
+  animation: fadeIn 0.3s ease;
+}
+
+.pwa-modal {
+  background: white;
+  border-radius: 24px;
+  padding: 2.5rem;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  position: relative;
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 2px solid rgba(200, 159, 119, 0.3);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.pwa-modal-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: rgba(200, 159, 119, 0.1);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.25rem;
+  color: var(--text-dark, #5D4E37);
+  transition: all 0.3s ease;
+}
+
+.pwa-modal-close:hover {
+  background: rgba(200, 159, 119, 0.25);
+  transform: rotate(90deg);
+}
+
+.pwa-modal-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin: 0 0 1.5rem 0;
+  background: linear-gradient(135deg, #C89F77, #A67C52, #8B6342);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-align: center;
+}
+
+.pwa-modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.pwa-step {
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(200, 159, 119, 0.05), rgba(200, 159, 119, 0.02));
+  border: 2px solid rgba(200, 159, 119, 0.2);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.pwa-step:hover {
+  background: linear-gradient(135deg, rgba(200, 159, 119, 0.1), rgba(200, 159, 119, 0.05));
+  border-color: var(--latte-brown, #C89F77);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(93, 78, 55, 0.1);
+}
+
+.pwa-step h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  color: var(--espresso-brown, #A67C52);
+}
+
+.pwa-step ol {
+  margin: 0;
+  padding-left: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.pwa-step li {
+  font-size: 1rem;
+  color: var(--text-dark, #5D4E37);
+  line-height: 1.6;
+  padding-left: 0.5rem;
+}
+
+.pwa-icon {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  background: rgba(200, 159, 119, 0.15);
+  border-radius: 6px;
+  font-weight: 700;
+  color: var(--espresso-brown, #A67C52);
+  font-size: 1.125rem;
+  margin: 0 0.25rem;
+}
+
+.pwa-modal-note {
+  text-align: center;
+  font-size: 1rem;
+  color: var(--text-light, #8B7355);
+  margin: 1rem 0 0 0;
+  padding-top: 1rem;
+  border-top: 2px solid rgba(200, 159, 119, 0.2);
+}
+
+/* PWA Modal - Mobile Responsive */
+@media (max-width: 768px) {
+  .pwa-modal {
+    padding: 2rem;
+    border-radius: 20px;
+  }
+
+  .pwa-modal-title {
+    font-size: 1.5rem;
+  }
+
+  .pwa-step {
+    padding: 1.25rem;
+  }
+
+  .pwa-step h3 {
+    font-size: 1.125rem;
+  }
+
+  .pwa-step li {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .pwa-modal {
+    padding: 1.5rem;
+    border-radius: 16px;
+  }
+
+  .pwa-modal-close {
+    top: 1rem;
+    right: 1rem;
+    width: 32px;
+    height: 32px;
+    font-size: 1.125rem;
+  }
+
+  .pwa-modal-title {
+    font-size: 1.375rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .pwa-step {
+    padding: 1rem;
+  }
+
+  .pwa-step h3 {
+    font-size: 1.075rem;
+  }
+
+  .pwa-step ol {
+    padding-left: 1.25rem;
+  }
+
+  .pwa-step li {
+    font-size: 0.9rem;
+  }
+
+  .pwa-modal-note {
+    font-size: 0.9rem;
+  }
+}
+
 /* Dark Mode Support */
 :root[data-theme="dark"] .about-section {
   background: rgba(93, 78, 55, 0.08);
@@ -563,6 +778,49 @@
 
 :root[data-theme="dark"] .student-info-display:hover {
   border-color: var(--latte-brown, #C89F77);
+}
+
+/* PWA Modal - Dark Mode */
+:root[data-theme="dark"] .pwa-modal {
+  background: #1a1410;
+  border-color: rgba(200, 159, 119, 0.3);
+}
+
+:root[data-theme="dark"] .pwa-modal-close {
+  background: rgba(200, 159, 119, 0.15);
+  color: #E3D5CA;
+}
+
+:root[data-theme="dark"] .pwa-modal-close:hover {
+  background: rgba(200, 159, 119, 0.3);
+}
+
+:root[data-theme="dark"] .pwa-step {
+  background: linear-gradient(135deg, rgba(200, 159, 119, 0.1), rgba(200, 159, 119, 0.05));
+  border-color: rgba(200, 159, 119, 0.25);
+}
+
+:root[data-theme="dark"] .pwa-step:hover {
+  background: linear-gradient(135deg, rgba(200, 159, 119, 0.15), rgba(200, 159, 119, 0.1));
+  border-color: var(--latte-brown, #C89F77);
+}
+
+:root[data-theme="dark"] .pwa-step h3 {
+  color: var(--latte-brown, #C89F77);
+}
+
+:root[data-theme="dark"] .pwa-step li {
+  color: #E3D5CA;
+}
+
+:root[data-theme="dark"] .pwa-icon {
+  background: rgba(200, 159, 119, 0.2);
+  color: var(--warm-brown, #D5BDAF);
+}
+
+:root[data-theme="dark"] .pwa-modal-note {
+  color: #B8A99A;
+  border-top-color: rgba(200, 159, 119, 0.25);
 }
 
 /* ============================================
@@ -749,4 +1007,156 @@
   .notice-detail {
     font-size: 0.8rem;
   }
+}
+
+/* ============================================
+   Background Decorations - About Page
+   ============================================ */
+
+/* Top-left corner arc */
+.about::before {
+  content: '';
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  top: -125px;
+  left: -125px;
+  border: 3px solid rgba(200, 159, 119, 0.45);
+  border-radius: 50%;
+  background: rgba(213, 189, 175, 0.5);
+  animation: borderPulseGlow 10s ease-in-out infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Steam wisps pattern - top */
+.about::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 200px;
+  background: linear-gradient(180deg, rgba(245, 235, 224, 0.5) 0%, transparent 100%);
+  animation: opacityBreathe 8s ease-in-out infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Espresso droplet - mid-right */
+.bg-decorations-about::before {
+  content: '';
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  top: 40%;
+  right: 12%;
+  background: rgba(166, 124, 82, 0.4);
+  border-radius: 50% 50% 50% 0%;
+  transform: rotate(-45deg);
+  animation: floatBob 10s ease-in-out infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Bottom-left corner glow */
+.bg-decorations-about::after {
+  content: '';
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  bottom: -150px;
+  left: -150px;
+  background: radial-gradient(circle, rgba(245, 235, 224, 0.5) 0%, transparent 65%);
+  filter: blur(60px);
+  animation: opacityBreathe 12s ease-in-out infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Responsive - Tablet */
+@media (max-width: 1024px) {
+  .about::before {
+    width: 200px;
+    height: 200px;
+    top: -100px;
+    left: -100px;
+  }
+
+  .about::after {
+    height: 150px;
+  }
+
+  .bg-decorations-about::before {
+    width: 70px;
+    height: 70px;
+    top: 35%;
+    right: 10%;
+  }
+
+  .bg-decorations-about::after {
+    width: 350px;
+    height: 350px;
+    filter: blur(50px);
+  }
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+  .about::before {
+    width: 150px;
+    height: 150px;
+    top: -75px;
+    left: -75px;
+    opacity: 0.7;
+  }
+
+  .about::after {
+    height: 120px;
+  }
+
+  .bg-decorations-about::before {
+    width: 60px;
+    height: 60px;
+    top: 30%;
+    right: 5%;
+  }
+
+  .bg-decorations-about::after {
+    width: 250px;
+    height: 250px;
+    filter: blur(40px);
+  }
+}
+
+/* Responsive - Small Mobile */
+@media (max-width: 480px) {
+  /* Hide glow effects to reduce visual clutter */
+  .bg-decorations-about::after {
+    display: none;
+  }
+
+  .about::before,
+  .about::after,
+  .bg-decorations-about::before {
+    opacity: 0.5;
+  }
+}
+
+/* Dark Mode */
+:root[data-theme="dark"] .about::before {
+  background: rgba(200, 159, 119, 0.3);
+  border-color: rgba(200, 159, 119, 0.4);
+}
+
+:root[data-theme="dark"] .about::after {
+  background: linear-gradient(180deg, rgba(200, 159, 119, 0.3) 0%, transparent 100%);
+}
+
+:root[data-theme="dark"] .bg-decorations-about::before {
+  background: rgba(166, 124, 82, 0.25);
+}
+
+:root[data-theme="dark"] .bg-decorations-about::after {
+  background: radial-gradient(circle, rgba(200, 159, 119, 0.28) 0%, transparent 65%);
 }

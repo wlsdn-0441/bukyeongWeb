@@ -1,14 +1,20 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getStudentIdFromStorage, clearStudentId } from '../services/studentService';
 import EditStudentIdForm from '../components/common/EditStudentIdForm';
 import './About.css';
 
 export default function About() {
+  const navigate = useNavigate();
+
   // 현재 등록된 학번 정보 가져오기
   const studentData = getStudentIdFromStorage();
 
   // 편집 모드 상태
   const [isEditingStudentId, setIsEditingStudentId] = useState(false);
+
+  // PWA 설치 안내 모달 상태
+  const [showPWAModal, setShowPWAModal] = useState(false);
 
   const handleShowOnboarding = () => {
     // localStorage에서 방문 기록 제거
@@ -53,8 +59,40 @@ export default function About() {
     location.reload();
   };
 
+  // 급식 페이지로 이동
+  const handleGoToMeal = () => {
+    navigate('/meal');
+  };
+
+  // 시간표 페이지로 이동
+  const handleGoToTimetable = () => {
+    navigate('/timetable');
+  };
+
+  // 다크모드 토글
+  const handleToggleDarkMode = () => {
+    const root = document.documentElement;
+    const currentTheme = root.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+  };
+
+  // PWA 설치 안내 모달 열기
+  const handleShowPWAGuide = () => {
+    setShowPWAModal(true);
+  };
+
+  // PWA 설치 안내 모달 닫기
+  const handleClosePWAModal = () => {
+    setShowPWAModal(false);
+  };
+
   return (
-    <div className="about">
+    <div className="about page-with-decorations">
+      {/* Decorative background elements */}
+      <div className="bg-decorations-about" aria-hidden="true"></div>
+
       <div className="about-container">
         <h1 className="about-title">부경고등학교 소개</h1>
 
@@ -71,11 +109,19 @@ export default function About() {
           <section className="about-section">
             <h2>주요 기능</h2>
             <ul className="feature-list">
-              <li>🍽️ 오늘의 급식 메뉴 및 주간 급식표</li>
-              <li>📚 우리 반 시간표 확인</li>
+              <li onClick={handleGoToMeal} className="feature-clickable">
+                🍽️ 오늘의 급식 메뉴 및 주간 급식표
+              </li>
+              <li onClick={handleGoToTimetable} className="feature-clickable">
+                📚 우리 반 시간표 확인
+              </li>
               <li>📢 학교 공지사항 알림</li>
-              <li>🌓 다크모드 지원</li>
-              <li>📱 앱으로 사용 가능</li>
+              <li onClick={handleToggleDarkMode} className="feature-clickable">
+                🌓 다크모드 지원
+              </li>
+              <li onClick={handleShowPWAGuide} className="feature-clickable">
+                📱 앱으로 사용 가능
+              </li>
             </ul>
           </section>
 
@@ -171,6 +217,46 @@ export default function About() {
           </section>
         </div>
       </div>
+
+      {/* PWA 설치 안내 모달 */}
+      {showPWAModal && (
+        <div className="pwa-modal-overlay" onClick={handleClosePWAModal}>
+          <div className="pwa-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="pwa-modal-close" onClick={handleClosePWAModal}>
+              ✕
+            </button>
+            <h2 className="pwa-modal-title">📱 앱으로 설치하기</h2>
+            <div className="pwa-modal-content">
+              <div className="pwa-step">
+                <h3>📱 iOS (Safari)</h3>
+                <ol>
+                  <li>하단 공유 버튼 <span className="pwa-icon">⎙</span> 을 탭하세요</li>
+                  <li>"홈 화면에 추가" 선택</li>
+                  <li>"추가" 버튼을 탭하세요</li>
+                </ol>
+              </div>
+              <div className="pwa-step">
+                <h3>🤖 Android (Chrome)</h3>
+                <ol>
+                  <li>우상단 메뉴 <span className="pwa-icon">⋮</span> 를 탭하세요</li>
+                  <li>"홈 화면에 추가" 또는 "앱 설치" 선택</li>
+                  <li>"설치" 버튼을 탭하세요</li>
+                </ol>
+              </div>
+              <div className="pwa-step">
+                <h3>💻 데스크톱 (Chrome, Edge)</h3>
+                <ol>
+                  <li>주소창 우측의 설치 아이콘 <span className="pwa-icon">⊕</span> 클릭</li>
+                  <li>"설치" 버튼 클릭</li>
+                </ol>
+              </div>
+            </div>
+            <p className="pwa-modal-note">
+              💡 설치하면 앱처럼 사용할 수 있어요!
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

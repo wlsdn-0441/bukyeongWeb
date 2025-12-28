@@ -65,7 +65,10 @@ const Meal = () => {
   }
 
   return (
-    <div className="meal-page">
+    <div className="meal-page page-with-decorations">
+      {/* Decorative background elements */}
+      <div className="bg-decorations-meal" aria-hidden="true"></div>
+
       <button
         onClick={() => navigate('/')}
         className="meal-back-button"

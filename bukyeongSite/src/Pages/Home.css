@@ -4,6 +4,7 @@
 .home-page {
   width: 100%;
   padding: 2rem 0;
+  position: relative;
 }
 
 .home-container {
@@ -151,10 +152,10 @@
   height: 120px;
   top: 10%;
   right: 5%;
-  background: rgba(200, 159, 119, 0.08);
+  background: rgba(200, 159, 119, 0.4);
   border-radius: 50% 40% 50% 40%;
   animation: floatAndRotate 16s ease-in-out infinite;
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
 }
 
@@ -163,9 +164,9 @@
   content: '';
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(circle, rgba(200, 159, 119, 0.03) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(200, 159, 119, 0.15) 1px, transparent 1px);
   background-size: 20px 20px;
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
 }
 
@@ -178,11 +179,11 @@
   top: -200px;
   left: 50%;
   transform: translateX(-50%);
-  background: radial-gradient(ellipse, rgba(200, 159, 119, 0.12) 0%, transparent 60%);
+  background: radial-gradient(ellipse, rgba(200, 159, 119, 0.45) 0%, transparent 60%);
   filter: blur(80px);
   animation: gentleGlow 15s ease-in-out infinite,
              driftHorizontal 20s ease-in-out infinite;
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
 }
 
@@ -195,13 +196,13 @@
   bottom: 15%;
   left: 8%;
   background: radial-gradient(circle at 30% 30%,
-              rgba(227, 213, 202, 0.15),
-              rgba(200, 159, 119, 0.1) 60%,
+              rgba(227, 213, 202, 0.5),
+              rgba(200, 159, 119, 0.35) 60%,
               transparent 80%);
   border-radius: 60% 40% 50% 50%;
   animation: floatDrift 12s ease-in-out infinite,
              scalePulse 6s ease-in-out infinite;
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
 }
 
@@ -264,20 +265,20 @@
 
 /* Dark Mode */
 :root[data-theme="dark"] .home-page::before {
-  background: rgba(200, 159, 119, 0.05);
+  background: rgba(200, 159, 119, 0.15);
 }
 
 :root[data-theme="dark"] .home-page::after {
-  background-image: radial-gradient(circle, rgba(200, 159, 119, 0.02) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(200, 159, 119, 0.06) 1px, transparent 1px);
 }
 
 :root[data-theme="dark"] .bg-decorations-home::before {
-  background: radial-gradient(ellipse, rgba(200, 159, 119, 0.08) 0%, transparent 60%);
+  background: radial-gradient(ellipse, rgba(200, 159, 119, 0.2) 0%, transparent 60%);
 }
 
 :root[data-theme="dark"] .bg-decorations-home::after {
   background: radial-gradient(circle at 30% 30%,
-              rgba(200, 159, 119, 0.08),
-              rgba(200, 159, 119, 0.05) 60%,
+              rgba(200, 159, 119, 0.2),
+              rgba(200, 159, 119, 0.12) 60%,
               transparent 80%);
 }

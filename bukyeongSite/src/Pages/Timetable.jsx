@@ -99,7 +99,10 @@ const Timetable = () => {
   }
 
   return (
-    <div className="timetable-page">
+    <div className="timetable-page page-with-decorations">
+      {/* Decorative background elements */}
+      <div className="bg-decorations-timetable" aria-hidden="true"></div>
+
       <button
         onClick={() => navigate('/')}
         className="timetable-back-button"

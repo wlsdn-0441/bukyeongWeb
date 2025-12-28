@@ -1,9 +1,11 @@
 /* Meal.css - Cafe Beige Theme */
+@import '../styles/BackgroundDecorations.css';
 
 .meal-page {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem 1rem;
+  position: relative;
 }
 
 .meal-back-button {
@@ -129,4 +131,146 @@
   .meal-page {
     padding: 2rem;
   }
+}
+
+/* ============================================
+   Background Decorations - Meal Page
+   ============================================ */
+
+/* Coffee bean shape - top-left */
+.meal-page::before {
+  content: '';
+  position: absolute;
+  width: 160px;
+  height: 110px;
+  top: 8%;
+  left: 5%;
+  background: rgba(200, 159, 119, 0.4);
+  border-radius: 45% 50% 45% 50%;
+  animation: floatAndRotate 18s ease-in-out infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Dotted texture background */
+.meal-page::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(200, 159, 119, 0.15) 1px, transparent 1px);
+  background-size: 20px 20px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Warm center glow */
+.bg-decorations-meal::before {
+  content: '';
+  position: absolute;
+  width: 500px;
+  height: 350px;
+  top: 50%;
+  right: -100px;
+  transform: translateY(-50%);
+  background: radial-gradient(ellipse, rgba(227, 213, 202, 0.5) 0%, transparent 60%);
+  filter: blur(70px);
+  animation: gentleGlow 16s ease-in-out infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Latte swirl - bottom-right */
+.bg-decorations-meal::after {
+  content: '';
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  bottom: 10%;
+  right: 10%;
+  background: radial-gradient(circle at 35% 35%,
+              rgba(245, 235, 224, 0.5),
+              rgba(227, 213, 202, 0.38) 55%,
+              transparent 75%);
+  border-radius: 55% 45% 55% 45%;
+  animation: floatDrift 13s ease-in-out infinite,
+             scalePulse 7s ease-in-out infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Responsive - Tablet */
+@media (max-width: 1024px) {
+  .meal-page::before {
+    width: 130px;
+    height: 90px;
+    top: 6%;
+    left: 3%;
+  }
+
+  .bg-decorations-meal::before {
+    width: 400px;
+    height: 280px;
+    filter: blur(55px);
+  }
+
+  .bg-decorations-meal::after {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+  .meal-page::before {
+    width: 90px;
+    height: 65px;
+    top: 4%;
+    left: 2%;
+    opacity: 0.7;
+  }
+
+  .bg-decorations-meal::before {
+    width: 300px;
+    height: 220px;
+    filter: blur(40px);
+  }
+
+  .bg-decorations-meal::after {
+    width: 90px;
+    height: 90px;
+    animation: floatDrift 16s ease-in-out infinite;
+  }
+}
+
+/* Responsive - Small Mobile */
+@media (max-width: 480px) {
+  /* Hide glow effects to reduce visual clutter */
+  .bg-decorations-meal::before {
+    display: none;
+  }
+
+  .meal-page::before,
+  .bg-decorations-meal::after {
+    opacity: 0.5;
+  }
+}
+
+/* Dark Mode */
+:root[data-theme="dark"] .meal-page::before {
+  background: rgba(200, 159, 119, 0.25);
+}
+
+:root[data-theme="dark"] .meal-page::after {
+  background-image: radial-gradient(circle, rgba(200, 159, 119, 0.08) 1px, transparent 1px);
+}
+
+:root[data-theme="dark"] .bg-decorations-meal::before {
+  background: radial-gradient(ellipse, rgba(200, 159, 119, 0.35) 0%, transparent 60%);
+}
+
+:root[data-theme="dark"] .bg-decorations-meal::after {
+  background: radial-gradient(circle at 35% 35%,
+              rgba(200, 159, 119, 0.35),
+              rgba(200, 159, 119, 0.22) 55%,
+              transparent 75%);
 }
