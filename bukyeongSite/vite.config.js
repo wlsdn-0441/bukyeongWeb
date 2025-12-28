@@ -8,7 +8,8 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
+      // 아이콘 파일을 캐시 목록에 추가합니다.
+      includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.png', 'icon-512x512.png'],
       manifest: {
         name: '부경고등학교 학생 포털',
         short_name: '부경고',
@@ -18,14 +19,16 @@ export default defineConfig({
         display: 'standalone',
         icons: [
           {
-            src: '/icon-192x192.png',
-            sizes: '192x192',
-            type: 'image/png'
+            src: '/icon-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any'
           },
           {
             src: '/icon-512x512.png',
             sizes: '512x512',
-            type: 'image/png'
+            type: 'image/png',
+            purpose: 'maskable'
           }
         ]
       },
@@ -123,23 +126,17 @@ export default defineConfig({
     rollupOptions: {
       output: {
         // 코드 스플리팅: 라이브러리별로 청크 분리
-        // - 브라우저 캐싱 최적화 (라이브러리는 변경 빈도 낮음)
-        // - 병렬 다운로드 가능 (HTTP/2)
         manualChunks: (id) => {
           if (id.includes('node_modules')) {
-            // React 관련 라이브러리는 react-vendor로 분리
             if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
               return 'react-vendor';
             }
-            // React Query는 query-vendor로 분리
             if (id.includes('@tanstack')) {
               return 'query-vendor';
             }
-            // Lucide 아이콘은 icons로 분리
             if (id.includes('lucide-react')) {
               return 'icons';
             }
-            // 나머지 라이브러리는 vendor로 분리
             return 'vendor';
           }
         },
@@ -150,10 +147,8 @@ export default defineConfig({
     minify: 'terser',
     terserOptions: {
       compress: {
-        // 디버깅을 위해 console 유지
         drop_console: false,  // ✅ console.log 유지
         drop_debugger: false, // ✅ debugger 유지
-        // pure_funcs 제거 - console을 유지
       },
     },
   },
