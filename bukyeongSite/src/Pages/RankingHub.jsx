@@ -10,7 +10,8 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { subscribeToGameRanking } from '../services/gameService';
+import { subscribeToGameRanking, getStudentAllRanks } from '../services/gameService';
+import { getStudentIdFromStorage } from '../services/studentService';
 import { GAME_CONFIG } from '../config/gameConfig';
 import './RankingHub.css';
 
@@ -22,6 +23,12 @@ export default function RankingHub() {
   const [searchParams] = useSearchParams();
   const [rankings, setRankings] = useState({});
   const [loading, setLoading] = useState(true);
+  const [myRanks, setMyRanks] = useState({});
+  const [myRanksLoading, setMyRanksLoading] = useState(true);
+
+  // Get student ID from localStorage
+  const studentData = getStudentIdFromStorage();
+  const studentId = studentData?.studentId;
 
   // Handle session parameter for QR code
   useEffect(() => {
@@ -34,6 +41,29 @@ export default function RankingHub() {
       // navigate(`/ranking/reaction?session=${sessionId}`);
     }
   }, [searchParams, navigate]);
+
+  // Fetch student's own ranks for all games
+  useEffect(() => {
+    const fetchMyRanks = async () => {
+      if (!studentId) {
+        setMyRanksLoading(false);
+        return;
+      }
+
+      try {
+        const ranksResult = await getStudentAllRanks(String(studentId));
+        if (ranksResult) {
+          setMyRanks(ranksResult);
+        }
+      } catch (error) {
+        console.error('[RankingHub] Failed to fetch student ranks:', error);
+      } finally {
+        setMyRanksLoading(false);
+      }
+    };
+
+    fetchMyRanks();
+  }, [studentId]);
 
   // Subscribe to all game rankings (top 3 only)
   useEffect(() => {
@@ -165,6 +195,46 @@ export default function RankingHub() {
                   </div>
                 )}
               </div>
+
+              {/* My Rank Section */}
+              {studentId ? (
+                <div className="my-rank-section">
+                  {myRanksLoading ? (
+                    <div className="my-rank-loading">내 순위 로딩 중...</div>
+                  ) : myRanks[game.id] ? (
+                    <div className="my-rank-info">
+                      <span className="my-rank-label">내 순위:</span>
+                      <span className="my-rank-value">
+                        {myRanks[game.id].rank}위 / {myRanks[game.id].total}명
+                      </span>
+                      <span className="my-rank-score">
+                        {myRanks[game.id].score} {game.unit}
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="my-rank-none">
+                      <span className="my-rank-icon">🎮</span>
+                      <span className="my-rank-text">아직 기록이 없습니다</span>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="my-rank-section no-student-id">
+                  <div className="my-rank-register">
+                    <span className="register-icon">📝</span>
+                    <span className="register-text">학번을 등록하고 내 순위를 확인하세요!</span>
+                    <button
+                      className="register-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate('/');
+                      }}
+                    >
+                      학번 등록하기
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {/* View More Button */}
               <button className="view-more-btn">

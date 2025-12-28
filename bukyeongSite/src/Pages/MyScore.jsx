@@ -34,6 +34,12 @@ export default function MyScore() {
   const studentData = getStudentIdFromStorage();
   const studentId = studentData?.studentId;
 
+  // allRanks가 변경될 때마다 로그 출력
+  useEffect(() => {
+    console.log('[MyScore] 📊 allRanks updated:', allRanks);
+    console.log('[MyScore] 📊 allRanks entries:', Object.entries(allRanks));
+  }, [allRanks]);
+
   // Fetch student ranks for all games and score history
   useEffect(() => {
     const fetchData = async () => {
@@ -54,16 +60,35 @@ export default function MyScore() {
         const studentIdStr = String(studentId);
         console.log('[MyScore] Using studentId:', studentIdStr);
 
-        // Fetch ranks for all games and all scores in parallel
-        const [ranksResult, scoresResult] = await Promise.all([
-          getStudentAllRanks(studentIdStr),
-          getAllStudentScores(studentIdStr)
-        ]);
+        // Fetch ranks - 필수 데이터
+        let ranksResult = null;
+        try {
+          ranksResult = await getStudentAllRanks(studentIdStr);
+          console.log('[MyScore] ✅ Ranks result:', ranksResult);
+          console.log('[MyScore] 🔍 Ranks result keys:', ranksResult ? Object.keys(ranksResult) : 'null');
 
-        console.log('[MyScore] ✅ Ranks result:', ranksResult);
-        console.log('[MyScore] ✅ Scores result:', scoresResult);
-        console.log('[MyScore] 🔍 Ranks result keys:', ranksResult ? Object.keys(ranksResult) : 'null');
-        console.log('[MyScore] 🔍 Scores count:', scoresResult ? scoresResult.length : 0);
+          // 각 게임별 상세 로그
+          if (ranksResult) {
+            Object.entries(ranksResult).forEach(([gameType, rankInfo]) => {
+              console.log(`[MyScore] 🎮 ${gameType}:`, rankInfo);
+            });
+          }
+        } catch (err) {
+          console.error('[MyScore] ❌ Failed to fetch ranks:', err);
+          throw err; // 랭킹 데이터는 필수이므로 에러 throw
+        }
+
+        // Fetch score history - 선택적 데이터 (실패해도 괜찮음)
+        let scoresResult = [];
+        try {
+          scoresResult = await getAllStudentScores(studentIdStr);
+          console.log('[MyScore] ✅ Scores result:', scoresResult);
+          console.log('[MyScore] 🔍 Scores count:', scoresResult ? scoresResult.length : 0);
+        } catch (err) {
+          console.warn('[MyScore] ⚠️ Failed to fetch score history (non-critical):', err);
+          // 점수 히스토리는 선택적이므로 빈 배열로 계속 진행
+          scoresResult = [];
+        }
 
         // ranksResult가 null이거나 모든 게임 점수가 null인 경우에만 에러
         if (!ranksResult) {
@@ -144,7 +169,7 @@ export default function MyScore() {
               {!studentId ? (
                 <button
                   className="action-button primary"
-                  onClick={() => navigate('/')}
+                  onClick={() => navigate('/about')}
                 >
                   학번 등록하기
                 </button>

@@ -45,7 +45,7 @@
 /* Game Cards Grid */
 .game-cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 1.5rem;
   padding: 0 0.5rem;
 }
@@ -228,6 +228,118 @@
   font-style: italic;
 }
 
+/* My Rank Section */
+.my-rank-section {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: var(--beige-light);
+  border-radius: 0.75rem;
+  border-left: 4px solid var(--game-color, var(--beige-medium));
+  min-height: 60px;
+}
+
+.my-rank-loading {
+  text-align: center;
+  color: var(--beige-dark);
+  font-size: 0.9rem;
+  padding: 0.5rem;
+}
+
+.my-rank-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.my-rank-label {
+  font-weight: 600;
+  color: var(--beige-darkest);
+  font-size: 0.95rem;
+}
+
+.my-rank-value {
+  font-weight: 700;
+  color: var(--beige-dark);
+  font-size: 1rem;
+  background: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.5rem;
+}
+
+.my-rank-score {
+  font-weight: 700;
+  color: var(--game-color, var(--beige-medium));
+  font-size: 1.05rem;
+  margin-left: auto;
+}
+
+.my-rank-none {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+  padding: 0.5rem;
+}
+
+.my-rank-icon {
+  font-size: 1.5rem;
+}
+
+.my-rank-text {
+  color: var(--beige-dark);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* No Student ID - Register Prompt */
+.my-rank-section.no-student-id {
+  background: linear-gradient(135deg, rgba(200, 159, 119, 0.1), rgba(166, 124, 82, 0.15));
+  border-left-color: var(--beige-dark);
+  padding: 1.25rem;
+}
+
+.my-rank-register {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  text-align: center;
+}
+
+.register-icon {
+  font-size: 2rem;
+}
+
+.register-text {
+  color: var(--beige-darkest);
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.register-btn {
+  padding: 0.625rem 1.5rem;
+  background: linear-gradient(135deg, var(--beige-medium), var(--beige-dark));
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(93, 78, 55, 0.2);
+}
+
+.register-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(93, 78, 55, 0.3);
+}
+
+.register-btn:active {
+  transform: translateY(0);
+}
+
 /* My Scores Card */
 .my-scores-card {
   background: linear-gradient(135deg, #FFFBF5 0%, #F5EBE0 100%);
@@ -378,6 +490,26 @@
   .preview-name,
   .preview-score {
     font-size: 0.9rem;
+  }
+
+  .my-rank-section {
+    padding: 0.875rem;
+  }
+
+  .my-rank-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .my-rank-score {
+    margin-left: 0;
+    align-self: flex-end;
+  }
+
+  .register-btn {
+    width: 100%;
+    max-width: 250px;
   }
 
   .back-home-btn {

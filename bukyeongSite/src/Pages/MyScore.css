@@ -11,10 +11,10 @@
 
 .my-score-container {
   width: 100%;
-  max-width: 900px;
+  max-width: 1200px;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2rem;
 }
 
 /* ============================================ */
@@ -47,20 +47,20 @@
 /* ============================================ */
 .scores-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
   margin-bottom: 2rem;
 }
 
 .game-score-card {
   background: var(--gradient-card);
   border-radius: 1.5rem;
-  padding: 2rem;
+  padding: 2.5rem;
   box-shadow: 0 8px 24px var(--shadow-soft);
   border: 3px solid var(--latte-brown);
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.5rem;
   transition: all var(--timing-normal) var(--easing);
   animation: scaleIn 0.5s var(--easing) both;
 }

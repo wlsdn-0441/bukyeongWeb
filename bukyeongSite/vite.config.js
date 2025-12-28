@@ -44,8 +44,18 @@ export default defineConfig({
         // Service Worker 캐싱 전략
         runtimeCaching: [
           {
-            // HTML 문서는 항상 네트워크 우선 (캐시 불일치 방지)
-            urlPattern: ({ request }) => request.mode === 'navigate',
+            // ⚠️ 모든 POST/PUT/DELETE 요청은 절대 캐싱하지 않음 (최우선 규칙)
+            urlPattern: ({ request }) => ['POST', 'PUT', 'DELETE', 'PATCH'].includes(request.method),
+            handler: 'NetworkOnly',
+          },
+          {
+            // Firebase/Firestore 요청은 캐싱하지 않음 (모든 메서드)
+            urlPattern: /^https?:\/\/(firestore\.googleapis\.com|.*\.firebaseio\.com|identitytoolkit\.googleapis\.com|securetoken\.googleapis\.com).*/i,
+            handler: 'NetworkOnly',
+          },
+          {
+            // HTML 문서는 항상 네트워크 우선 (GET 요청만, 캐시 불일치 방지)
+            urlPattern: ({ request }) => request.mode === 'navigate' && request.method === 'GET',
             handler: 'NetworkFirst',
             options: {
               cacheName: 'pages-cache',
@@ -57,11 +67,11 @@ export default defineConfig({
             },
           },
           {
-            // API 요청 캐싱 (NetworkFirst 전략)
-            // GET 요청만 캐싱 (POST는 캐싱 불가)
-            urlPattern: /^https?:\/\/.*\/api\/.*/i,
+            // API 요청 캐싱 (GET 요청만)
+            urlPattern: ({ url, request }) => {
+              return url.pathname.includes('/api/') && request.method === 'GET';
+            },
             handler: 'NetworkFirst',
-            method: 'GET',
             options: {
               cacheName: 'api-cache',
               expiration: {
@@ -74,10 +84,11 @@ export default defineConfig({
             },
           },
           {
-            // 정적 파일 캐싱 (CacheFirst 전략)
-            urlPattern: /\.(?:js|css|woff|woff2|ttf|otf)$/i,
+            // 정적 파일 캐싱 (GET 요청만)
+            urlPattern: ({ url, request }) => {
+              return /\.(?:js|css|woff|woff2|ttf|otf)$/i.test(url.pathname) && request.method === 'GET';
+            },
             handler: 'CacheFirst',
-            method: 'GET',
             options: {
               cacheName: 'static-cache',
               expiration: {
@@ -87,10 +98,11 @@ export default defineConfig({
             },
           },
           {
-            // 이미지 캐싱 (CacheFirst 전략)
-            urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/i,
+            // 이미지 캐싱 (GET 요청만)
+            urlPattern: ({ url, request }) => {
+              return /\.(?:png|jpg|jpeg|svg|gif|webp)$/i.test(url.pathname) && request.method === 'GET';
+            },
             handler: 'CacheFirst',
-            method: 'GET',
             options: {
               cacheName: 'image-cache',
               expiration: {

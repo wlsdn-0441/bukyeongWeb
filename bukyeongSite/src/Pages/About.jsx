@@ -38,12 +38,10 @@ export default function About() {
   };
 
   const handleDeleteStudentId = async () => {
-    if (confirm('학번을 삭제하시겠습니까? 시간표를 이용하려면 다시 등록해야 합니다.')) {
-      console.log('[About] 학번 삭제');
-      await clearStudentId();
-      console.log('[About] 페이지 새로고침 중...');
-      location.reload();
-    }
+    console.log('[About] 학번 삭제');
+    await clearStudentId();
+    console.log('[About] 페이지 새로고침 중...');
+    location.reload();
   };
 
   const handleRegisterStudentId = () => {
@@ -58,7 +56,7 @@ export default function About() {
   return (
     <div className="about">
       <div className="about-container">
-        <h1 className="about-title">부경고등학교 포털 소개</h1>
+        <h1 className="about-title">부경고등학교 소개</h1>
 
         <div className="about-content">
           <section className="about-section">

@@ -20,13 +20,14 @@
 
 /* 현재 학번 표시 */
 .edit-current-student {
-  background: rgba(107, 114, 128, 0.1);
-  border: 2px solid rgba(107, 114, 128, 0.2);
+  background: linear-gradient(135deg, #F5EBE0, #FAF7F2);
+  border: 2px solid #C89F77;
   border-radius: 12px;
   padding: 1.5rem;
   margin-bottom: 2.5rem;
   text-align: center;
   transition: all 0.3s;
+  box-shadow: 0 2px 8px rgba(93, 78, 55, 0.1);
 }
 
 .edit-current-label {
@@ -77,18 +78,20 @@
 /* 입력 필드 */
 .edit-input {
   width: 100%;
-  font-size: 3rem;
+  max-width: 100%;
+  font-size: 2.5rem;
   font-weight: 700;
   text-align: center;
-  padding: 1.25rem;
-  border: 3px solid rgba(99, 102, 241, 0.2);
+  padding: 1rem 0.5rem;
+  border: 3px solid rgba(200, 159, 119, 0.3);
   border-radius: 16px;
-  background: var(--card-bg);
-  color: var(--text-primary);
-  letter-spacing: 0.5rem;
+  background: white;
+  color: #5D4E37;
+  letter-spacing: 0.3rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-family: 'Courier New', monospace;
   outline: none;
+  box-sizing: border-box;
 }
 
 .edit-input::placeholder {
@@ -97,18 +100,18 @@
 }
 
 .edit-input:focus {
-  border-color: rgba(99, 102, 241, 0.5);
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+  border-color: rgba(200, 159, 119, 0.6);
+  box-shadow: 0 0 0 4px rgba(200, 159, 119, 0.15);
   transform: scale(1.02);
 }
 
 .edit-input.valid {
-  border-color: rgba(16, 185, 129, 0.4);
+  border-color: rgba(166, 124, 82, 0.5);
 }
 
 .edit-input.valid:focus {
-  border-color: rgba(16, 185, 129, 0.6);
-  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+  border-color: rgba(166, 124, 82, 0.7);
+  box-shadow: 0 0 0 4px rgba(166, 124, 82, 0.2);
 }
 
 .edit-input.error {
@@ -139,8 +142,8 @@
   justify-content: center;
   gap: 0.75rem;
   padding: 1rem;
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.05));
-  border: 2px solid rgba(16, 185, 129, 0.3);
+  background: linear-gradient(135deg, rgba(166, 124, 82, 0.15), rgba(200, 159, 119, 0.1));
+  border: 2px solid rgba(166, 124, 82, 0.4);
   border-radius: 12px;
   animation: slideIn 0.3s ease-out;
 }
@@ -163,7 +166,7 @@
 .preview-text {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #059669;
+  color: #5D4E37;
 }
 
 /* 에러 메시지 */
@@ -241,17 +244,17 @@
 
 /* 변경 버튼 */
 .edit-button.change {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: linear-gradient(135deg, #C89F77, #A67C52);
   color: white;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+  box-shadow: 0 4px 12px rgba(200, 159, 119, 0.3);
 }
 
 .edit-button.change::before {
-  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+  background: linear-gradient(135deg, #A67C52, #8B6F47);
 }
 
 .edit-button.change:hover:not(:disabled) {
-  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
+  box-shadow: 0 8px 20px rgba(200, 159, 119, 0.4);
 }
 
 .edit-button.change:hover:not(:disabled)::before {
@@ -280,14 +283,14 @@
 /* 취소 버튼 */
 .edit-button.cancel {
   background: transparent;
-  color: var(--text-secondary);
-  border: 2px solid rgba(107, 114, 128, 0.3);
+  color: #5D4E37;
+  border: 2px solid rgba(200, 159, 119, 0.4);
   box-shadow: none;
 }
 
 .edit-button.cancel:hover:not(:disabled) {
-  background: rgba(107, 114, 128, 0.1);
-  border-color: rgba(107, 114, 128, 0.5);
+  background: rgba(200, 159, 119, 0.15);
+  border-color: rgba(166, 124, 82, 0.6);
 }
 
 /* 모바일 반응형 */
@@ -310,9 +313,9 @@
   }
 
   .edit-input {
-    font-size: 2.5rem;
-    padding: 1rem;
-    letter-spacing: 0.4rem;
+    font-size: 2rem;
+    padding: 0.875rem 0.5rem;
+    letter-spacing: 0.25rem;
   }
 
   .edit-button-group {
@@ -345,9 +348,9 @@
   }
 
   .edit-input {
-    font-size: 2rem;
-    padding: 0.875rem;
-    letter-spacing: 0.3rem;
+    font-size: 1.75rem;
+    padding: 0.75rem 0.5rem;
+    letter-spacing: 0.2rem;
   }
 
   .edit-button-group {
