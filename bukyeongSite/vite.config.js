@@ -34,8 +34,10 @@ export default defineConfig({
         runtimeCaching: [
           {
             // API 요청 캐싱 (NetworkFirst 전략)
+            // GET 요청만 캐싱 (POST는 캐싱 불가)
             urlPattern: /^https?:\/\/.*\/api\/.*/i,
             handler: 'NetworkFirst',
+            method: 'GET',
             options: {
               cacheName: 'api-cache',
               expiration: {
@@ -51,6 +53,7 @@ export default defineConfig({
             // 정적 파일 캐싱 (CacheFirst 전략)
             urlPattern: /\.(?:js|css|woff|woff2|ttf|otf)$/i,
             handler: 'CacheFirst',
+            method: 'GET',
             options: {
               cacheName: 'static-cache',
               expiration: {
@@ -63,6 +66,7 @@ export default defineConfig({
             // 이미지 캐싱 (CacheFirst 전략)
             urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/i,
             handler: 'CacheFirst',
+            method: 'GET',
             options: {
               cacheName: 'image-cache',
               expiration: {
