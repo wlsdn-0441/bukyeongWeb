@@ -164,7 +164,7 @@ export default function About() {
               </a>
               <div className="info-item">
                 <strong>플랫폼</strong>
-                <span >모든 플랫폼에서 사용가능</span>
+                <span >모든 기기에서 사용가능</span>
               </div>
               
             </div>
