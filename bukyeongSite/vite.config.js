@@ -77,12 +77,12 @@ export default defineConfig({
             urlPattern: ({ url, request }) => {
               return /\.(?:js|css|woff|woff2|ttf|otf)$/i.test(url.pathname) && request.method === 'GET';
             },
-            handler: 'CacheFirst',
+            handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'static-cache',
               expiration: {
                 maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24 * 30,
+                maxAgeSeconds: 60 * 60 * 24 * 7,
               },
             },
           },

@@ -63,7 +63,7 @@ export default function About() {
             <h2>📱 학교 생활의 모든 정보를 한눈에</h2>
             <p>
               부경고등학교 학생들을 위한 통합 포털 서비스입니다.
-              급식 메뉴, 시간표, 날씨 정보, 학교 공지사항을
+              급식 메뉴, 시간표, 학교 공지사항을
               빠르고 편리하게 확인할 수 있습니다.
             </p>
           </section>
@@ -134,7 +134,7 @@ export default function About() {
           </section>
 
           <section className="about-section">
-            <h2>🎯 온보딩 다시 보기</h2>
+            <h2> 소개화면 다시 보기</h2>
             <p>
               처음 방문 시 보여드린 소개 화면을 다시 보고 싶으신가요?
             </p>
@@ -142,10 +142,10 @@ export default function About() {
               className="onboarding-restart-button"
               onClick={handleShowOnboarding}
             >
-              <span>🚀 온보딩 화면 다시 보기</span>
+              <span>소개 화면 다시보기</span>
             </button>
             <p className="onboarding-hint-text">
-              * 버튼을 클릭하면 페이지가 새로고침되며 온보딩 화면이 표시됩니다.
+              * 버튼을 클릭하면 페이지가 새로고침되며 소개화면이 다시 표시됩니다.
             </p>
           </section>
 
@@ -156,13 +156,16 @@ export default function About() {
                 <strong>버전</strong>
                 <span>1.0.0</span>
               </div>
-              <div className="info-item">
-                <strong>개발</strong>
-                <span>부경고등학교</span>
-              </div>
+              <a href="https://www.instagram.com/jin_woo.o8?igsh=MWxtNGRsazNocWYyaw%3D%3D&utm_source=qr" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <div className="info-item">
+                  <strong>개발</strong>
+                  <span>부경고등학교 인코딩 동아리</span>
+                  <span>개발자 문의</span>
+                </div>
+              </a>
               <div className="info-item">
                 <strong>플랫폼</strong>
-                <span>React + Vite + Vercel</span>
+                <span >React + Vite + Vercel</span>
               </div>
               <div className="info-item">
                 <strong>최적화</strong>

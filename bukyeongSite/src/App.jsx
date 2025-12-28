@@ -190,6 +190,40 @@ export default function App() {
   const [authLoading, setAuthLoading] = useState(true);
   const [authReady, setAuthReady] = useState(false);
 
+  // 청크 로딩 에러 자동 복구
+  useEffect(() => {
+    const handleChunkError = (event) => {
+      // 동적 임포트 에러 감지
+      const isChunkError =
+        event.message?.includes('Failed to fetch dynamically imported module') ||
+        event.reason?.message?.includes('Failed to fetch dynamically imported module') ||
+        event.error?.message?.includes('Failed to fetch dynamically imported module');
+
+      if (isChunkError) {
+        console.error('[App] 청크 로딩 에러 감지 - 페이지 새로고침:', event);
+
+        // 무한 새로고침 방지
+        const lastReloadTime = sessionStorage.getItem('lastChunkErrorReload');
+        const now = Date.now();
+
+        if (!lastReloadTime || now - parseInt(lastReloadTime) > 5000) {
+          sessionStorage.setItem('lastChunkErrorReload', now.toString());
+          window.location.reload();
+        } else {
+          console.error('[App] 청크 로딩 에러가 반복됨 - 새로고침 중단');
+        }
+      }
+    };
+
+    window.addEventListener('error', handleChunkError);
+    window.addEventListener('unhandledrejection', handleChunkError);
+
+    return () => {
+      window.removeEventListener('error', handleChunkError);
+      window.removeEventListener('unhandledrejection', handleChunkError);
+    };
+  }, []);
+
   // 마운트 시 학번 입력 모달 표시 플래그 확인
   const [showStudentIdModal, setShowStudentIdModal] = useState(() => {
     const shouldShow = localStorage.getItem(SHOW_STUDENT_ID_MODAL_KEY) === 'true';
