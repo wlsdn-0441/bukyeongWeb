@@ -6,6 +6,7 @@ import Card from '../components/common/Card';
 import MealWidget from '../components/widgets/MealWidget';
 import TimetableWidget from '../components/widgets/TimetableWidget';
 import GameStatsWidget from '../components/widgets/GameStatsWidget';
+import LetterWidget from '../components/widgets/LetterWidget';
 import { getWeekMealData } from '../services/mealService';
 import { getWeekTimetable } from '../services/timetableService';
 import { getStudentIdFromStorage } from '../services/studentService';
@@ -86,6 +87,13 @@ const Home = () => {
       title: '게임 랭킹',
       component: <GameStatsWidget />,
       route: '/ranking-hub',
+      isClickable: true,
+    },
+    {
+      id: 4,
+      title: '✉️ 편지함',
+      component: <LetterWidget />,
+      route: '/letters',
       isClickable: true,
     },
     // {

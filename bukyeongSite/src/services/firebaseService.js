@@ -17,7 +17,9 @@ import {
   query,
   where,
   getDocs,
-  serverTimestamp
+  serverTimestamp,
+  orderBy,
+  onSnapshot
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 
@@ -172,6 +174,58 @@ export const updateUserAuthInfo = async (userId, authProvider, email) => {
     console.log(`${CONSOLE_PREFIX} User auth info updated:`, authProvider, email);
   } catch (error) {
     console.error(`${CONSOLE_PREFIX} Update auth info failed:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Add a new letter to Firestore
+ * @param {string} author - Author nickname
+ * @param {string} content - Letter content
+ * @returns {Promise<void>}
+ */
+export const addLetter = async (author, content) => {
+  try {
+    await addDoc(collection(db, 'letters'), {
+      author: author || '익명',
+      content,
+      createdAt: serverTimestamp()
+    });
+
+    console.log(`${CONSOLE_PREFIX} Letter added successfully`);
+  } catch (error) {
+    console.error(`${CONSOLE_PREFIX} Add letter failed:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Subscribe to letters collection with real-time updates
+ * @param {Function} callback - Callback function to receive letters array
+ * @returns {Function} Unsubscribe function
+ */
+export const subscribeToLetters = (callback) => {
+  try {
+    const q = query(
+      collection(db, 'letters'),
+      orderBy('createdAt', 'desc')
+    );
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const letters = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+        // createdAt이 null인 경우 (서버 타임스탬프 pending) 현재 시간 사용
+        createdAt: doc.data().createdAt?.toDate() || new Date()
+      }));
+
+      console.log(`${CONSOLE_PREFIX} Letters updated:`, letters.length, 'letters');
+      callback(letters);
+    });
+
+    return unsubscribe;
+  } catch (error) {
+    console.error(`${CONSOLE_PREFIX} Subscribe to letters failed:`, error);
     throw error;
   }
 };
