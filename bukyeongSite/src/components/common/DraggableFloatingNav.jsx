@@ -18,6 +18,7 @@ function DraggableFloatingNav() {
   const [hoveredItems, setHoveredItems] = useState([]); // 인디케이터와 겹치는 항목들
   const [isAnimating, setIsAnimating] = useState(false); // 인디케이터 이동 애니메이션 중 여부
   const [isLongPressActive, setIsLongPressActive] = useState(false); // 롱프레스 활성화 여부
+  const [isNavigating, setIsNavigating] = useState(false); // 네비게이션 진행 중 여부
 
   // ==============================================
   // Ref 참조 (References)
@@ -303,8 +304,14 @@ function DraggableFloatingNav() {
 
     // 드래그로 선택한 페이지로 이동
     const targetPath = navItems[nearestIndex]?.path;
-    if (targetPath && targetPath !== location.pathname) {
+    if (targetPath && targetPath !== location.pathname && !isNavigating) {
+      setIsNavigating(true);
       navigate(targetPath);
+
+      // 네비게이션 완료 후 상태 초기화
+      setTimeout(() => {
+        setIsNavigating(false);
+      }, 500);
     }
   };
 
@@ -334,23 +341,52 @@ function DraggableFloatingNav() {
 
   // ==============================================
   // 항목 클릭 핸들러 (Item Click Handler)
-  // 더블클릭 방지를 위한 debounce 추가
-  // 빠른 클릭 시 이전 타이머를 취소하고 새로운 애니메이션 시작
+  // 더블클릭 방지 및 네비게이션 중복 방지
   // ==============================================
   const lastClickTimeRef = useRef(0);
 
-  const handleItemClick = (index) => {
-    if (isDragging) return;
+  const handleItemClick = (e, index) => {
+    // Link의 기본 동작 방지 (중복 네비게이션 방지)
+    e.preventDefault();
 
-    // 더블클릭 방지: 200ms 이내 연속 클릭 무시
+    // 드래그 중이거나 네비게이션 진행 중이면 무시
+    if (isDragging || isNavigating) {
+      return;
+    }
+
+    // 더블클릭 방지: 300ms 이내 연속 클릭 무시 (200ms → 300ms로 증가)
     const now = Date.now();
-    if (now - lastClickTimeRef.current < 200) {
+    if (now - lastClickTimeRef.current < 300) {
       return;
     }
     lastClickTimeRef.current = now;
 
+    const targetPath = navItems[index]?.path;
+
+    // 같은 경로로의 네비게이션 방지
+    if (targetPath === location.pathname) {
+      // 같은 페이지 클릭 시 인디케이터 위치만 업데이트
+      setActiveIndex(index);
+      updateIndicatorPosition(index);
+      return;
+    }
+
+    // 네비게이션 시작
+    setIsNavigating(true);
     setActiveIndex(index);
     updateIndicatorPosition(index);
+
+    // 네비게이션 실행
+    if (targetPath) {
+      navigate(targetPath);
+
+      // 네비게이션 완료 후 상태 초기화 (500ms 후)
+      setTimeout(() => {
+        setIsNavigating(false);
+      }, 500);
+    } else {
+      setIsNavigating(false);
+    }
   };
 
   // 초기 위치 설정
@@ -359,12 +395,15 @@ function DraggableFloatingNav() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // 현재 경로에 따라 activeIndex 동기화
+  // 현재 경로에 따라 activeIndex 동기화 및 네비게이션 상태 초기화
   useEffect(() => {
     const currentIndex = navItems.findIndex(item => item.path === location.pathname);
     if (currentIndex !== -1 && currentIndex !== activeIndex) {
       setActiveIndex(currentIndex);
     }
+
+    // 경로가 변경되면 네비게이션 상태 초기화
+    setIsNavigating(false);
   }, [location.pathname, navItems, activeIndex]);
 
   // activeIndex 변경 시 위치 업데이트
@@ -506,8 +545,8 @@ function DraggableFloatingNav() {
                 key={item.name}
                 to={item.path}
                 ref={(el) => (navRefs.current[index] = el)}
-                className={`nav-item ${isActive ? 'active' : ''}`}
-                onClick={() => handleItemClick(index)}
+                className={`nav-item ${isActive ? 'active' : ''} ${isNavigating ? 'navigating' : ''}`}
+                onClick={(e) => handleItemClick(e, index)}
               >
                 <span className="nav-item-content">
                   <span className="nav-item-logo" style={logoStyle}>
