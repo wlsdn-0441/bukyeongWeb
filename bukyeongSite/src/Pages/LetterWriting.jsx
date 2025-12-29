@@ -9,6 +9,7 @@ const LetterWriting = () => {
   const [author, setAuthor] = useState('');
   const [content, setContent] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [message, setMessage] = useState({ type: '', text: '' });
 
   // 실시간 편지 구독
   useEffect(() => {
@@ -20,17 +21,28 @@ const LetterWriting = () => {
     return () => unsubscribe();
   }, []);
 
+  // 메시지 자동 숨김
+  useEffect(() => {
+    if (message.text) {
+      const timer = setTimeout(() => {
+        setMessage({ type: '', text: '' });
+      }, 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
+
   // 편지 작성 핸들러
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // 내용이 비어있으면 제출 불가
     if (!content.trim()) {
-      alert('편지 내용을 입력해주세요.');
+      setMessage({ type: 'error', text: '편지 내용을 입력해주세요.' });
       return;
     }
 
     setSubmitting(true);
+    setMessage({ type: '', text: '' });
 
     try {
       await addLetter(author.trim() || '익명', content.trim());
@@ -39,10 +51,18 @@ const LetterWriting = () => {
       setAuthor('');
       setContent('');
 
-      alert('편지가 성공적으로 작성되었습니다! ✉️');
+      setMessage({ type: 'success', text: '편지가 성공적으로 작성되었습니다! ✉️' });
+
+      // 편지 목록으로 스크롤
+      setTimeout(() => {
+        document.getElementById('letter-list')?.scrollIntoView({ behavior: 'smooth' });
+      }, 300);
     } catch (error) {
       console.error('편지 작성 실패:', error);
-      alert('편지 작성에 실패했습니다. 다시 시도해주세요.');
+      setMessage({
+        type: 'error',
+        text: '편지 작성에 실패했습니다. Firestore 인덱스를 확인해주세요.'
+      });
     } finally {
       setSubmitting(false);
     }
@@ -69,16 +89,16 @@ const LetterWriting = () => {
     });
   };
 
-  // 포스트잇 색상 배열 (파스텔톤)
+  // 포스트잇 색상 배열 (브라운 파스텔톤)
   const postItColors = [
-    '#fef3c7', // 노란색
-    '#fee2e2', // 빨간색
-    '#dbeafe', // 파란색
-    '#d1fae5', // 초록색
-    '#fce7f3', // 핑크색
-    '#e0e7ff', // 인디고
-    '#fed7aa', // 주황색
-    '#f3e8ff', // 보라색
+    '#F5EBE0', // 연한 베이지
+    '#E3D5CA', // 베이지
+    '#D5BDAF', // 따뜻한 베이지
+    '#E8DDD3', // 크림 베이지
+    '#F0E6DC', // 밝은 베이지
+    '#DCC9BB', // 모카 베이지
+    '#EAD9CD', // 연한 모카
+    '#D9C4B0', // 카페라떼
   ];
 
   return (
@@ -93,6 +113,13 @@ const LetterWriting = () => {
           <p className="letter-page-subtitle">
             친구들에게 따뜻한 메시지를 남겨보세요
           </p>
+
+          {/* 메시지 표시 */}
+          {message.text && (
+            <div className={`letter-message letter-message-${message.type}`}>
+              {message.text}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="letter-form">
             <div className="letter-form-group">
@@ -143,7 +170,7 @@ const LetterWriting = () => {
         <div className="letter-divider"></div>
 
         {/* 편지 목록 */}
-        <div className="letter-list-section">
+        <div id="letter-list" className="letter-list-section">
           <h2 className="letter-list-title">
             📮 모두의 편지함
             {!loading && <span className="letter-count">({letters.length})</span>}

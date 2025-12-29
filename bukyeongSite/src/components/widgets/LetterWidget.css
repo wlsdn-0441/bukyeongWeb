@@ -1,4 +1,4 @@
-/* Letter Widget Styles */
+/* Letter Widget Styles - 브라운 톤 */
 .letter-widget {
   min-height: 200px;
   display: flex;
@@ -10,7 +10,7 @@
   align-items: center;
   justify-content: center;
   min-height: 200px;
-  color: #6b7280;
+  color: #8B7355;
   font-size: 0.875rem;
 }
 
@@ -20,7 +20,7 @@
   align-items: center;
   justify-content: center;
   min-height: 200px;
-  color: #9ca3af;
+  color: #8B7355;
   text-align: center;
 }
 
@@ -35,7 +35,7 @@
 }
 
 .letter-widget-empty-hint {
-  color: #d1d5db;
+  color: #C89F77;
   font-size: 0.75rem !important;
 }
 
@@ -46,21 +46,21 @@
 }
 
 .letter-widget-item {
-  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  background: linear-gradient(135deg, #F5EBE0 0%, #E3D5CA 100%);
   padding: 0.75rem;
   border-radius: 0.375rem;
-  border-left: 3px solid #f59e0b;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-left: 3px solid #A67C52;
+  box-shadow: 0 2px 4px rgba(93, 78, 55, 0.1);
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .letter-widget-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 8px rgba(93, 78, 55, 0.15);
 }
 
 .letter-widget-content {
-  color: #78350f;
+  color: #5D4E37;
   font-size: 0.875rem;
   line-height: 1.5;
   margin-bottom: 0.5rem;
@@ -68,7 +68,7 @@
 }
 
 .letter-widget-author {
-  color: #92400e;
+  color: #8B7355;
   font-size: 0.75rem;
   text-align: right;
   font-weight: 500;
@@ -76,25 +76,25 @@
 
 /* Dark Mode */
 :root[data-theme="dark"] .letter-widget-item {
-  background: linear-gradient(135deg, #78350f 0%, #92400e 100%);
+  background: linear-gradient(135deg, #5D4E37 0%, #3A2F23 100%);
 }
 
 :root[data-theme="dark"] .letter-widget-content {
-  color: #fef3c7;
+  color: #E3D5CA;
 }
 
 :root[data-theme="dark"] .letter-widget-author {
-  color: #fde68a;
+  color: #D5BDAF;
 }
 
 :root[data-theme="dark"] .letter-widget-loading {
-  color: #9ca3af;
+  color: #B8A99A;
 }
 
 :root[data-theme="dark"] .letter-widget-empty {
-  color: #6b7280;
+  color: #8B7355;
 }
 
 :root[data-theme="dark"] .letter-widget-empty-hint {
-  color: #4b5563;
+  color: #5D4E37;
 }
