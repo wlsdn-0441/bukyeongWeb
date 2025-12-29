@@ -293,6 +293,21 @@
   transform: none;
 }
 
+/* 네비게이션 진행 중 상태 - 모든 클릭 차단 */
+.nav-item.navigating {
+  pointer-events: none !important;
+  cursor: default !important;
+}
+
+/* 네비게이션 진행 중 - 전체 컨테이너 클릭 차단 */
+.draggable-nav-wrapper.navigating {
+  pointer-events: none !important;
+}
+
+.draggable-nav-wrapper.navigating .nav-item {
+  pointer-events: none !important;
+}
+
 /* ==============================================
    반응형 - 화면 크기만 기준 (테마 무관)
    ============================================== */
