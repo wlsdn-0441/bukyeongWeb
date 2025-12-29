@@ -13,10 +13,18 @@ const LetterWriting = () => {
 
   // 실시간 편지 구독
   useEffect(() => {
-    const unsubscribe = subscribeToLetters((lettersData) => {
-      setLetters(lettersData);
-      setLoading(false);
-    });
+    const unsubscribe = subscribeToLetters(
+      (lettersData) => {
+        setLetters(lettersData);
+        setLoading(false);
+      },
+      (error) => {
+        // 에러 발생 시 처리
+        console.error('편지 구독 실패:', error);
+        setLoading(false);
+        showToast(error.message || '편지 목록을 불러오는 중 오류가 발생했습니다.', 'error');
+      }
+    );
 
     return () => unsubscribe();
   }, []);
@@ -51,7 +59,8 @@ const LetterWriting = () => {
       showToast('편지가 성공적으로 작성되었습니다! ✉️', 'success');
     } catch (error) {
       console.error('편지 작성 실패:', error);
-      showToast('편지 작성에 실패했습니다. 다시 시도해주세요.', 'error');
+      // 구체적인 에러 메시지 표시
+      showToast(error.message || '편지 작성에 실패했습니다. 다시 시도해주세요.', 'error');
     } finally {
       setSubmitting(false);
     }

@@ -186,6 +186,11 @@ export const updateUserAuthInfo = async (userId, authProvider, email) => {
  */
 export const addLetter = async (author, content) => {
   try {
+    // Firebase 초기화 확인
+    if (!db) {
+      throw new Error('Firebase가 초기화되지 않았습니다. 환경 변수를 확인해주세요.');
+    }
+
     await addDoc(collection(db, 'letters'), {
       author: author || '익명',
       content,
@@ -195,33 +200,81 @@ export const addLetter = async (author, content) => {
     console.log(`${CONSOLE_PREFIX} Letter added successfully`);
   } catch (error) {
     console.error(`${CONSOLE_PREFIX} Add letter failed:`, error);
-    throw error;
+
+    // 구체적인 에러 메시지 생성
+    let errorMessage = '편지 작성에 실패했습니다.';
+
+    if (error.code === 'permission-denied') {
+      errorMessage = 'Firebase 권한이 없습니다. Firestore 규칙을 확인해주세요.';
+    } else if (error.code === 'unavailable') {
+      errorMessage = 'Firebase 서버에 연결할 수 없습니다. 인터넷 연결을 확인해주세요.';
+    } else if (error.code === 'unauthenticated') {
+      errorMessage = '인증이 필요합니다. 다시 로그인해주세요.';
+    } else if (error.message?.includes('Firebase')) {
+      errorMessage = error.message;
+    }
+
+    const enhancedError = new Error(errorMessage);
+    enhancedError.originalError = error;
+    throw enhancedError;
   }
 };
 
 /**
  * Subscribe to letters collection with real-time updates
  * @param {Function} callback - Callback function to receive letters array
+ * @param {Function} errorCallback - Optional error callback function
  * @returns {Function} Unsubscribe function
  */
-export const subscribeToLetters = (callback) => {
+export const subscribeToLetters = (callback, errorCallback = null) => {
   try {
+    // Firebase 초기화 확인
+    if (!db) {
+      const error = new Error('Firebase가 초기화되지 않았습니다. 환경 변수를 확인해주세요.');
+      if (errorCallback) errorCallback(error);
+      throw error;
+    }
+
     const q = query(
       collection(db, 'letters'),
       orderBy('createdAt', 'desc')
     );
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const letters = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        // createdAt이 null인 경우 (서버 타임스탬프 pending) 현재 시간 사용
-        createdAt: doc.data().createdAt?.toDate() || new Date()
-      }));
+    const unsubscribe = onSnapshot(
+      q,
+      (snapshot) => {
+        try {
+          const letters = snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+            // createdAt이 null인 경우 (서버 타임스탬프 pending) 현재 시간 사용
+            createdAt: doc.data().createdAt?.toDate() || new Date()
+          }));
 
-      console.log(`${CONSOLE_PREFIX} Letters updated:`, letters.length, 'letters');
-      callback(letters);
-    });
+          console.log(`${CONSOLE_PREFIX} Letters updated:`, letters.length, 'letters');
+          callback(letters);
+        } catch (error) {
+          console.error(`${CONSOLE_PREFIX} Error processing snapshot:`, error);
+          if (errorCallback) errorCallback(error);
+        }
+      },
+      (error) => {
+        // onSnapshot 에러 핸들러
+        console.error(`${CONSOLE_PREFIX} Subscribe error:`, error);
+
+        let errorMessage = '편지 목록을 불러오는 중 오류가 발생했습니다.';
+
+        if (error.code === 'permission-denied') {
+          errorMessage = 'Firebase 권한이 없습니다. Firestore 규칙을 확인해주세요.';
+        } else if (error.code === 'unavailable') {
+          errorMessage = 'Firebase 서버에 연결할 수 없습니다. 인터넷 연결을 확인해주세요.';
+        }
+
+        if (errorCallback) {
+          errorCallback(new Error(errorMessage));
+        }
+      }
+    );
 
     return unsubscribe;
   } catch (error) {
