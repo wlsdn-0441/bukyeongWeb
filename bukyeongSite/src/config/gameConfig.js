@@ -101,9 +101,8 @@ export const normalizeGameType = (gameType) => {
     'colorfind': 'color',  // 부스 게임 호환
     'color': 'color',
     'reaction': 'reaction',
-    'memory': 'memory',
-    'balloon': 'balloon',
-    'quiz': 'memory'  // 퀴즈 게임을 기억력으로 매핑 (필요시)
+    'wordle': 'wordle',
+    'capital': 'capital'
   };
 
   const normalized = mapping[gameType] || gameType;
