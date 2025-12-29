@@ -33,6 +33,7 @@ function DraggableFloatingNav() {
   const longPressTimerRef = useRef(null); // 롱프레스 타이머 ID
   const touchStartPosRef = useRef({ x: 0, y: 0 }); // 터치 시작 위치
   const navigationTimerRef = useRef(null); // 네비게이션 타이머 ID
+  const isNavigatingRef = useRef(false); // 네비게이션 진행 중 여부 (즉시 확인용 ref)
 
   // ==============================================
   // 메뉴 항목 데이터 (Navigation Items)
@@ -305,7 +306,7 @@ function DraggableFloatingNav() {
 
     // 드래그로 선택한 페이지로 이동
     const targetPath = navItems[nearestIndex]?.path;
-    if (targetPath && targetPath !== location.pathname && !isNavigating) {
+    if (targetPath && targetPath !== location.pathname && !isNavigating && !isNavigatingRef.current) {
       // 중복 터치 방지를 위해 마지막 클릭 시간 업데이트
       lastClickTimeRef.current = Date.now();
 
@@ -314,14 +315,17 @@ function DraggableFloatingNav() {
         clearTimeout(navigationTimerRef.current);
       }
 
+      // ref와 state 모두 업데이트 (즉시 확인용 + UI 반영용)
+      isNavigatingRef.current = true;
       setIsNavigating(true);
       navigate(targetPath);
 
-      // 네비게이션 완료 후 상태 초기화 (300ms 후로 단축)
+      // 네비게이션 완료 후 상태 초기화 (500ms로 증가)
       navigationTimerRef.current = setTimeout(() => {
+        isNavigatingRef.current = false;
         setIsNavigating(false);
         navigationTimerRef.current = null;
-      }, 300);
+      }, 500);
     }
   };
 
@@ -358,49 +362,61 @@ function DraggableFloatingNav() {
   const handleItemClick = (e, index) => {
     // Link의 기본 동작 방지 (중복 네비게이션 방지)
     e.preventDefault();
+    e.stopPropagation();
 
-    // 드래그 중이거나 네비게이션 진행 중이면 무시
-    if (isDragging || isNavigating) {
+    // 드래그 중이거나 네비게이션 진행 중이면 즉시 무시 (ref 먼저 확인)
+    if (isDragging || isNavigatingRef.current || isNavigating) {
       return;
     }
 
-    // 중복 터치 방지: 400ms 이내 연속 클릭 무시
+    // 중복 터치 방지: 600ms 이내 연속 클릭 무시 (400ms → 600ms로 증가)
     const now = Date.now();
-    if (now - lastClickTimeRef.current < 400) {
+    const timeSinceLastClick = now - lastClickTimeRef.current;
+    if (timeSinceLastClick < 600) {
       return;
     }
-    lastClickTimeRef.current = now;
 
     const targetPath = navItems[index]?.path;
 
     // 같은 경로로의 네비게이션 방지
     if (targetPath === location.pathname) {
       // 같은 페이지 클릭 시 인디케이터 위치만 업데이트
+      lastClickTimeRef.current = now;
       setActiveIndex(index);
       updateIndicatorPosition(index);
       return;
     }
 
+    // 마지막 클릭 시간 즉시 업데이트 (다음 클릭 차단)
+    lastClickTimeRef.current = now;
+
     // 이전 네비게이션 타이머 취소
     if (navigationTimerRef.current) {
       clearTimeout(navigationTimerRef.current);
+      navigationTimerRef.current = null;
     }
 
-    // 네비게이션 시작
+    // ref와 state 모두 즉시 업데이트 (다중 보호)
+    isNavigatingRef.current = true;
     setIsNavigating(true);
     setActiveIndex(index);
     updateIndicatorPosition(index);
 
     // 네비게이션 실행
     if (targetPath) {
-      navigate(targetPath);
+      // requestAnimationFrame으로 한 프레임 지연하여 상태 업데이트 확실히 적용
+      requestAnimationFrame(() => {
+        navigate(targetPath);
+      });
 
-      // 네비게이션 완료 후 상태 초기화 (300ms 후로 단축하여 빠른 반응성 확보)
+      // 네비게이션 완료 후 상태 초기화 (500ms로 증가)
       navigationTimerRef.current = setTimeout(() => {
+        isNavigatingRef.current = false;
         setIsNavigating(false);
         navigationTimerRef.current = null;
-      }, 300);
+      }, 500);
     } else {
+      isNavigatingRef.current = false;
       setIsNavigating(false);
     }
   };
@@ -418,11 +434,12 @@ function DraggableFloatingNav() {
       setActiveIndex(currentIndex);
     }
 
-    // 경로가 변경되면 네비게이션 타이머 취소 및 상태 초기화
+    // 경로가 변경되면 네비게이션 타이머 취소 및 상태 초기화 (ref도 함께)
     if (navigationTimerRef.current) {
       clearTimeout(navigationTimerRef.current);
       navigationTimerRef.current = null;
     }
+    isNavigatingRef.current = false;
     setIsNavigating(false);
   }, [location.pathname, navItems, activeIndex]);
 
@@ -533,7 +550,7 @@ function DraggableFloatingNav() {
   }, [isDragging, isLongPressActive, indicatorPos]);
 
   return (
-    <div className={`draggable-nav-wrapper ${isDragging ? 'is-dragging' : ''}`}>
+    <div className={`draggable-nav-wrapper ${isDragging ? 'is-dragging' : ''} ${isNavigating ? 'navigating' : ''}`}>
       <nav className="draggable-floating-nav">
         <div className="nav-container" ref={navContainerRef}>
           {/* 애플 리퀴드 글래스 인디케이터 */}
