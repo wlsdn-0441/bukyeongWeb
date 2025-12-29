@@ -9,6 +9,7 @@ const LetterWriting = () => {
   const [author, setAuthor] = useState('');
   const [content, setContent] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [toast, setToast] = useState({ show: false, message: '', type: '' });
 
   // 실시간 편지 구독
   useEffect(() => {
@@ -20,13 +21,21 @@ const LetterWriting = () => {
     return () => unsubscribe();
   }, []);
 
+  // 토스트 알림 표시 함수
+  const showToast = (message, type = 'success') => {
+    setToast({ show: true, message, type });
+    setTimeout(() => {
+      setToast({ show: false, message: '', type: '' });
+    }, 3000);
+  };
+
   // 편지 작성 핸들러
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // 내용이 비어있으면 제출 불가
     if (!content.trim()) {
-      alert('편지 내용을 입력해주세요.');
+      showToast('편지 내용을 입력해주세요.', 'error');
       return;
     }
 
@@ -39,10 +48,10 @@ const LetterWriting = () => {
       setAuthor('');
       setContent('');
 
-      alert('편지가 성공적으로 작성되었습니다! ✉️');
+      showToast('편지가 성공적으로 작성되었습니다! ✉️', 'success');
     } catch (error) {
       console.error('편지 작성 실패:', error);
-      alert('편지 작성에 실패했습니다. 다시 시도해주세요.');
+      showToast('편지 작성에 실패했습니다. 다시 시도해주세요.', 'error');
     } finally {
       setSubmitting(false);
     }
@@ -69,22 +78,34 @@ const LetterWriting = () => {
     });
   };
 
-  // 포스트잇 색상 배열 (파스텔톤)
+  // 포스트잇 색상 배열 (브라운 파스텔톤)
   const postItColors = [
-    '#fef3c7', // 노란색
-    '#fee2e2', // 빨간색
-    '#dbeafe', // 파란색
-    '#d1fae5', // 초록색
-    '#fce7f3', // 핑크색
-    '#e0e7ff', // 인디고
-    '#fed7aa', // 주황색
-    '#f3e8ff', // 보라색
+    '#F5EBE0', // 베이지
+    '#E3D5CA', // 라이트 브라운
+    '#D5BDAF', // 웜 브라운
+    '#F9F3EE', // 크림
+    '#EAD8C9', // 샌드
+    '#F0E5DB', // 아이보리 브라운
+    '#E8DDD0', // 밀크 브라운
+    '#F2E8DD', // 피치 브라운
   ];
 
   return (
     <div className="letter-writing-page page-with-decorations">
       {/* Background decorations */}
       <div className="bg-decorations-letter" aria-hidden="true"></div>
+
+      {/* 토스트 알림 */}
+      {toast.show && (
+        <div className={`toast-notification toast-${toast.type}`}>
+          <div className="toast-content">
+            <span className="toast-icon">
+              {toast.type === 'success' ? '✓' : '⚠'}
+            </span>
+            <span className="toast-message">{toast.message}</span>
+          </div>
+        </div>
+      )}
 
       <div className="letter-writing-container">
         {/* 편지 작성 폼 */}
