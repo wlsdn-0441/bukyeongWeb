@@ -7,8 +7,8 @@ import './GameStatsWidget.css';
 const GAMES = [
   { id: 'reaction', name: '반응속도', icon: '⚡', unit: 'ms' },
   { id: 'color', name: '색깔 찾기', icon: '🎨', unit: '점' },
-  { id: 'memory', name: '기억력', icon: '🧠', unit: '점' },
-  { id: 'balloon', name: '풍선 터뜨리기', icon: '🎈', unit: '점' },
+  { id: 'wordle', name: '워들', icon: '📝', unit: '점' },
+  { id: 'capital', name: '수도 퀴즈', icon: '🌍', unit: '점' },
 ];
 
 const GameStatsWidget = () => {
