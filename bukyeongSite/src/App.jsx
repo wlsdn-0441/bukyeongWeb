@@ -38,6 +38,7 @@ const Home = lazy(() => import("./Pages/Home"));
 const About = lazy(() => import("./Pages/About"));
 const Meal = lazy(() => import("./Pages/Meal"));
 const Timetable = lazy(() => import("./Pages/Timetable"));
+const LetterWriting = lazy(() => import("./Pages/LetterWriting"));
 
 const NotFound = lazy(() => import("./Pages/NotFound"));
 
@@ -132,6 +133,11 @@ const router = createBrowserRouter(
       <Route path="timetable" element={
         <Suspense fallback={<PageLoadingFallback />}>
           <Timetable />
+        </Suspense>
+      } />
+      <Route path="letters" element={
+        <Suspense fallback={<PageLoadingFallback />}>
+          <LetterWriting />
         </Suspense>
       } />
 
