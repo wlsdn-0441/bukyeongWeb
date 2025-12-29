@@ -110,7 +110,16 @@ export const claimScore = async (sessionId, studentId, session) => {
 
       if (isNewBest) {
         const newScores = { ...studentData.scores, [gameType]: score };
-        const totalScore = Object.values(newScores).reduce((a, b) => a + b, 0);
+
+        // Calculate totalScore: only sum scores from games where "higher is better"
+        const totalScore = Object.entries(newScores).reduce((sum, [type, scoreValue]) => {
+          const config = GAME_CONFIG[type];
+          // Only add scores from games where higher is better
+          if (config && config.betterWhen === 'higher') {
+            return sum + scoreValue;
+          }
+          return sum;
+        }, 0);
 
         await updateDoc(studentRef, {
           scores: newScores,
@@ -130,12 +139,24 @@ export const claimScore = async (sessionId, studentId, session) => {
       }
     } else {
       // Create new student record
+      const scores = { [gameType]: score };
+
+      // Calculate totalScore: only sum scores from games where "higher is better"
+      const totalScore = Object.entries(scores).reduce((sum, [type, scoreValue]) => {
+        const config = GAME_CONFIG[type];
+        // Only add scores from games where higher is better
+        if (config && config.betterWhen === 'higher') {
+          return sum + scoreValue;
+        }
+        return sum;
+      }, 0);
+
       const studentData = {
         studentId,
         name: null,
         class: null,
-        scores: { [gameType]: score },
-        totalScore: score,
+        scores,
+        totalScore,
         photoUrl: null,
         lastPlayed: now,
         createdAt: now,
