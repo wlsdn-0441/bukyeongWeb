@@ -32,6 +32,7 @@ function DraggableFloatingNav() {
   const dragRafRef = useRef(null); // 드래그 애니메이션 RAF ID
   const longPressTimerRef = useRef(null); // 롱프레스 타이머 ID
   const touchStartPosRef = useRef({ x: 0, y: 0 }); // 터치 시작 위치
+  const navigationTimerRef = useRef(null); // 네비게이션 타이머 ID
 
   // ==============================================
   // 메뉴 항목 데이터 (Navigation Items)
@@ -305,13 +306,22 @@ function DraggableFloatingNav() {
     // 드래그로 선택한 페이지로 이동
     const targetPath = navItems[nearestIndex]?.path;
     if (targetPath && targetPath !== location.pathname && !isNavigating) {
+      // 중복 터치 방지를 위해 마지막 클릭 시간 업데이트
+      lastClickTimeRef.current = Date.now();
+
+      // 이전 네비게이션 타이머 취소
+      if (navigationTimerRef.current) {
+        clearTimeout(navigationTimerRef.current);
+      }
+
       setIsNavigating(true);
       navigate(targetPath);
 
-      // 네비게이션 완료 후 상태 초기화
-      setTimeout(() => {
+      // 네비게이션 완료 후 상태 초기화 (300ms 후로 단축)
+      navigationTimerRef.current = setTimeout(() => {
         setIsNavigating(false);
-      }, 500);
+        navigationTimerRef.current = null;
+      }, 300);
     }
   };
 
@@ -354,9 +364,9 @@ function DraggableFloatingNav() {
       return;
     }
 
-    // 더블클릭 방지: 300ms 이내 연속 클릭 무시 (200ms → 300ms로 증가)
+    // 중복 터치 방지: 400ms 이내 연속 클릭 무시
     const now = Date.now();
-    if (now - lastClickTimeRef.current < 300) {
+    if (now - lastClickTimeRef.current < 400) {
       return;
     }
     lastClickTimeRef.current = now;
@@ -371,6 +381,11 @@ function DraggableFloatingNav() {
       return;
     }
 
+    // 이전 네비게이션 타이머 취소
+    if (navigationTimerRef.current) {
+      clearTimeout(navigationTimerRef.current);
+    }
+
     // 네비게이션 시작
     setIsNavigating(true);
     setActiveIndex(index);
@@ -380,10 +395,11 @@ function DraggableFloatingNav() {
     if (targetPath) {
       navigate(targetPath);
 
-      // 네비게이션 완료 후 상태 초기화 (500ms 후)
-      setTimeout(() => {
+      // 네비게이션 완료 후 상태 초기화 (300ms 후로 단축하여 빠른 반응성 확보)
+      navigationTimerRef.current = setTimeout(() => {
         setIsNavigating(false);
-      }, 500);
+        navigationTimerRef.current = null;
+      }, 300);
     } else {
       setIsNavigating(false);
     }
@@ -402,7 +418,11 @@ function DraggableFloatingNav() {
       setActiveIndex(currentIndex);
     }
 
-    // 경로가 변경되면 네비게이션 상태 초기화
+    // 경로가 변경되면 네비게이션 타이머 취소 및 상태 초기화
+    if (navigationTimerRef.current) {
+      clearTimeout(navigationTimerRef.current);
+      navigationTimerRef.current = null;
+    }
     setIsNavigating(false);
   }, [location.pathname, navItems, activeIndex]);
 
@@ -487,6 +507,9 @@ function DraggableFloatingNav() {
       }
       if (longPressTimerRef.current) {
         clearTimeout(longPressTimerRef.current);
+      }
+      if (navigationTimerRef.current) {
+        clearTimeout(navigationTimerRef.current);
       }
     };
   }, []);
